@@ -1,0 +1,96 @@
+- Crear proyecto nuevo emulando al proyecto de S4
+- Instalar paquetes PRIMERO: Breeze, TailwindCSS / React con las dependencias de Node.js, y Laravel Passport
+- PHPUnit y/o preparación de tests unitarios o TDD (Plantear TDD antes crear el proyecto)
+- Definir las rutas según los paquetes ya instalados. (COPIAR TODAS LAS VISTAS Y LAS RUTAS)
+
+API REST - Arquitectura del Application Programming Interface
+
+- Usos del GET, POST, PUT, DELETE en el middleware api
+POSTMAN - (?)
+RESTful API - (REpresentational State Transfer) - HTTP Response
+Frankenstein API - (?)
+GraphQL APIs - (?)
+SOAP - (Simple Object Access Protocol) APIs escritas a mano con XML con un RPC (Remote Proceedure Call)
+Concepto de Endpoint - (?)
+
+API service RESTful - 6 guías básicas se deben cumplir:
+- Uniform Interface (UI): Multiple arquitectural constrains are required to guide the behaviour of components.
+Resources should be unique through a single URL
+
+- Client/Server based: HTTP response between both. The UI separates user concerns from data storage concerns.
+- Stateless operations: Request from client to server must contain all info necessary, so that the server can understand
+and process it accordingly. The server can't hold any info about the client state.
+
+- RESTful resource caching: Data within a response to a request must be labeled as cacheable or non-cacheable.
+
+- Code on demand: REST APIs download and execute code in the form of applets or scripts. For example, xml or json
+
+--------------------------
+
+Hay dos caminos para elegir construir una arquitectura RESTful API en Laravel: Usando Sanctum o Passport
+
+Sanctum en un paquete para la autentificación basado en tokens. Se centra en escenarios de autentificación persistente,
+mientras que los tokens de corta vida son ideales para autentificaciones temporales (Mobile, SPA Auths)
+
+También ofrece protección CSRF para los usos de autentificación y autorización en las APIs, centrándote en el enfoque de
+API endpoints.
+
+Passport ofrece un set completo de endpoints OAuth2 (CONTEXTO)
+OAuth2 es un protocolo / framework de autorización que delega la autentificación para aplicaciones web, mobile apps y programas
+de escritorio, que dan acceso limitado a las cuentas de usuario en determinados servicios de terceros, que gestiona las cuentas. De
+modo que sea éste quien otorgue el acceso.
+
+Roles presentes en OAuth:
+	- Client: Aplicación cliente que quiere acceder a la cuenta
+	de un usuario en un servicio determinado. Debe contar con una autorización
+	del usuario, y ésta se debe validar (a través de la API del servicio)
+	- Resource Owner: Quien autoriza a una app para que pueda acceder a su cuenta.
+	El acceso está limitado en función del "scope" que concede el usuario durante
+	la autorización.
+	- Resource Server: Servidor que almacena las cuentas de los usuarios
+	- Authorization Server: Verifica la identidad de los usuarios y emite access
+	tokens a la aplicación cliente
+
+FLUJO DEL PROTOCOLO OAUTH
+
+Puede implementarse bajo diversas condiciones, y varía principalmente si se trata de una app web, mv, o desktop
+
+Además, la arquitectura REST cuenta con 4 RESTricciones
+
+- Respetar la conexión clients/servidor, envio por GET del cliente y POST del servidor
+- Los recursos DEBEN y pueden que no, pero deberían ser CACHEABLES
+- UI
+	- Los recursos deberían ser identificados como URIs en la UI
+	- Los recursos deberían ser manipulables mediantes sus representaciones, que es la forma que
+	toma cuando alguien lo solicita, lo manipula o lo ve. Un cliente debería poder modificar el recurso mismo (sombras)
+	- Los recursos deberían ser autodescriptivos
+	- HATEOAS: El motor o estado de la interfaz debería ser hipermedia (el cliente no debería necesitar información adicional
+	para navegar por el sitio web) Se puede agregar al servidor un endpoint que devuelva un JSON que informe al cliente
+	de cuales son las acciones disponible sobre los recursos que existe en el servidor.
+	Autocontenidos y autodescriptivos. Aunque un JSON no es un RESTful, es más sutil, y que una respuesta sea hipermedia, es
+	que contener datos, puede contener punteros que direcciona a otro recurso. De esta manera, ese JSON respeta el
+	protocolo/standard HAL (Es una forma de hacer un JSON RESTful) Todos los recursos están descritos, y si el cliente está
+	utilizando ese mapa JSON, para utilizar la API, si llegase a cambiar la estructura del mapa, va a ser totalmente recibiente
+	a estos cambios.
+- Stateless: El servidor no debería guardar el estado de la app.
+Si una API no es stateless, según y de acuerdo a la Disertación de Roy T Fielding, no sería RESTful
+- Los sistemas deberian tener capas y un cliente no debería saber por donde pasa su solicitud
+- Code On Demand: Cada vez que vas a un sitio, descargas archivos JS, y los cargas
+
+* ------------------SOBRE PASSPORT, API REST Y AVANCE DEL PROYECTO---------------------- *
+
+- He realizado la instalación del proyecto de Laravel desde 0, junto Passport y la config en el proyecto, incluyendo la creacion
+de una nueva db llamada passport y las migraciones de la base de datos. Lo aprendido en Sprint 4 me ha hecho reflexionar sobre
+instalar paquetes y dependecias, y decidir la arquitectura del proyecto ANETES que picar cualquier lines de código fuente.
+
+Definimos un trait que se implemente en la autentificación del usuario en el modelo User que Laravel crea por defecto. Además,
+se configura la api en congif/auth.php y se determina quien recibe y quien proviene la configuración de la api.
+
+
+
+
+
+
+
+
+
