@@ -93,6 +93,19 @@ Passport proporciona al instalar unas keys (publicas y privadas) para las HTTP R
 También, si organizo el proyecto desde la visión TDD, podría crear un ManagementTest para cada tipo de ruta (GET, POST, PUT, DELETE)
 Hay que ver también si va a ser tests de Features, o Unit tests.
 
+En cuanto a metodos test en el TDD: Observaciones
+- Todos aquellos métodos de test, que no son CRUD y que determine qué puede y qué no puede hacer X (lógica de negocio) forma
+parte de una tabla en la que esté asignado una clave foránea. Por ejemplo:
+
+
+   /*  public function test_user_cannot_join_community_of_other_discipline()
+    {
+        // Crear disciplina A y B
+        // Crear comunidad en disciplina A
+        // Crear usuario con disciplina B
+        // Intentar unir usuario a comunidad de disciplina A
+        // Esperar error 403 o 422
+    } */
 
 
 
