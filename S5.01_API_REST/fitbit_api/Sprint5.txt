@@ -1,3 +1,5 @@
+
+
 - Crear proyecto nuevo emulando al proyecto de S4
 - Instalar paquetes PRIMERO: Breeze, TailwindCSS / React con las dependencias de Node.js, y Laravel Passport
 - PHPUnit y/o preparación de tests unitarios o TDD (Plantear TDD antes crear el proyecto)
@@ -85,6 +87,12 @@ instalar paquetes y dependecias, y decidir la arquitectura del proyecto ANETES q
 
 Definimos un trait que se implemente en la autentificación del usuario en el modelo User que Laravel crea por defecto. Además,
 se configura la api en congif/auth.php y se determina quien recibe y quien proviene la configuración de la api.
+
+Passport proporciona al instalar unas keys (publicas y privadas) para las HTTP Response.
+
+También, si organizo el proyecto desde la visión TDD, podría crear un ManagementTest para cada tipo de ruta (GET, POST, PUT, DELETE)
+Hay que ver también si va a ser tests de Features, o Unit tests.
+
 
 
 
