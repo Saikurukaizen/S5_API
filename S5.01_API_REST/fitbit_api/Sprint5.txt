@@ -97,15 +97,29 @@ En cuanto a metodos test en el TDD: Observaciones
 - Todos aquellos métodos de test, que no son CRUD y que determine qué puede y qué no puede hacer X (lógica de negocio) forma
 parte de una tabla en la que esté asignado una clave foránea. Por ejemplo:
 
-
-   /*  public function test_user_cannot_join_community_of_other_discipline()
+- Todos aquellos métodos con una lógica de negocio específica, es mejor crear archivos aparte
+   /*  
+   PARA COMMUNITY
+   puedo crear un archivo CommunityMembershipTest
+   public function test_user_cannot_join_community_of_other_discipline()
     {
         // Crear disciplina A y B
+		$disciplineA = Discipline::factory()->create();
+		$disciplineB = Discipline::factory()->create();
         // Crear comunidad en disciplina A
+		$communityA = Community::factory()->create(['discipline_id' => $disciplineA->id])
         // Crear usuario con disciplina B
+		$user = User::factory()->create(['discipline_id' => $disciplineB->id])
         // Intentar unir usuario a comunidad de disciplina A
+		$response = $this->actingAs($user)->postJson("/api/communities/{$communityA->id}/join");
         // Esperar error 403 o 422
-    } */
+		$response->assertStatus(403);
+		$response->assertStatus(422);
+    } 
+	
+	public function a_community_cannot_join_many_moderator_users{
+
+	}*/
 
 
 
