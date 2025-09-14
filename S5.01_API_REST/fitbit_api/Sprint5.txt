@@ -121,16 +121,91 @@ parte de una tabla en la que esté asignado una clave foránea. Por ejemplo:
 
 	}*/
 
-	Por otro lado. Passport 13 en Laravel 12, no genera de por sí unos IDs ni tokens de
-	clientes iniciales, así que, la idea es crear un PassportSeeder para recrear las tablas
-	necesarias al realizar la migracion, y crear los clientes manualmente Usando
+Por otro lado. Passport 13 en Laravel 12, no genera de por sí unos IDs ni tokens de
+clientes iniciales, así que, la idea es crear un PassportSeeder para recrear las tablas
+necesarias al realizar la migracion, y crear los clientes manualmente Usando
+
+php artisan passport:client --personal
+php artisan passport:client --password
+
+Para generar los registros en la tabla oauth_clients, y insertar el client_id:
+grant_types = ["personal_access"] en la tabla oauth_personal_access_clients
+Además, se puede automatizar con un seeder:
+
+Apuntes de Cristina:
+
+	Los que tengáis que empezar el Sprint5 y lo hagáis con las versiones de Laravel y Passport actualizadas 
+	a fecha de hoy (laravel 12 y Passport 13) os vais a encontrar con que,  en contra de lo que dice la 
+	documentación, al instalarse Passport (Passport:install), NO se crean dos clientes en oauth_clients,
+	ni se graba el id del personal access client en la tabla oauth_personal_access_clients. De hecho, ni 
+	siquiera la crea por defecto.
+
+	Para solucionarlo, después de mucho investigar, me ha funcionado lo siguiente.
+	1) crear la tabla oauth_personal_access_clients:
+	Puedes forzar que se creen TODOS los ficheros de migracion de las tablas que tiene Passport asi:
+
+	php artisan vendor:publish --tag=passport-migrations
+
+	Y te aparecera la  migración de tabla oauth_personal_access_clients
+
+	También puedes crear el fichero y  copiar el esquema de aqui:
+	php artisan make:migration create_oauth_personal_access_clients
+
+	 Schema::create('oauth_personal_access_clients', function (Blueprint $table) {
+	            $table->bigIncrements('id');
+	            $table->uuid('client_id');
+	            $table->timestamps();
+	        });
+
+	2) a continuación crea los clientes necesarios que se deberían haber creado haciendo passport:install:
+
 	php artisan passport:client --personal
 	php artisan passport:client --password
-	Para generar los registros en la tabla oauth_clients, y insertar el client_id:
-	grant_types = ["personal_access"] en la tabla oauth_personal_access_clients
-	Además, se puede automatizar con un seeder:
 
-	
+	3) luego hay que grabar en la tabla oauth_personal_access_clients que hemos creado en el paso 1 el id del cliente con grant_types = "personal_access" en el campo client_id
+
+	Passport necesita saber cual de los dos clientes creados en el paso 2 es el personal_client.
+
+	Hecho esto Passport estará configurado 
+	Como todo esto se borrara cada vez que hagas migrate:refresh (cuando hagas testing, pe), te conviene tener todo esto en un PassportSeeder.
+	A mí este me funciona:
+	<?php 
+
+	namespace Database\Seeders;
+
+	use Illuminate\Database\Seeder;
+	use Illuminate\Support\Facades\Artisan;
+	use Illuminate\Support\Facades\DB;
+	use Laravel\Passport\Client;
+
+	class PassportSeeder extends Seeder
+	{
+
+	    public function run()
+	    {
+	        //Delete in case there were previous records
+	        DB::table('oauth_clients')->delete(); 
+	        DB::table('oauth_personal_access_clients')->delete(); 
+
+	        // Run password and personal Passport clients
+	        Artisan::call('app:create-passport-clients');
+
+	        // Insert Personal Access Client Id into personal_access_clients table
+	        $personalClientId = Client::where('grant_types', '["personal_access"]')->latest()->first()->id;
+
+	        DB::table('oauth_personal_access_clients')->insert([
+	            'client_id' => $personalClientId,
+	            'created_at' => now(),
+	            'updated_at' => now(),
+	        ]); 
+	    }
+	}
+
+	---------
+	en mi caso he creado un comando artisan que automatiza los comandos php artisan passport:client --personal y
+	php artisan passport:client –password que es lo que hace donde dice  Artisan::call('app:create-passport-clients');
+
+
 
 
 
