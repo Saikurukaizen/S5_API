@@ -32,7 +32,7 @@ class CreatePassportClients extends Command
 
         $personalClient = Client::where('grant_types', '["personal_access"]')->latest()->first();
 
-        if($personalClient && DB::schemaBuilder()->hasTable('oauth_personal_access_clients')){
+        if($personalClient && DB::getSchemaBuilder()->hasTable('oauth_personal_access_clients')){
             DB::table('oauth_personal_access_clients')->insert([
                 'client_id' => $personalClient->id,
                 'created_at' => now(),
