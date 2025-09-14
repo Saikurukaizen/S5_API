@@ -121,6 +121,17 @@ parte de una tabla en la que esté asignado una clave foránea. Por ejemplo:
 
 	}*/
 
+	Por otro lado. Passport 13 en Laravel 12, no genera de por sí unos IDs ni tokens de
+	clientes iniciales, así que, la idea es crear un PassportSeeder para recrear las tablas
+	necesarias al realizar la migracion, y crear los clientes manualmente Usando
+	php artisan passport:client --personal
+	php artisan passport:client --password
+	Para generar los registros en la tabla oauth_clients, y insertar el client_id:
+	grant_types = ["personal_access"] en la tabla oauth_personal_access_clients
+	Además, se puede automatizar con un seeder:
+
+	
+
 
 
 
