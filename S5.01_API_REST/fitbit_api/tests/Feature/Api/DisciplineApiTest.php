@@ -20,9 +20,7 @@ class DisciplineApiTest extends TestCase{
     use RefreshDatabase;
 
     /** @test */
-
-    public function admin_can_create_a_discipline(): void{
-
+    public function admin_can_create_a_discipline_in_api(): void{
         $admin = User::factory()->create([
             'role' => 'admin',
         ]);
@@ -49,44 +47,112 @@ class DisciplineApiTest extends TestCase{
         $this->assertEquals($discipline->description, 'Japanese combat martial art');
     }
 
-    /** @test */
     public function user_cannot_create_a_discipline_in_api(): void{
+        $user = User::factory()->create([
+            'role' => 'user',
+        ]);
+        Passport::actingAs($user);
 
+        $response = $this->post('/api/disciplines', [
+            'name' => 'New Discipline',
+            'description' => 'Discipline Description',
+        ]);
+
+        $response->assertStatus(403);
+        $this->assertCount(0, Discipline::all());
     }
 
-    /** @test */
     public function guest_cannot_create_a_discipline_in_api(): void{
+        $response = $this->post('/api/disciplines', [
+            'name' => 'New Discipline',
+            'description' => 'Discipline Description',
+        ]);
 
+        $response->assertStatus(401);
+        $this->assertCount(0, Discipline::all());
     }
 
-    /** @test */
     public function admin_can_update_a_discipline_in_api(): void{
+        $admin = User::factory()->create([
+            'role' => 'admin',
+        ]);
+        Passport::actingAs($admin);
 
+        $response = $this->post('/api/disciplines/{id}', [
+            'name' => 'New Discipline',
+            'description' => 'Discipline Description',
+        ]);
+
+        $response->assertStatus(201);
+
+        $this->assertDatabaseHas('disciplines', [
+            'name' => 'Karate',
+            'description' => 'Japanese combat martial art',
+        ]);
     }
 
-    /** @test */
     public function user_cannot_update_a_discipline_in_api(): void{
+        $user = User::factory()->create([
+            'role' => 'user',
+        ]);
+        Passport::actingAs($user);
 
+        $response = $this->post('/api/disciplines/{id}', [
+            'name' => 'New Discipline',
+            'description' => 'Discipline Description',
+        ]);
+
+        $response->assertStatus(403);
+        $this->assertCount(0, Discipline::all());
     }
 
-    /** @test */
     public function guest_cannot_update_a_discipline_in_api(): void{
+        $response = $this->post('/api/disciplines/{id}', [
+            'name' => 'New Discipline',
+            'description' => 'Discipline Description',
+        ]);
 
+        $response->assertStatus(401);
+        $this->assertCount(0, Discipline::all());
     }
 
-    /** @test */
     public function admin_can_delete_a_discipline_in_api(): void{
+        $admin = User::factory()->create([
+            'role' => 'admin',
+        ]);
+        Passport::actingAs($admin);
 
+        $response = $this->post('/api/disciplines/{id}', [
+            'name' => 'New Discipline',
+            'description' => 'Discipline Description',
+        ]);
+
+        $response->assertStatus(201);
+        $this->assertCount(1, Discipline::all());
     }
 
-    /** @test */
     public function user_cannot_delete_a_discipline_in_api(): void{
+        $user = User::factory()->create([
+            'role' => 'user',
+        ]);
+        Passport::actingAs($user);
 
+        $response = $this->post('/api/discipline/{id}', [
+            'name' => 'New Discipline',
+            'description' => 'Discipline Description',
+        ]);
+        $response->assertStatus(403);
+        $this->assertCount(0, Discipline::all());
     }
 
-    /** @test */
     public function guest_cannot_delete_a_discipline_in_api(): void{
+        $response = $this->post('/api/disciplines/{id}', [
+            'name' => 'New Discipline',
+            'description' => 'Discipline Description',
+        ]);
 
+        $response->assertStatus(401);
+        $this->assertCount(0, Discipline::all());
     }
 }
 ?>

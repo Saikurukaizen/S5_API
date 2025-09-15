@@ -203,6 +203,9 @@ PUT/users/{id}/discipline - Cambiar de disciplina (pierde comunidades previas)
 POST/users/{id}/communities - Unirse a una comunidad de su disciplina.
 DELETE/users/{id}/communities/{id} - Salirse de esa comunidad que pertenece
 
+auth:api valida que haya un token Passport válido
+can:manage-disciplines invoca una Policy de Disciplines
+Se puede usar middleware como role:admin
 
 
 
