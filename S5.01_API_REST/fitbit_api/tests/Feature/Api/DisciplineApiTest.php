@@ -60,32 +60,32 @@ class DisciplineApiTest extends TestCase{
     }
 
     /** @test */
-    public function admin_can_update_a_discipline(): void{
+    public function admin_can_update_a_discipline_in_api(): void{
 
     }
 
     /** @test */
-    public function user_cannot_update_a_discipline(): void{
+    public function user_cannot_update_a_discipline_in_api(): void{
 
     }
 
     /** @test */
-    public function guest_cannot_update_a_discipline(): void{
+    public function guest_cannot_update_a_discipline_in_api(): void{
 
     }
 
     /** @test */
-    public function admin_can_delete_a_discipline(): void{
+    public function admin_can_delete_a_discipline_in_api(): void{
 
     }
 
     /** @test */
-    public function user_cannot_delete_a_discipline(): void{
+    public function user_cannot_delete_a_discipline_in_api(): void{
 
     }
 
     /** @test */
-    public function guest_cannot_delete_a_discipline(): void{
+    public function guest_cannot_delete_a_discipline_in_api(): void{
 
     }
 }

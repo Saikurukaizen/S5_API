@@ -112,12 +112,8 @@ class DisciplineManagementTest extends TestCase
         $this->assertEquals($discipline->description, 'Disc Desc.');
 
         $response = $this->delete('/disciplines/'.$discipline->id);
-        $this->assertCount(0, Disciplines::all());
+        $this->assertCount(0, Discipline::all());
         $response->assertOk();
         
     }
-
-
-    
-
 }
