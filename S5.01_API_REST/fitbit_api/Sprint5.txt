@@ -167,5 +167,43 @@ Tests/Unit - DisciplineManagementTest - Valida las operaciones CRUD y casos de u
 Tests/Models - DisciplineTest - Valida la integridad de comandos de Eloquent: Relaciones, restricciones lógicas y reglas de negocio puras.
 	- Usa los modelos para simular flujos de negocio
 
+Dentro de Tests/Unit, he creado una carpeta de Policies para los Tests que tienen que ver con las acciones según
+el permiso de los usuarios. Es como un punto medio entre el Management y el Model, y testea los permisos en sí.
+Aseguran que cada función CRUD devuelva true/false según su permiso.
+
+Esto define unos cuantos puntos:
+
+- En Laravel, el servidor es la aplicación completa. El cliente se conecta a la API a través del frontend.
+- Con el paquete Passport, hay un modelo Client y los modelos de casos de uso son Disciplines, Users, Communities.
+- Los endpoints son "la cara pública" de la API REST. El "contrato" entre cliente y servidor.
+- Los endpoints se diseñan alrededor de las entidades y los casos de uso.
+
+GET/POST/PUT/DELETE + /api/ + caso de uso (Disciplines/Users/Communities)
+
+ESTOS SON LOS ENDPOINTS:
+
+# Disciplines
+
+GET/api/disciplines - Listar disciplinas
+POST/api/disciplines - Crear una disciplina (admin)
+PUT/api/disciplines/{id} - Actualizar una disciplina(admin)
+DELETE/api/disciplines/{id} - Borrar una disciplina (admin)
+
+# Communities
+
+GET/api/communities - Listar las comunidades
+POST/api/communities - Crear una comunidad (admin o moderador de esa disciplina)
+PUT o PATCH/api/communities/{id} - Actualizar parcial o total de una comunidad(solo admin puede cambiar nombre)
+DELETE/api/communities/{id} - Borrar una comunidad (admin)
+
+#Users
+
+GET/users/me - Perfil propio o del usuario
+PUT/users/{id}/discipline - Cambiar de disciplina (pierde comunidades previas)
+POST/users/{id}/communities - Unirse a una comunidad de su disciplina.
+DELETE/users/{id}/communities/{id} - Salirse de esa comunidad que pertenece
+
+
+
 
 	
