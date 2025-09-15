@@ -171,6 +171,15 @@ Dentro de Tests/Unit, he creado una carpeta de Policies para los Tests que tiene
 el permiso de los usuarios. Es como un punto medio entre el Management y el Model, y testea los permisos en sí.
 Aseguran que cada función CRUD devuelva true/false según su permiso.
 
+Conclusion:
+	- Los ApiTest manejan los endpoints de la API.
+	- Los ManagementTest manejan la lógica de negocio CRUD.
+	- Los PolicyTest manejan los roles y permisos.
+
+	- Se usa Status tipo 200s para decir que está validado en admin
+	- Se usa Status tipo 403 para el error en users
+	- Se usa Status tipo 401 para el error en guests
+
 Esto define unos cuantos puntos:
 
 - En Laravel, el servidor es la aplicación completa. El cliente se conecta a la API a través del frontend.
