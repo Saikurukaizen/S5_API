@@ -245,6 +245,11 @@ por defecto, intenta redirigir al usuario a la ruta login usando route('login').
 Por ejemplo, un test tipo guest_caanot--blabla en ApiTest que accede a una ruta 
 protegida sin autenticación.
 
+Todo ello resume los "agujeros" para empezar a picar código, el punto de entrada de datos,
+de autenticado, y la ruta de viaje de los datos, y ya definidos gracias al TDD.
+
+
+
 
 
 	
