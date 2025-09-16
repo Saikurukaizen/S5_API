@@ -216,6 +216,35 @@ auth:api valida que haya un token Passport válido
 can:manage-disciplines invoca una Policy de Disciplines
 Se puede usar middleware como role:admin
 
+--UPDATE--
+
+Primer run del TDD: 
+	- Los tests para el Management de Passport es válido: crea Passport Clients/Personal Access
+	- Se registra en la tabla
+	- No crea clientes duplicados
+
+	- No detecta archivos, que no se han creado todavía. Tales son:
+		. DisciplinePolicy
+		. La tabla de Database de Disciplines. 
+	- ApiTest - admin_can_create_a_discipline: Recibe error 403 en vez del 201
+
+	- Además, tampoco ha podido hacer run en los endpoints de la API.
+
+Además, la sustitución de /** @test*/ por #[Test], ya que, en PHPUnit v.12 y 
+versiones recientes, está deprecado. Esto modifica el comportamiento de los tests,
+pero lo hace más robusto y menos vulnerable.
+
+Versiones:
+Laravel 12.0
+Passport 13.2
+PHPUnit ^10.0
+
+También hay un error de una ruta no definida llamada Login: El middleware de
+autenticación(autho auth:api) detecta que el usuario no está autenticado. Laravel,
+por defecto, intenta redirigir al usuario a la ruta login usando route('login').
+Por ejemplo, un test tipo guest_caanot--blabla en ApiTest que accede a una ruta 
+protegida sin autenticación.
+
 
 
 	

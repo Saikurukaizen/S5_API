@@ -2,10 +2,11 @@
 
 namespace Tests\Unit\Policies;
 
-use Tests\TestCase;
 use App\Models\User;
 use App\Models\Discipline;
 use App\Policies\DisciplinePolicy;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class DisciplinePolicyTest extends TestCase{
@@ -19,8 +20,7 @@ class DisciplinePolicyTest extends TestCase{
         $this->policy = new DisciplinePolicy();
     }
 
-    /** @test */
-
+    #[Test]
     public function admin_can_create_a_discipline(): void{
 
         $admin = User::factory()->create([
@@ -29,7 +29,7 @@ class DisciplinePolicyTest extends TestCase{
         $this->assertTrue($this->policy->create($admin));        
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_create_a_discipline(): void{
         $user = User::create([
             'role' => 'user',
@@ -37,12 +37,12 @@ class DisciplinePolicyTest extends TestCase{
         $this->assertFalse($this->policy->create($user));
     }
 
-    /** @test */
+    #[Test]
     public function guest_cannot_create_a_discipline(): void{
         $this->assertFalse($this->policy->create(null));
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_update_a_discipline(): void{
         $admin = User::factory()->create([
             'role' => 'admin',
@@ -50,7 +50,7 @@ class DisciplinePolicyTest extends TestCase{
         $this->assertTrue($this->policy->update($admin, new Discipline()));
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_update_a_discipline(): void{
         $user = User::factory()->create([
             'role' => 'user',
@@ -58,12 +58,12 @@ class DisciplinePolicyTest extends TestCase{
         $this->assertFalse($this->policy->update($user, new Discipline()));
     }
 
-    /** @test */
+    #[Test]
     public function guest_cannot_update_a_discipline(): void{
         $this->assertFalse($this->policy->update(null, new Discipline()));
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_delete_a_discipline(): void{
         $admin = User::factory()->create([
             'role' => 'admin',
@@ -71,7 +71,7 @@ class DisciplinePolicyTest extends TestCase{
         $this->assertTrue($this->policy->delete($admin, new Discipline()));
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_delete_a_discipline(): void{
         $user = User::factory()->create([
             'role' => 'user',
@@ -79,7 +79,7 @@ class DisciplinePolicyTest extends TestCase{
         $this->assertFalse($this->policy->delete($user, new Discipline()));
     }
 
-    /** @test */
+    #[Test]
     public function guest_cannot_delete_a_discipline(): void{
 
         $this->assertFalse($this->policy->delete(null, new Discipline()));

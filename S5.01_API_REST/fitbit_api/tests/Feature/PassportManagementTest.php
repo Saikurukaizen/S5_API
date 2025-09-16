@@ -6,13 +6,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Passport\Client;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class PassportManagementTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_creates_personal_and_password_clients(): void{
         Artisan::call('app:create-passport-clients');
 
@@ -25,7 +26,7 @@ class PassportManagementTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_registers_personal_access_client_in_personal_table(): void{
 
         Artisan::call('app:create-passport-clients');
@@ -37,7 +38,7 @@ class PassportManagementTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_the_command_twice_does_not_duplicate_clients(): void{
         
         Artisan::call('app:create-passport-clients');

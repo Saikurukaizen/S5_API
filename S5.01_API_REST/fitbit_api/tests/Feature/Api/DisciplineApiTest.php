@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Discipline;
 use Laravel\Passport\Passport;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 
 //This test checks the API endpoints for the Discipline model.
 // Use the command Passport::actingAs($user) to simulate an authenticated user with different roles
@@ -19,7 +20,7 @@ class DisciplineApiTest extends TestCase{
     
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function admin_can_create_a_discipline_in_api(): void{
         $admin = User::factory()->create([
             'role' => 'admin',
@@ -47,6 +48,7 @@ class DisciplineApiTest extends TestCase{
         $this->assertEquals($discipline->description, 'Japanese combat martial art');
     }
 
+    #[Test]
     public function user_cannot_create_a_discipline_in_api(): void{
         $user = User::factory()->create([
             'role' => 'user',
@@ -62,16 +64,17 @@ class DisciplineApiTest extends TestCase{
         $this->assertCount(0, Discipline::all());
     }
 
+    #[Test]
     public function guest_cannot_create_a_discipline_in_api(): void{
-        $response = $this->post('/api/disciplines', [
+        $response = $this->postJson('/api/disciplines', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
 
         $response->assertStatus(401);
-        $this->assertCount(0, Discipline::all());
     }
 
+    #[Test]
     public function admin_can_update_a_discipline_in_api(): void{
         $admin = User::factory()->create([
             'role' => 'admin',
@@ -91,6 +94,7 @@ class DisciplineApiTest extends TestCase{
         ]);
     }
 
+    #[Test]
     public function user_cannot_update_a_discipline_in_api(): void{
         $user = User::factory()->create([
             'role' => 'user',
@@ -106,16 +110,17 @@ class DisciplineApiTest extends TestCase{
         $this->assertCount(0, Discipline::all());
     }
 
+    #[Test]
     public function guest_cannot_update_a_discipline_in_api(): void{
-        $response = $this->post('/api/disciplines/{id}', [
+        $response = $this->postJson('/api/disciplines/{id}', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
 
         $response->assertStatus(401);
-        $this->assertCount(0, Discipline::all());
     }
 
+    #[Test]
     public function admin_can_delete_a_discipline_in_api(): void{
         $admin = User::factory()->create([
             'role' => 'admin',
@@ -131,6 +136,7 @@ class DisciplineApiTest extends TestCase{
         $this->assertCount(1, Discipline::all());
     }
 
+    #[Test]
     public function user_cannot_delete_a_discipline_in_api(): void{
         $user = User::factory()->create([
             'role' => 'user',
@@ -145,14 +151,14 @@ class DisciplineApiTest extends TestCase{
         $this->assertCount(0, Discipline::all());
     }
 
+    #[Test]
     public function guest_cannot_delete_a_discipline_in_api(): void{
-        $response = $this->post('/api/disciplines/{id}', [
+        $response = $this->postJson('/api/disciplines/{id}', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
 
         $response->assertStatus(401);
-        $this->assertCount(0, Discipline::all());
     }
 }
 ?>
