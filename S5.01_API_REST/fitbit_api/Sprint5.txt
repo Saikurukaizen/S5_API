@@ -191,6 +191,8 @@ GET/POST/PUT/DELETE + /api/ + caso de uso (Disciplines/Users/Communities)
 
 ESTOS SON LOS ENDPOINTS:
 
+---UPDATED---
+
 # Disciplines
 
 GET/api/disciplines - Listar disciplinas
@@ -207,14 +209,36 @@ DELETE/api/communities/{id} - Borrar una comunidad (admin)
 
 #Users
 
-GET/users/me - Perfil propio o del usuario
+GET/users - Listado de usuarios
+GET/users/{id} - Perfil propio o del usuario
 PUT/users/{id}/discipline - Cambiar de disciplina (pierde comunidades previas)
-POST/users/{id}/communities - Unirse a una comunidad de su disciplina.
+POST/users/{id}/communities/{id} - Unirse a una comunidad de su disciplina.
 DELETE/users/{id}/communities/{id} - Salirse de esa comunidad que pertenece
 
 auth:api valida que haya un token Passport válido
 can:manage-disciplines invoca una Policy de Disciplines
 Se puede usar middleware como role:admin
+
+-----DISCLAIMER!!!-----
+
+1.- Los datos que Postman devuelve desde los endpoints está en formato JSON, que es un estandard en API RESTs.
+La discusión ha estado de qué tipo de bases de datos usar. Se puede usar MongoDB ya que trabaja con JSON, pero la config
+de Passport está pensada para almacenarse en bases de datos relacionales mySQL, ya que la configuración de la validación
+del client_id y el access token se almacena bien ahí, a pesar de que Passport es inherente a qué base de datos lo almacenes,
+al igual que la arquitectura API. 
+
+Para conservar la estructura JSON (porque es la más versátil y robusta, en el momento de enviar la API para el trabajo Frontend),
+es usar un array asociativo "key" / "value" como fila / columna en una tabla. Habrá maneras de transformar ese array
+en formato JSON(vease un parseJSON() o similar)
+
+Además, hay que pensar en métricas y estadísticas para no hacer la lógica de un simple CRUD.
+Hay que realizar y empezar a realizar lógica más complejas que esto. Entonces:
+
+- Validar los endpoints y los recibe bien con status 200s
+- Ampliar endpoints para las stats, el register y el login.
+- Determinar la lógica de almacenaje, JSON / Array asoc. / mySQL
+- Ampliar el TDD con lógicas de métricas y estadísticas para las categorías del proyecto.
+- Añadir Policies, Providers, Controllers y Models según la estructura del TDD.
 
 --UPDATE--
 
@@ -242,7 +266,7 @@ PHPUnit ^10.0
 También hay un error de una ruta no definida llamada Login: El middleware de
 autenticación(autho auth:api) detecta que el usuario no está autenticado. Laravel,
 por defecto, intenta redirigir al usuario a la ruta login usando route('login').
-Por ejemplo, un test tipo guest_caanot--blabla en ApiTest que accede a una ruta 
+Por ejemplo, un test tipo guest_cannot--blabla en ApiTest que accede a una ruta 
 protegida sin autenticación.
 
 Todo ello resume los "agujeros" para empezar a picar código, el punto de entrada de datos,
