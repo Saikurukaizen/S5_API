@@ -195,25 +195,37 @@ ESTOS SON LOS ENDPOINTS:
 
 # Disciplines
 
-GET/api/disciplines - Listar disciplinas
-POST/api/disciplines - Crear una disciplina (admin)
-PUT/api/disciplines/{id} - Actualizar una disciplina(admin)
-DELETE/api/disciplines/{id} - Borrar una disciplina (admin)
+GET/api/v1/disciplines - Listar disciplinas
+POST/api/v1/disciplines - Crear una disciplina (admin)
+PUT/api/v1/disciplines/{id} - Actualizar una disciplina(admin)
+DELETE/api/v1/disciplines/{id} - Borrar una disciplina (admin)
+
+GET/api/v1/disciplines/stats - Estadística de las disciplinas
+--Se puede crear un DisciplineStatsController para estas lógicas
 
 # Communities
 
-GET/api/communities - Listar las comunidades
-POST/api/communities - Crear una comunidad (admin o moderador de esa disciplina)
-PUT o PATCH/api/communities/{id} - Actualizar parcial o total de una comunidad(solo admin puede cambiar nombre)
-DELETE/api/communities/{id} - Borrar una comunidad (admin)
+GET/api/v1/communities - Listar las comunidades
+POST/api/v1/communities - Crear una comunidad (admin o moderador de esa disciplina)
+PUT o PATCH/api/v1/communities/{id} - Actualizar parcial o total de una comunidad(solo admin puede cambiar nombre)
+DELETE/api/v1/communities/{id} - Borrar una comunidad (admin)
+
+GET/api/v1/communities/{id}/stats - Estadistica de una comunidad
 
 #Users
+---Estos endpoint se definen en api.php y se gestiona en un AuthController
+POST/api/v1/register - Registro de usuario
+POST/api/login - Registro de un usuario
+v1/
+GET/api/v1/users - Listado de usuarios
+GET/api/v1/users/{id} - Perfil propio o del usuario
+PUT/api/users/{id}/discipline - Cambiar de disciplina (pierde comunidades previas)
+POST/api/v1/users/{id}/communities/{id} - Unirse a una comunidad de su disciplina.
+DELETE/api/v1/users/{id}/communities/{id} - Salirse de esa comunidad que pertenece
 
-GET/users - Listado de usuarios
-GET/users/{id} - Perfil propio o del usuario
-PUT/users/{id}/discipline - Cambiar de disciplina (pierde comunidades previas)
-POST/users/{id}/communities/{id} - Unirse a una comunidad de su disciplina.
-DELETE/users/{id}/communities/{id} - Salirse de esa comunidad que pertenece
+GET/api/v1/users/{id}/stats - Estadísticas de un usuario
+
+(Ver y añadir params key para consultas de comparación, queries para endpoints, etc)
 
 auth:api valida que haya un token Passport válido
 can:manage-disciplines invoca una Policy de Disciplines

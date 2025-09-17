@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:api')->group(function (){
+Route::middleware('auth:api')->prefix('v1')->group(function (){
 
     //Disciplines only admin
     Route::apiResource('disciplines', DisciplineController::class)
@@ -16,8 +16,8 @@ Route::middleware('auth:api')->group(function (){
     Route::apiResource('communities', CommunityController::class);
 
     //Users
-    Route::get('/users/me', [UserController::class, 'me']);
-    Route::put('/users/{user}/discipline', [UserController::class, 'changeDiscipline']);
-    Route::post('/users/{user}/communities', [UserController::class, 'joinCommunity']);
-    Route::delete('/users/{user}/communities/{community}', [UserController::class, 'leaveCommunity']);
+    Route::get('v1/users/{id}', [UserController::class, 'me']);
+    Route::put('v1/users/{id}/discipline', [UserController::class, 'changeDiscipline']);
+    Route::post('v1/users/{id}/communities/{id}', [UserController::class, 'joinCommunity']);
+    Route::delete('v1/users/{id}/communities/{id}', [UserController::class, 'leaveCommunity']);
 });
