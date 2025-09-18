@@ -215,8 +215,8 @@ GET/api/v1/communities/{id}/stats - Estadistica de una comunidad
 #Users
 ---Estos endpoint se definen en api.php y se gestiona en un AuthController
 POST/api/v1/register - Registro de usuario
-POST/api/login - Registro de un usuario
-v1/
+POST/api/v1/login - Registro de un usuario
+
 GET/api/v1/users - Listado de usuarios
 GET/api/v1/users/{id} - Perfil propio o del usuario
 PUT/api/users/{id}/discipline - Cambiar de disciplina (pierde comunidades previas)
@@ -242,6 +242,29 @@ al igual que la arquitectura API.
 Para conservar la estructura JSON (porque es la más versátil y robusta, en el momento de enviar la API para el trabajo Frontend),
 es usar un array asociativo "key" / "value" como fila / columna en una tabla. Habrá maneras de transformar ese array
 en formato JSON(vease un parseJSON() o similar)
+
+** Dónde crear el array asociativo key/value? en la respuesta de los controladores bajo
+	return response()->json()
+	Puedes usar Resource classes si la API fuera más compleja y mantenible, en un DisciplineResources en /Http/Resources
+
+	Si la lógica es simple, se define el array en el controlador /api. Si no,
+	crear un DisciplineResource en /http/Resource. 
+
+	Logica:
+	Los datos se almacenan en MySQL usando Eloquent, no se necesita almacenar en JSON.
+	Cuando recupero datos con eloquest, ej: $discipline = Discipline::find($id), se
+	obtiene un objeto o colección de modelos. DisciplineResource transforma ese modelo en
+	un array asociativo, y Laravel convierte automáticamente ese array en JSON cuando
+	devuelves el Resource desde el controlador.
+
+	Ej: return new DisciplineResource($discipline);
+
+	Donde ocurre la conversión? 
+		El Controlador recupera el modelo y lo pasa al Resource
+		EL Resource define el array asociativo
+		Laravel convierte el Array del Resource a JSON al enviar la respuesta HTTP
+
+
 
 Además, hay que pensar en métricas y estadísticas para no hacer la lógica de un simple CRUD.
 Hay que realizar y empezar a realizar lógica más complejas que esto. Entonces:
