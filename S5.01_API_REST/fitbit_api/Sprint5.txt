@@ -308,6 +308,171 @@ Todo ello resume los "agujeros" para empezar a picar código, el punto de entrad
 de autenticado, y la ruta de viaje de los datos, y ya definidos gracias al TDD.
 
 
+---RESPUESTA IA SOBRE EL ARRAY JSON EN KEY/VALUE?
+
+
+1. ¿Dónde crear el array asociativo “key/value”?
+En la respuesta de los controladores:
+El array asociativo se crea normalmente en los métodos de los controladores, donde defines la estructura de la respuesta JSON para el frontend.
+
+<?php
+return response()->json([
+    'message' => 'Disciplina creada',
+    'data' => $discipline
+], 201);
+
+Esto garantiza que la API siempre devuelva datos en formato JSON, estándar y robusto.
+
+En los recursos (Resource classes):
+Para APIs más complejas y mantenibles, puedes usar Resource classes (app/Http/Resources).
+Ejemplo:
+
+<?php
+return new DisciplineResource($discipline);
+
+Dentro de la clase DisciplineResource, defines el array asociativo que será transformado a JSON.
+
+2. ¿En qué tipo de archivo y dónde debe estar?
+Controladores:
+Si la lógica es simple, puedes definir el array directamente en el controlador (Api).
+Resource classes:
+Para lógica más compleja, crea un archivo en app/Http/Resources/DisciplineResource.php.
+Esto te permite centralizar la transformación de datos y mantener el controlador limpio.
+3. ¿Por qué no en modelos o migraciones?
+Modelos:
+Los modelos (Models) representan la estructura y relaciones de la base de datos, no la forma en que se devuelven los datos.
+Migraciones:
+Las migraciones (migrations) solo definen la estructura de las tablas, no la lógica de respuesta.
+4. Conclusión y buenas prácticas
+Controladores:
+Úsalos para lógica sencilla y respuestas rápidas.
+Resource classes:
+Úsalas para APIs que requieren flexibilidad, personalización y consistencia en las respuestas.
+Nunca en migraciones o modelos:
+Mantén la lógica de presentación separada de la lógica de datos y estructura.
+Recomendación:
+
+Para mantener tu API escalable y robusta, crea Resource classes en app/Http/Resources y usa arrays asociativos en ellas para definir la estructura JSON de tus respuestas.
+Los controladores pueden usar estas resources para devolver los datos al frontend.
+¿Quieres un ejemplo de cómo crear y usar un Resource en Laravel para tus endpoints?
+
+2. Estructura del archivo app/Http/Resources/DisciplineResource.php:
+
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class DisciplineResource extends JsonResource
+{
+    public function toArray($request)
+    {
+        return [
+            'id'          => $this->id,
+            'name'        => $this->name,
+            'description' => $this->description,
+            'community'   => new CommunityResource($this->community), // si tienes relación
+            'users'       => UserResource::collection($this->users),  // si tienes relación
+            // Puedes añadir más campos o lógica aquí
+        ];
+    }
+}
+
+3. Usar el Resource en el DisciplineController:
+
+<?php
+use App\Http\Resources\DisciplineResource;
+
+public function show($id)
+{
+    $discipline = Discipline::findOrFail($id);
+    return new DisciplineResource($discipline);
+}
+
+public function index()
+{
+    return DisciplineResource::collection(Discipline::all());
+}
+
+4. Test para el Resource (opcional pero recomendable):
+
+Puedes crear un archivo como tests/Feature/DisciplineResourceTest.php para validar que la estructura del JSON es la esperada.
+Resumen:
+
+El Resource define el array asociativo para la respuesta JSON.
+Se instancia en el controlador y reemplaza el uso directo de response()->json().
+Es buena práctica añadir tests para los Resources en tu TDD.
+
+ejemplos de metodos test de porcentajes:
+
+ #[Test]
+    public function it_returns_percentage_of_users_per_discipline(): void
+    {
+        $this->actingAsAdmin();
+        $disciplines = Discipline::factory()->count(3)->create();
+        $userCounts = [5, 3, 2];
+        foreach ($disciplines as $i => $discipline) {
+            User::factory()->count($userCounts[$i])->create(['discipline_id' => $discipline->id]);
+        }
+        $totalUsers = array_sum($userCounts);
+        $expectedPercentages = [];
+        foreach ($disciplines as $i => $discipline) {
+            $expectedPercentages[$discipline->name] = round($userCounts[$i] / $totalUsers * 100);
+        }
+        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response->assertStatus(200);
+        foreach ($expectedPercentages as $name => $percentage) {
+            $response->assertJsonFragment([
+                'name' => $name,
+                'percentage' => $percentage
+            ]);
+        }
+    }
+
+    #[Test]
+    public function it_returns_ranking_of_disciplines_by_users(): void
+    {
+        $this->actingAsAdmin();
+        $disciplines = Discipline::factory()->count(3)->create();
+        $userCounts = [2, 6, 4];
+        foreach ($disciplines as $i => $discipline) {
+            User::factory()->count($userCounts[$i])->create(['discipline_id' => $discipline->id]);
+        }
+        $ranking = collect($disciplines)
+            ->map(function ($discipline, $i) use ($userCounts) {
+                return [
+                    'name' => $discipline->name,
+                    'users' => $userCounts[$i]
+                ];
+            })
+            ->sortByDesc('users')
+            ->values()
+            ->all();
+        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response->assertStatus(200);
+        foreach ($ranking as $rank) {
+            $response->assertJsonFragment($rank);
+        }
+    }
+
+    #[Test]
+    public function it_returns_additional_stats_for_disciplines(): void
+    {
+        $this->actingAsAdmin();
+        $disciplines = Discipline::factory()->count(2)->create();
+        User::factory()->count(4)->create(['discipline_id' => $disciplines[0]->id]);
+        User::factory()->count(1)->create(['discipline_id' => $disciplines[1]->id]);
+        // Ejemplo: media de usuarios por disciplina
+        $totalUsers = 5;
+        $totalDisciplines = 2;
+        $expectedAverage = $totalUsers / $totalDisciplines;
+        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response->assertStatus(200)
+                 ->assertJsonFragment(['average_users_per_discipline' => $expectedAverage]);
+    }
+
+
 
 
 

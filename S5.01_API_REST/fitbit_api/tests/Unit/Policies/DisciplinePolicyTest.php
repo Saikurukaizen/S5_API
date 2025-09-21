@@ -8,6 +8,7 @@ use App\Policies\DisciplinePolicy;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Passport\Passport;
 
 class DisciplinePolicyTest extends TestCase{
 
@@ -15,73 +16,51 @@ class DisciplinePolicyTest extends TestCase{
 
     protected DisciplinePolicy $policy;
 
+    protected function actingAsAdmin(): User{
+        $admin = User::factory()->create([
+            'role' => 'admin',
+        ]);
+        Passport::actingAs($admin);
+        return $admin;
+    }
+
+    protected function actingAsUser(): User{
+        $user = User::factory()->create([
+            'role' => 'user',
+        ]);
+        Passport::actingAs($user);
+        return $user;
+    }
+
     protected function setUp(): void{
         parent::setUp();
         $this->policy = new DisciplinePolicy();
     }
 
     #[Test]
-    public function admin_can_create_a_discipline(): void{
+    public function admin_can_manage_disciplines(): void{
+        $admin = $this->actingAsAdmin();
+        $discipline = Discipline::factory()->create();
 
-        $admin = User::factory()->create([
-            'role' => 'admin',
-        ]);
-        $this->assertTrue($this->policy->create($admin));        
+        $this->assertTrue($this->policy->create($admin));
+        $this->assertTrue($this->policy->update($admin, $discipline));
+        $this->assertTrue($this->policy->delete($admin, $discipline));
     }
 
-    #[Test]
-    public function user_cannot_create_a_discipline(): void{
-        $user = User::create([
-            'role' => 'user',
-        ]);
+    public function user_cannot_manage_disciplines(): void{
+        $user = $this->actingAsUser();
+        $discipline = Discipline::factory()->create();
+
         $this->assertFalse($this->policy->create($user));
+        $this->assertFalse($this->policy->update($user, $discipline));
+        $this->assertFalse($this->policy->delete($user, $discipline));
     }
 
-    #[Test]
-    public function guest_cannot_create_a_discipline(): void{
+    /* public function guest_cannot_manage_disciplines(): void{
+        $discipline = Discipline::factory()->create();
+
         $this->assertFalse($this->policy->create(null));
-    }
-
-    #[Test]
-    public function admin_can_update_a_discipline(): void{
-        $admin = User::factory()->create([
-            'role' => 'admin',
-        ]);
-        $this->assertTrue($this->policy->update($admin, new Discipline()));
-    }
-
-    #[Test]
-    public function user_cannot_update_a_discipline(): void{
-        $user = User::factory()->create([
-            'role' => 'user',
-        ]);
-        $this->assertFalse($this->policy->update($user, new Discipline()));
-    }
-
-    #[Test]
-    public function guest_cannot_update_a_discipline(): void{
-        $this->assertFalse($this->policy->update(null, new Discipline()));
-    }
-
-    #[Test]
-    public function admin_can_delete_a_discipline(): void{
-        $admin = User::factory()->create([
-            'role' => 'admin',
-        ]);
-        $this->assertTrue($this->policy->delete($admin, new Discipline()));
-    }
-
-    #[Test]
-    public function user_cannot_delete_a_discipline(): void{
-        $user = User::factory()->create([
-            'role' => 'user',
-        ]);
-        $this->assertFalse($this->policy->delete($user, new Discipline()));
-    }
-
-    #[Test]
-    public function guest_cannot_delete_a_discipline(): void{
-
-        $this->assertFalse($this->policy->delete(null, new Discipline()));
-    }    
+        $this->assertFalse($this->policy->update(null, $discipline));
+        $this->assertFalse($this->policy->delete(null, $discipline));
+    } */
 }

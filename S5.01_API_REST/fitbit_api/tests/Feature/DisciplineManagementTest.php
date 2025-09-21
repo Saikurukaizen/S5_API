@@ -15,46 +15,38 @@ class DisciplineManagementTest extends TestCase
 
     #[Test]
     public function a_discipline_can_be_created(): void{
-    $discipline = Discipline::create([
-        'name' => 'Karate',
-        'description' => 'Japanese Combat Martial Art',
-    ]);
+        $discipline = Discipline::factory()->create();
 
-    $this->assertDatabaseHas('disciplines', [
-        'name' => 'Karate',
-        'description' => 'Japanese Combat Martial Art',
-    ]);
+        $this->assertDatabaseHas('disciplines', [
+            'name' => 'Karate',
+            'description' => 'Japanese Combat Martial Art',
+        ]);
+
+        $this->assertDatabaseHas('disciplines', [
+            'name' => $discipline->name,
+            'description' => $discipline->description,
+        ]);
     }
 
     #[Test]
     public function a_discipline_can_be_updated(): void{
-        $discipline = Discipline::create([
+        $discipline = Discipline::factory()->create();
+        $discipline->update([
             'name' => 'Karate',
             'description' => 'Japanese Combat Martial Arts',
         ]);
 
-        $discipline::update([
-            'name' => 'Judo',
-            'description' => 'Japanese Grappling Martial Art',
-        ]);
-
-        $this->assertDatabaseHas('disciplines', [
-            'name' => 'Judo',
-            'description' => 'Japanese Grappling Martial Art',
-        ]);
-        
+        $this->assertEquals('Karate', $discipline->fresh()->name);
+        $this->assertEquals('Japanese Combat Martial Arts', $discipline->fresh()->description);
     }
 
     #[Test]
     public function a_discipline_can_be_deleted(){
-        $discipline = Discipline::create([
-            'name' => 'Karate',
-            'description' => 'Japanese Combat Martial Art',
-        ]);
-
+        $discipline = Discipline::factory()->create();
+        $discipline->delete();
+        
         $this->assertDatabaseMissing('disciplines', [
-            'name' => 'Karate',
-            'description' => 'Japanese Combat Martial Art',
+            'id' => $discipline->id,
         ]);
     }
 }
