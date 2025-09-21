@@ -6,6 +6,8 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Discipline;
 use Laravel\Passport\Passport;
+use Tests\Traits\ActingAsAdminTest;
+use Tests\Traits\ActingAsUserTest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 
@@ -19,6 +21,8 @@ use PHPUnit\Framework\Attributes\Test;
 class DisciplineApiTest extends TestCase{
     
     use RefreshDatabase;
+    use ActingAsAdminTest;
+    use ActingAsUserTest;
 
     #[Test]
     public function admin_can_create_a_discipline_in_api(): void{
@@ -67,7 +71,7 @@ class DisciplineApiTest extends TestCase{
         $this->assertCount(0, Discipline::all());
     }
 
-   /*  #[Test]
+    #[Test]
     public function guest_cannot_create_a_discipline_in_api(): void{
         $response = $this->postJson('/api/disciplines', [
             'name' => 'New Discipline',
@@ -75,28 +79,97 @@ class DisciplineApiTest extends TestCase{
         ]);
 
         $response->assertStatus(401);
-    } */
+    }
 
     #[Test]
-    public function admin_can_read_all_disciplines(){
-        $admin = User::factory()->create([
-            'role' => 'admin',
-        ]);
-        Passport::actingAs($admin);
+    public function admin_can_read_all_disciplines(): void{
+        $this->actingAsAdmin();
 
         $response = $this->getJson('/api/disciplines');
-            $response->assertStatus(200)->assertJsonStructure([
-                'data' => [
-                    [
-                        'id',
-                        'name',
-                        'description',
-                        'created_at',
-                        'updated_at',
-                    ]
+        $response->assertStatus(200)->assertJsonStructure([
+            'data' => [
+                [
+                    'id',
+                    'name',
+                    'description',
+                    'created_at',
+                    'updated_at',
                 ]
-            ]);
-        }
+            ]
+        ]);
+    }
+
+    #[Test]
+    public function user_can_read_all_disciplines(): void{
+        $this->actingAsUser();
+
+        $response = $this->getJson('/api/disciplines');
+        $response->assertStatus(200)->assertJsonStructure([
+            'data' => [
+                [
+                    'id',
+                    'name',
+                    'description',
+                    'created_at',
+                    'updated_at',
+                ]
+            ]
+        ]);
+    }
+
+    #[Test]
+    public function guest_can_read_all_disciplines(): void{
+        $response = $this->getJson('/api/disciplines');
+        $response->assertStatus(200)->assertJsonStructure([
+            'data' => [
+                [
+                    'id',
+                    'name',
+                    'description',
+                    'created_at',
+                    'updated_at',
+                ]
+            ]
+        ]);
+    }
+
+    #[Test]
+    public function admin_can_read_a_discipline_by_id(): void{
+        $this->actingAsAdmin();
+        $discipline = Discipline::factory()->create();
+
+        $response = $this->getJson("/api/disciplines/{$discipline->id}");
+        $response->assertStatus(200)->assertJsonFragment([
+            'id' => $discipline->id,
+            'name' => $discipline->name,
+            'description' => $discipline->description,
+        ]);
+    }
+
+    #[Test]
+    public function user_can_read_a_discipline_by_id(): void{
+        $this->actingAsUser();
+        $discipline = Discipline::factory()->create();
+
+        $response = $this->getJson("/api/disciplines/{$discipline->id}");
+        $response->assertStatus(200)->assertJsonFragment([
+            'id' => $discipline->id,
+            'name' => $discipline->name,
+            'description' => $discipline->description,
+        ]);
+    }
+
+    #[Test]
+    public function guest_cannot_read_a_discipline_by_id(): void{
+        $discipline = Discipline::factory()->create();
+
+        $response = $this->getJson("/api/disciplines/{$discipline->id}");
+        $response->assertStatus(200)->assertJsonFragment([
+            'id' => $discipline->id,
+            'name' => $discipline->name,
+            'description' => $discipline->description,
+        ]);
+    }
 
     #[Test]
     public function admin_can_update_a_discipline_in_api(): void{
@@ -137,7 +210,7 @@ class DisciplineApiTest extends TestCase{
         $this->assertCount(0, Discipline::all());
     }
 
-    /* #[Test]
+    #[Test]
     public function guest_cannot_update_a_discipline_in_api(): void{
         $response = $this->postJson('/api/disciplines/{id}', [
             'name' => 'New Discipline',
@@ -145,7 +218,7 @@ class DisciplineApiTest extends TestCase{
         ]);
 
         $response->assertStatus(401);
-    } */
+    }
 
     #[Test]
     public function admin_can_delete_a_discipline_in_api(): void{
@@ -181,7 +254,7 @@ class DisciplineApiTest extends TestCase{
         $this->assertCount(0, Discipline::all());
     }
 
-    /* #[Test]
+    #[Test]
     public function guest_cannot_delete_a_discipline_in_api(): void{
         $response = $this->postJson('/api/disciplines/{id}', [
             'name' => 'New Discipline',
@@ -189,6 +262,33 @@ class DisciplineApiTest extends TestCase{
         ]);
 
         $response->assertStatus(401);
-    } */
+    }
+
+
+    #[Test]
+    public function get_discipline_by_id_returns_404_if_not_found(): void{
+        $this->actingAsAdmin();
+        $response = $this->getJson('/api/disciplines/999');
+        $response->assertStatus(404);
+    }
+
+   
+
+    #[Test]
+    public function response_structure_is_valid_for_get_discipline_by_id(): void{
+        $this->actingAsAdmin();
+        $discipline = Discipline::factory()->create();
+
+        $response = $this->getJson("/api/disciplines/{$discipline->id}");
+        $response->assertStatus(200)->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'description',
+                'created_at',
+                'updated_at',
+            ]
+        ]);
+    }
 }
 ?>

@@ -2,36 +2,22 @@
 
 namespace Tests\Unit\Policies;
 
-use App\Models\User;
 use App\Models\Discipline;
 use App\Policies\DisciplinePolicy;
+use Tests\Traits\ActingAsAdminTest;
+use Tests\Traits\ActingAsUserTest;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Passport\Passport;
 
 class DisciplinePolicyTest extends TestCase{
 
     use RefreshDatabase;
 
     protected DisciplinePolicy $policy;
-
-    protected function actingAsAdmin(): User{
-        $admin = User::factory()->create([
-            'role' => 'admin',
-        ]);
-        Passport::actingAs($admin);
-        return $admin;
-    }
-
-    protected function actingAsUser(): User{
-        $user = User::factory()->create([
-            'role' => 'user',
-        ]);
-        Passport::actingAs($user);
-        return $user;
-    }
-
+    use ActingAsAdminTest;
+    use ActingAsUserTest;
+    
     protected function setUp(): void{
         parent::setUp();
         $this->policy = new DisciplinePolicy();
