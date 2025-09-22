@@ -31,7 +31,7 @@ class DisciplineApiTest extends TestCase{
         ]);
         Passport::actingAs($admin);
 
-        $response = $this->postJson('/api/disciplines', [
+        $response = $this->postJson('/api/v1/disciplines', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
@@ -40,11 +40,6 @@ class DisciplineApiTest extends TestCase{
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
-
-        /* $this->assertDatabaseHas('disciplines', [
-            'name' => 'Karate',
-            'description' => 'Japanese combat martial art',
-        ]); */
 
         $this->assertCount(1, Discipline::all());
         
@@ -62,7 +57,7 @@ class DisciplineApiTest extends TestCase{
         ]);
         Passport::actingAs($user);
 
-        $response = $this->postJson('/api/disciplines', [
+        $response = $this->postJson('/api/v1/disciplines', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
@@ -73,7 +68,7 @@ class DisciplineApiTest extends TestCase{
 
     #[Test]
     public function guest_cannot_create_a_discipline_in_api(): void{
-        $response = $this->postJson('/api/disciplines', [
+        $response = $this->postJson('/api/v1/disciplines', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
@@ -85,7 +80,7 @@ class DisciplineApiTest extends TestCase{
     public function admin_can_read_all_disciplines(): void{
         $this->actingAsAdmin();
 
-        $response = $this->getJson('/api/disciplines');
+        $response = $this->getJson('/api/v1/disciplines');
         $response->assertStatus(200)->assertJsonStructure([
             'data' => [
                 [
@@ -103,7 +98,7 @@ class DisciplineApiTest extends TestCase{
     public function user_can_read_all_disciplines(): void{
         $this->actingAsUser();
 
-        $response = $this->getJson('/api/disciplines');
+        $response = $this->getJson('/api/v1/disciplines');
         $response->assertStatus(200)->assertJsonStructure([
             'data' => [
                 [
@@ -119,7 +114,7 @@ class DisciplineApiTest extends TestCase{
 
     #[Test]
     public function guest_can_read_all_disciplines(): void{
-        $response = $this->getJson('/api/disciplines');
+        $response = $this->getJson('/api/v1/disciplines');
         $response->assertStatus(200)->assertJsonStructure([
             'data' => [
                 [
@@ -138,7 +133,7 @@ class DisciplineApiTest extends TestCase{
         $this->actingAsAdmin();
         $discipline = Discipline::factory()->create();
 
-        $response = $this->getJson("/api/disciplines/{$discipline->id}");
+        $response = $this->getJson("/api/v1/disciplines/{$discipline->id}");
         $response->assertStatus(200)->assertJsonFragment([
             'id' => $discipline->id,
             'name' => $discipline->name,
@@ -151,7 +146,7 @@ class DisciplineApiTest extends TestCase{
         $this->actingAsUser();
         $discipline = Discipline::factory()->create();
 
-        $response = $this->getJson("/api/disciplines/{$discipline->id}");
+        $response = $this->getJson("/api/v1/disciplines/{$discipline->id}");
         $response->assertStatus(200)->assertJsonFragment([
             'id' => $discipline->id,
             'name' => $discipline->name,
@@ -163,7 +158,7 @@ class DisciplineApiTest extends TestCase{
     public function guest_cannot_read_a_discipline_by_id(): void{
         $discipline = Discipline::factory()->create();
 
-        $response = $this->getJson("/api/disciplines/{$discipline->id}");
+        $response = $this->getJson("/api/v1/disciplines/{$discipline->id}");
         $response->assertStatus(200)->assertJsonFragment([
             'id' => $discipline->id,
             'name' => $discipline->name,
@@ -178,7 +173,7 @@ class DisciplineApiTest extends TestCase{
         ]);
         Passport::actingAs($admin);
 
-        $response = $this->post('/api/disciplines/{id}', [
+        $response = $this->post('/api/v1/disciplines/{id}', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
@@ -201,7 +196,7 @@ class DisciplineApiTest extends TestCase{
         ]);
         Passport::actingAs($user);
 
-        $response = $this->postJson('/api/disciplines/{id}', [
+        $response = $this->postJson('/api/v1/disciplines/{id}', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
@@ -212,7 +207,7 @@ class DisciplineApiTest extends TestCase{
 
     #[Test]
     public function guest_cannot_update_a_discipline_in_api(): void{
-        $response = $this->postJson('/api/disciplines/{id}', [
+        $response = $this->postJson('/api/v1/disciplines/{id}', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
@@ -227,7 +222,7 @@ class DisciplineApiTest extends TestCase{
         ]);
         Passport::actingAs($admin);
 
-        $response = $this->postJson('/api/disciplines/{id}', [
+        $response = $this->postJson('/api/v1/disciplines/{id}', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
@@ -246,7 +241,7 @@ class DisciplineApiTest extends TestCase{
         ]);
         Passport::actingAs($user);
 
-        $response = $this->postJson('/api/discipline/{id}', [
+        $response = $this->postJson('/api/v1/discipline/{id}', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
@@ -256,7 +251,7 @@ class DisciplineApiTest extends TestCase{
 
     #[Test]
     public function guest_cannot_delete_a_discipline_in_api(): void{
-        $response = $this->postJson('/api/disciplines/{id}', [
+        $response = $this->postJson('/api/v1/disciplines/{id}', [
             'name' => 'New Discipline',
             'description' => 'Discipline Description',
         ]);
@@ -264,22 +259,19 @@ class DisciplineApiTest extends TestCase{
         $response->assertStatus(401);
     }
 
-
     #[Test]
     public function get_discipline_by_id_returns_404_if_not_found(): void{
         $this->actingAsAdmin();
-        $response = $this->getJson('/api/disciplines/999');
+        $response = $this->getJson('/api/v1/disciplines/999');
         $response->assertStatus(404);
     }
-
-   
 
     #[Test]
     public function response_structure_is_valid_for_get_discipline_by_id(): void{
         $this->actingAsAdmin();
         $discipline = Discipline::factory()->create();
 
-        $response = $this->getJson("/api/disciplines/{$discipline->id}");
+        $response = $this->getJson("/api/v1/disciplines/{$discipline->id}");
         $response->assertStatus(200)->assertJsonStructure([
             'data' => [
                 'id',

@@ -17,6 +17,10 @@ class DisciplinePolicy{
     public function delete(User $admin, Discipline $discipline): bool{
         return $admin->role === 'admin';
     }
+
+    public function viewStats(User $user): bool{
+        return in_array($user->role, ['admin', 'user']);
+    }
 }
 
 ?>

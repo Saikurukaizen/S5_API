@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Discipline;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DisciplineSeeder extends Seeder
 {
@@ -12,19 +11,13 @@ class DisciplineSeeder extends Seeder
      * Run the database seeds.
      */
     public function run(): void{
-        DB::table('disciplines')->insert([
-            [
-                'name' => 'Tai-Chi',
-                'description' => 'Arte Marcial Chino'
-            ],
-            [
-                'name' => 'Boxeo',
-                'description' => 'Estilo de combate americano'
-            ],
-            [
-                'name' => 'Bodybuilder',
-                'description' => 'Disciplina de musculación'
-            ]
+
+        Discipline::create([
+            'name' => 'Karate',
+            'description' => 'Japanese martial art'
         ]);
+
+        Discipline::factory()->count(5)->create();
+
     }
 }

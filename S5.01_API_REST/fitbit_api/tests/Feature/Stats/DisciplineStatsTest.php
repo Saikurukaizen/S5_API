@@ -18,7 +18,7 @@ class DisciplineStatsTest extends TestCase{
 
     #[Test]
     public function it_cannot_access_if_not_authenticated(): void{
-        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response = $this->getJson('/api/stats/disciplines');
         $response->assertStatus(401);
     }
 
@@ -26,14 +26,14 @@ class DisciplineStatsTest extends TestCase{
     public function it_cannot_access_stats_when_not_admin(): void{
         $this->actingAsUser();
 
-        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response = $this->getJson('/api/stats/disciplines');
         $response->assertStatus(403);
     }
 
     #[Test]
     public function it_returns_zero_when_no_disciplines_exist(): void{
         $this->actingAsAdmin();
-        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response = $this->getJson('/api/stats/disciplines');
         $response->assertStatus(200)->assertJsonFragment([
             'total_disciplines' => 0,
         ]);
@@ -43,7 +43,7 @@ class DisciplineStatsTest extends TestCase{
     public function it_returns_total_number_of_disciplines(): void{
         Discipline::factory()->count(5)->create();
         $this->actingAsAdmin();
-        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response = $this->getJson('/api/stats/disciplines');
         $response->assertStatus(200)->assertJsonFragment([
             'total_disciplines' => 5,
         ]);
@@ -56,7 +56,7 @@ class DisciplineStatsTest extends TestCase{
             'name' => 'Karate',
             'description' => 'Japanese martial art',
         ]);
-        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response = $this->getJson('/api/stats/disciplines');
         $response->assertStatus(200)->assertJsonFragment([
             'total_disciplines' => 1,
         ]);
@@ -66,8 +66,8 @@ class DisciplineStatsTest extends TestCase{
     public function it_returns_count_of_disciplines_after_deleting(): void{
         $this->actingAsAdmin();
         $discipline = Discipline::factory()->create();
-        $this->deleteJson("/api/disciplines/{$discipline->id}");
-        $this->getJson('/api/stats/disciplines/stats')
+        $this->deleteJson("/api/v1/disciplines/{$discipline->id}");
+        $this->getJson('/api/stats/disciplines')
              ->assertStatus(200)
              ->assertJsonFragment([
                  'total_disciplines' => 0,
@@ -92,7 +92,7 @@ class DisciplineStatsTest extends TestCase{
         $mostPopularId = array_search(max($userCounts), $userCounts);
         $mostPopularName = $disciplines->firstWhere('id', $mostPopularId)->name;
 
-        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response = $this->getJson('/api/stats/disciplines');
         $response->assertStatus(200)->assertJsonFragment([
             'most_popular_discipline' => $mostPopularName,
         ]);
@@ -117,7 +117,7 @@ class DisciplineStatsTest extends TestCase{
             $expectedPercentages[$discipline->name] = round($userCounts[$i] / $totalUsers * 100);
         }
 
-        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response = $this->getJson('/api/stats/disciplines/percentage');
         $response->assertStatus(200);
         foreach($expectedPercentages as $name => $percentage){
             $response->assertJsonFragment([
@@ -148,7 +148,7 @@ class DisciplineStatsTest extends TestCase{
                 ];
             })->sortByDesc('users')->values()->all();
 
-        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response = $this->getJson('/api/stats/disciplines/ranking');
         foreach($ranking as $rank){
             $response->assertJsonFragment($rank);
         }
@@ -170,7 +170,7 @@ class DisciplineStatsTest extends TestCase{
         $totalDisciplines = Discipline::count();
         $expectedAverage = $totalUsers / $totalDisciplines;
 
-        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response = $this->getJson('/api/stats/disciplines');
         $response->assertStatus(200)->assertJsonFragment([
             'average_users_per_discipline' => $expectedAverage,
         ]);
