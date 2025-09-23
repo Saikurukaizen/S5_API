@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DisciplineResource;
+use App\Http\Resources\DisciplineStatsResource;
 use App\Models\Discipline;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class DisciplineStatsController extends Controller
 {
-    public function index(): DisciplineResource{
-
+    public function index(): \App\Http\Resources\DisciplineStatsResource{
         $totalDisciplines = Discipline::count();
         $totalUsers = User::count();
         $mostPopularDiscipline = Discipline::withCount('users')
@@ -20,45 +20,55 @@ class DisciplineStatsController extends Controller
         $data = [
             'total_disciplines' => $totalDisciplines,
             'total_users' => $totalUsers,
-            'most_popular_discipline' => $mostPopularDiscipline ? $mostPopularDiscipline->name: null,
+            'most_popular_discipline' => $mostPopularDiscipline ? $mostPopularDiscipline->name : null,
+            'disciplines' => DisciplineResource::collection(Discipline::all()),
         ];
-
-        return new DisciplineResource($data);
+        return new DisciplineStatsResource($data);
     }
 
-    public function ranking(): DisciplineResource{
-
+    public function ranking(): DisciplineStatsResource{
         $ranking = Discipline::withCount('users')->orderByDesc('users_count')
-        ->get([
-            'id',
-            'name',
-            'users_count'
-        ]);
+            ->get([
+                'id',
+                'name',
+                'users_count'
+            ]);
 
-        return new DisciplineResource(['ranking' => $ranking]);
+        $data = [
+            'ranking' => $ranking,
+            'disciplines' => DisciplineResource::collection(Discipline::all()),
+        ];
+        return new DisciplineStatsResource($data);
     }
 
-    public function percentage(): DisciplineResource{
+    public function percentage(): DisciplineStatsResource{
         $totalUsers = User::count();
         $percentages = Discipline::withCount('users')->get()
-        ->map(function($discipline) use ($totalUsers){
-            $percentage = $totalUsers > 0 ? round(($discipline->users_count / $totalUsers) * 100) : 0;
-            return [
-                'discipline_name' => $discipline->name,
-                'percentage' => $percentage,
-            ];
-        });
+            ->map(function($discipline) use ($totalUsers){
+                $percentage = $totalUsers > 0 ? round(($discipline->users_count / $totalUsers) * 100) : 0;
+                return [
+                    'discipline_name' => $discipline->name,
+                    'percentage' => $percentage,
+                ];
+            });
 
-        return new DisciplineResource(['percentages' => $percentages]);
+        $data = [
+            'percentages' => $percentages,
+            'disciplines' => \App\Http\Resources\DisciplineResource::collection(Discipline::all()),
+        ];
+        return new DisciplineStatsResource($data);
     }
 
-    public function summary(): DisciplineResource{
+    public function summary(): DisciplineStatsResource{
         $monthly = Discipline::select(
             DB::raw('MONTH(created_at) as month'),
             DB::raw('COUNT(*) as count')
         )->groupBy('month')->get();
 
-
-        return new DisciplineResource(['monthly_activity' => $monthly]);
+        $data = [
+            'monthly_activity' => $monthly,
+            'disciplines' => DisciplineResource::collection(Discipline::all()),
+        ];
+        return new DisciplineStatsResource($data);
     }
 }

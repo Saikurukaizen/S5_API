@@ -15,12 +15,9 @@ class DisciplineResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'total_disciplines' => $this->total_disciplines ?? 0,
-            'total_users' => $this->total_users ?? 0,
-            'most_popular_discipline' => $this->most_popular_discipline ?? null,
-            'ranking' => $this->ranking ?? [],
-            'percentages' => $this->percentages ?? [],
-            'monthly_activity' => $this->monthly_activity ?? [],
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
         ];
     }
 }
