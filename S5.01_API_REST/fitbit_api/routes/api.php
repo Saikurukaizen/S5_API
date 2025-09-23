@@ -20,6 +20,11 @@ Route::middleware('auth:api')->prefix('v1')->group(function (){
     Route::put('/users/{id}/discipline', [UserController::class, 'changeDiscipline']);
     Route::post('/users/{id}/communities/{community}', [UserController::class, 'joinCommunity']);
     Route::delete('/users/{id}/communities/{community}', [UserController::class, 'leaveCommunity']);
+
+    //Login and User Register
+    Route::post('/register', [UserController::class, 'register']);
+    Route::post('/login', [UserController::class, 'login']);
+    Route::post('/logout', [UserController::class, 'logout']);
 });
 
 Route::middleware(['auth:api', 'can:viewStats'])->group(function(){
