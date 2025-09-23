@@ -2,65 +2,120 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\Discipline;
+use Tests\Traits\ActingAsAdminTest;
+use Tests\Traits\ActingAsUserTest;
+use PHPUnit\Framework\Attributes\Test;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class DisciplineManagementTest extends TestCase
 {
-    /** @test */ 
-    public function a_discipline_can_be_created(){
+    //This managementTest checks the CRUD operations for the Discipline model.
+    use RefreshDatabase;
+    use ActingAsAdminTest;
+    use ActingAsUserTest;
 
-        $this->withoutExceptionHandling();
-        $response = $this->post('/disciplines', [
-            'name' => 'Disc Name',
-            'description' => 'Disc Desc.'
+    #[Test]
+    public function a_discipline_can_be_created(): void{
+        $discipline = Discipline::factory()->create();
+
+        $this->assertDatabaseHas('disciplines', [
+            'name' => 'Karate',
+            'description' => 'Japanese Combat Martial Art',
         ]);
 
-        $this->assertOk();
-        $this->assertCount(1, Discipline::all());
-
-        $discipline = Discipline::first();
-
-        $this->assertEquals($discipline->name, 'Disc Name');
-        $this->assertEquals($discipline->description, 'Disc Desc.');
-        /*
-        Estructura de test: verifica si se puede crear una disciplina (u otra categoria)
-        1. Hace una peticion POST a la ruta /disciplines con datos de ejemplo.
-        2. Verifica que la respuesta sea OK (200).
-        3. Verifica que haya exactamente una disciplina en la base de datos.
-        4. Verifica que los datos de la disciplina creada coincidan con los datos enviados
-        */
+        $this->assertDatabaseHas('disciplines', [
+            'name' => $discipline->name,
+            'description' => $discipline->description,
+        ]);
     }
 
+    #[Test]
+    public function a_discipline_can_be_updated(): void{
+        $discipline = Discipline::factory()->create();
+        $discipline->update([
+            'name' => 'Karate',
+            'description' => 'Japanese Combat Martial Arts',
+        ]);
+
+        $this->assertEquals('Karate', $discipline->fresh()->name);
+        $this->assertEquals('Japanese Combat Martial Arts', $discipline->fresh()->description);
+    }
+
+    #[Test]
     public function a_discipline_can_be_deleted(){
+        $discipline = Discipline::factory()->create();
+        $discipline->delete();
+        
+        $this->assertDatabaseMissing('disciplines', [
+            'id' => $discipline->id,
+        ]);
+    }
 
-        $this->withoutExceptionHandling();
-        $this->post('/disciplines', [
-            'name' => 'Disc Name',
-            'description' => 'Disc Desc.'
+    #[Test]
+    public function get_all_disciplines_returns_empty_array_when_none_exist(): void{
+        $this->actingAsAdmin();
+        $response = $this->getJson('/api/disciplines');
+        $response->assertStatus(200)->assertExactJson([
+            'data' => []
+        ]);
+    }
+
+    #[Test]
+    public function cannot_create_disciplines_with_empty_fields(): void{
+        $this->actingAsAdmin();
+        $response = $this->postJson('/api/disciplines', [
+            'name' => '',
+            'description' => '',
+        ]);
+        $response->assertStatus(422)->assertJsonValidationErrors(['name']);
+        $this->assertCount(0, Discipline::all());
+    }
+
+    #[Test]
+    public function it_returns_correct_data_after_crud_operations(): void{
+        $this->actingAsAdmin();
+
+        // Create
+        $response = $this->postJson('/api/disciplines', [
+            'name' => 'Karate',
+            'description' => 'Japanese martial art',
+        ]);
+        $response->assertStatus(201)->assertJsonFragment([
+            'name' => 'Karate',
+            'description' => 'Japanese martial art',
+        ]);
+        $disciplineId = $response->json('data.id');
+
+        // Read
+        $response = $this->getJson("/api/disciplines/{$disciplineId}");
+        $response->assertStatus(200)->assertJsonFragment([
+            'name' => 'Karate',
+            'description' => 'Japanese martial art',
         ]);
 
-        $this->assertCount(1, Discipline::all());
+        // Update
+        $response = $this->putJson("/api/disciplines/{$disciplineId}", [
+            'name' => 'Updated Karate',
+            'description' => 'Updated description',
+        ]);
+        $response->assertStatus(200)->assertJsonFragment([
+            'name' => 'Updated Karate',
+            'description' => 'Updated description',
+        ]);
 
-        $discipline = Discipline::first();
+        // Delete
+        $response = $this->deleteJson("/api/disciplines/{$disciplineId}");
+        $response->assertStatus(200)->assertJsonFragment([
+            'message' => 'Discipline deleted succesfully'
+        ]);
 
-        $this->assertEquals($discipline->name, 'Disc Name');
-        $this->assertEquals($discipline->description, 'Disc Desc.');
-
-        $response = $this->delete('/disciplines/'.$discipline->id);
-        $this->assertCount(0, Disciplines::all());
-        $response->assertOk();
-        /*
-        Estructura de test: verifica si se puede eliminar una disciplina (u otra categoria)
-        1. Crea una disciplina con una peticion POST a la ruta /disciplines.
-        2. Verifica que haya exactamente una disciplina en la base de datos.
-        3. Obtiene la disciplina creada.
-        4. Verifica que los datos de la disciplina creada coincidan con los datos enviados
-        5. Hace una peticion DELETE a la ruta /disciplines/{id} para eliminar la disciplina.
-        6. Verifica que ya no haya disciplinas en la base de datos.
-        7. Verifica que la respuesta sea OK (200).
-        */
+        // Verify Deletion
+        $response = $this->getJson("/api/disciplines/{$disciplineId}");
+        $response->assertStatus(404);
     }
+
 
 }
