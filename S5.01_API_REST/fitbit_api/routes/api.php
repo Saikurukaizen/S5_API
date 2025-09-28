@@ -32,4 +32,9 @@ Route::middleware(['auth:api', 'can:viewStats'])->group(function(){
     Route::get('/stats/disciplines/ranking', [DisciplineStatsController::class, 'ranking']);
     Route::get('/stats/disciplines/percentage', [DisciplineStatsController::class, 'percentage']);
     Route::get('/stats/disciplines/summary', [DisciplineStatsController::class, 'summary']);
+
+    Route::get('/stats/users', [UserStatsController::class, 'index']);
+    Route::get('/stats/users/ranking', [UserStatsController::class, 'ranking']);
+    Route::get('/stats/users/percentage', [UserStatsController::class, 'percentage']);
+    Route::get('/stats/users/summary', [UserStatsController::class, 'summary']);
 });

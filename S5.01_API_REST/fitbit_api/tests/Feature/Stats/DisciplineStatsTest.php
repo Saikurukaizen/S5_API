@@ -106,7 +106,8 @@ class DisciplineStatsTest extends TestCase{
         $userCounts = [];
 
         foreach($disciplines as $discipline){
-            User::factory()->count($userCounts[$discipline->name])->create([
+            $count = $userCounts[$discipline->name] ?? 0;
+            User::factory()->count($count)->create([
                 'discipline_id' => $discipline->id,
             ]);
         }
@@ -135,7 +136,8 @@ class DisciplineStatsTest extends TestCase{
         $userCounts = [];
 
         foreach($disciplines as $discipline){
-            User::factory()->count($userCounts[$discipline->name])->create([
+            $count = $userCounts[$discipline->name] ?? rand(1, 10);
+            User::factory()->count($count)->create([
                 'discipline_id' => $discipline->id,
             ]);
         }

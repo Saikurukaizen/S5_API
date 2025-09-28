@@ -4,13 +4,14 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\Traits\ActingAsAdminTest;
 use Tests\Traits\ActingAsUserTest;
 use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
 class AuthTest extends TestCase{
-
+    
     use RefreshDatabase;
     use ActingAsAdminTest;
     use ActingAsUserTest;
@@ -27,7 +28,6 @@ class AuthTest extends TestCase{
             'discipline_id' => null,
         ];
     }
-
 
     #[Test]
     public function a_user_can_register(): void{
@@ -83,7 +83,7 @@ class AuthTest extends TestCase{
         $user = $this->actingAsUser();
         $response = $this->getJson('/api/v1/users/' . $user->id);
         $response->assertStatus(200);
-+
+
         $expectedAuthUser = $this->userAuthData();
         unset(
             $expectedAuthUser['password'],
@@ -157,5 +157,26 @@ class AuthTest extends TestCase{
             'refresh_token',
         ]);
     }
+
+    #[Test]
+    public function it_revoked_token_denies_access(): void {
+        $user = User::factory()->create([
+            'password' => bcrypt('password'),
+        ]);
+        $loginResponse = $this->postJson('/api/v1/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+        $accessToken = $loginResponse->json('access_token');
+
+        DB::table('oauth_access_tokens')->where('user_id', $user->id)->update(['revoked' => true]);
+
+        $response = $this->getJson('/api/v1/users/' . $user->id, [
+            'Authorization' => 'Bearer ' . $accessToken,
+        ]);
+        $response->assertStatus(401);
+        $response->assertJson(['message' => 'Unauthenticated.']);
+    }
 }
+
 ?>

@@ -73,9 +73,10 @@ class UserPolicyTest extends TestCase{
     }
 
     #[Test]
-    public function moderator_can_temporaily_ban_user_with_admin_permission(): void{
+    public function moderator_can_temporarily_ban_user_with_admin_permission(): void{
         $this->actingAsAdmin();
         $moderator = $this->actingAsModerator();
+
         $this->assertFalse($moderator->can('tempBan', User::class));
         $this->assertTrue($this->ActingAsAdmin()->can('grantTempBanPermission', User::class));
     }
