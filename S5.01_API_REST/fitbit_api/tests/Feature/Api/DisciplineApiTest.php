@@ -11,13 +11,6 @@ use Tests\Traits\ActingAsUserTest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 
-//This test checks the API endpoints for the Discipline model.
-// Use the command Passport::actingAs($user) to simulate an authenticated user with different roles
-//with package Passport.
-
-//The test check if an admin user can create, update and delete a discipline
-//and that a regular user or guest cannot perform these actions.
-
 class DisciplineApiTest extends TestCase{
     
     use RefreshDatabase;
@@ -26,10 +19,7 @@ class DisciplineApiTest extends TestCase{
 
     #[Test]
     public function admin_can_create_a_discipline_in_api(): void{
-        $admin = User::factory()->create([
-            'role' => 'admin',
-        ]);
-        Passport::actingAs($admin);
+        $this->actingAsAdmin();
 
         $response = $this->postJson('/api/v1/disciplines', [
             'name' => 'New Discipline',
@@ -52,10 +42,7 @@ class DisciplineApiTest extends TestCase{
 
     #[Test]
     public function user_cannot_create_a_discipline_in_api(): void{
-        $user = User::factory()->create([
-            'role' => 'user',
-        ]);
-        Passport::actingAs($user);
+        $this->actingAsUser();
 
         $response = $this->postJson('/api/v1/disciplines', [
             'name' => 'New Discipline',
@@ -168,10 +155,7 @@ class DisciplineApiTest extends TestCase{
 
     #[Test]
     public function admin_can_update_a_discipline_in_api(): void{
-        $admin = User::factory()->create([
-            'role' => 'admin',
-        ]);
-        Passport::actingAs($admin);
+        $this->actingAsAdmin();
 
         $response = $this->post('/api/v1/disciplines/{id}', [
             'name' => 'New Discipline',
@@ -191,10 +175,7 @@ class DisciplineApiTest extends TestCase{
 
     #[Test]
     public function user_cannot_update_a_discipline_in_api(): void{
-        $user = User::factory()->create([
-            'role' => 'user',
-        ]);
-        Passport::actingAs($user);
+        $this->actingAsUser();
 
         $response = $this->postJson('/api/v1/disciplines/{id}', [
             'name' => 'New Discipline',
@@ -217,10 +198,7 @@ class DisciplineApiTest extends TestCase{
 
     #[Test]
     public function admin_can_delete_a_discipline_in_api(): void{
-        $admin = User::factory()->create([
-            'role' => 'admin',
-        ]);
-        Passport::actingAs($admin);
+        $this->actingAsAdmin();
 
         $response = $this->postJson('/api/v1/disciplines/{id}', [
             'name' => 'New Discipline',
@@ -236,10 +214,7 @@ class DisciplineApiTest extends TestCase{
 
     #[Test]
     public function user_cannot_delete_a_discipline_in_api(): void{
-        $user = User::factory()->create([
-            'role' => 'user',
-        ]);
-        Passport::actingAs($user);
+        $this->actingAsUser();
 
         $response = $this->postJson('/api/v1/discipline/{id}', [
             'name' => 'New Discipline',

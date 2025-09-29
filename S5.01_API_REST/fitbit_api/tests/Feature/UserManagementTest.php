@@ -18,6 +18,10 @@ class UserManagementTest extends TestCase{
     use ActingAsUserTest;
     use ActingAsModeratorTest;
 
+    protected function setUp(): void{
+        
+    }
+
     protected function userData(array $overrides = []): array{
         return array_merge([
             'name' => 'New User',

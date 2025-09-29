@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\DisciplineController;
-use App\Http\Controllers\Api\DisciplineStatsController;
+use App\Http\Controllers\Api\Stats\UserStatsController;
+use App\Http\Controllers\Api\Stats\DisciplineStatsController;
 use App\Http\Controllers\Api\CommunityController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Stats\DisciplineStatsController as StatsDisciplineStatsController;
+use App\Http\Controllers\Stats\UserStatsController as StatsUserStatsController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->prefix('v1')->group(function (){
@@ -13,7 +16,7 @@ Route::middleware('auth:api')->prefix('v1')->group(function (){
     ->middleware('can:manage-disciplines');
 
     //Communities
-    Route::apiResource('communities', CommunityController::class);
+    //Route::apiResource('communities', CommunityController::class);
 
     //Users
     Route::get('/users/{id}', [UserController::class, 'me']);
@@ -28,13 +31,13 @@ Route::middleware('auth:api')->prefix('v1')->group(function (){
 });
 
 Route::middleware(['auth:api', 'can:viewStats'])->group(function(){
-    Route::get('/stats/disciplines', [DisciplineStatsController::class, 'index']);
-    Route::get('/stats/disciplines/ranking', [DisciplineStatsController::class, 'ranking']);
-    Route::get('/stats/disciplines/percentage', [DisciplineStatsController::class, 'percentage']);
-    Route::get('/stats/disciplines/summary', [DisciplineStatsController::class, 'summary']);
+    Route::get('/stats/disciplines', [StatsDisciplineStatsController::class, 'index']);
+    Route::get('/stats/disciplines/ranking', [StatsDisciplineStatsController::class, 'ranking']);
+    Route::get('/stats/disciplines/percentage', [StatsDisciplineStatsController::class, 'percentage']);
+    Route::get('/stats/disciplines/summary', [StatsDisciplineStatsController::class, 'summary']);
 
-    Route::get('/stats/users', [UserStatsController::class, 'index']);
-    Route::get('/stats/users/ranking', [UserStatsController::class, 'ranking']);
-    Route::get('/stats/users/percentage', [UserStatsController::class, 'percentage']);
-    Route::get('/stats/users/summary', [UserStatsController::class, 'summary']);
+    Route::get('/stats/users', [StatsUserStatsController::class, 'index']);
+    Route::get('/stats/users/ranking', [StatsUserStatsController::class, 'ranking']);
+    Route::get('/stats/users/percentage', [StatsUserStatsController::class, 'percentage']);
+    Route::get('/stats/users/summary', [StatsUserStatsController::class, 'summary']);
 });
