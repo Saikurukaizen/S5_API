@@ -1,12 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\DisciplineController;
-use App\Http\Controllers\Api\Stats\UserStatsController;
-use App\Http\Controllers\Api\Stats\DisciplineStatsController;
 use App\Http\Controllers\Api\CommunityController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Stats\DisciplineStatsController as StatsDisciplineStatsController;
 use App\Http\Controllers\Stats\UserStatsController as StatsUserStatsController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->prefix('v1')->group(function (){
@@ -25,9 +25,9 @@ Route::middleware('auth:api')->prefix('v1')->group(function (){
     Route::delete('/users/{id}/communities/{community}', [UserController::class, 'leaveCommunity']);
 
     //Login and User Register
-    Route::post('/register', [UserController::class, 'register']);
-    Route::post('/login', [UserController::class, 'login']);
-    Route::post('/logout', [UserController::class, 'logout']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 Route::middleware(['auth:api', 'can:viewStats'])->group(function(){

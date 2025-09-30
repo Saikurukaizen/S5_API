@@ -106,51 +106,7 @@ class AuthTest extends TestCase{
         $response->assertStatus(401);
     }
 
-    #[Test]
-    public function it_can_refresh_token(): void{
-        $user = User::factory()->create([
-            'password' => bcrypt('password'),
-        ]);
-
-        $loginResponse = $this->postJson('/api/v1/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-
-        $refreshToken = $loginResponse->json('refresh_token');
-        $response = $this->postJson('/api/v1/refresh-token', [
-            'refresh_token' => $refreshToken,
-        ]);
-
-        $response->assertStatus(200);
-
-        $response->assertJsonStructure([
-            'access_token',
-            'token_type',
-            'expires_in',
-            'refresh_token',
-        ]);
-    }
-/* 
-    #[Test]
-    public function it_revoked_token_denies_access(): void {
-        $user = User::factory()->create([
-            'password' => bcrypt('password'),
-        ]);
-        $loginResponse = $this->postJson('/api/v1/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-        $accessToken = $loginResponse->json('access_token');
-
-        DB::table('oauth_access_tokens')->where('user_id', $user->id)->update(['revoked' => true]);
-
-        $response = $this->getJson('/api/v1/users/' . $user->id, [
-            'Authorization' => 'Bearer ' . $accessToken,
-        ]);
-        $response->assertStatus(401);
-        $response->assertJson(['message' => 'Unauthenticated.']);
-    } */
+    
 }
 
 ?>

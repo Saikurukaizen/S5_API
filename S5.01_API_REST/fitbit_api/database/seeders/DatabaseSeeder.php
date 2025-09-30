@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Doom',
             'lastname' => 'Eternal',
             'date_of_birth' => '1999-06-06',
@@ -25,8 +25,9 @@ class DatabaseSeeder extends Seeder
             'discipline_id' => 1,
             'role' => 'user',
         ]);
+        $user->createToken('Personal Access Token');
 
-        User::factory()->create([
+        $admin = User::factory()->create([
             'name' => 'Lux',
             'lastname' => 'Triumfantis',
             'date_of_birth' => '2000-01-01',
@@ -38,6 +39,7 @@ class DatabaseSeeder extends Seeder
             'discipline_id' => null,
             'role' => 'admin',
         ]);
+        $admin->createToken('Personal Access Token');
 
         $this->call([
             PassportSeeder::class,
