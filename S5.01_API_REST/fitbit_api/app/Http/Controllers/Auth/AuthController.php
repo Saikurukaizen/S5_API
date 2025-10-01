@@ -9,9 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller
-{
-
+class AuthController extends Controller{
 
     public function register(Request $request): JsonResponse{
         $request->validate([
@@ -62,7 +60,6 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
-
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'The provided credentials are incorrect.'
@@ -97,10 +94,16 @@ class AuthController extends Controller
         ]);
     }
 
-    public function me(Request $request): JsonResponse
-    {
+    public function me(Request $request): JsonResponse{
+        $user = $request->user();       
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated'
+            ], 401);
+        }
+        
         return response()->json([
-            'user' => $request->user()
+            'user' => $user
         ]);
     }
 }

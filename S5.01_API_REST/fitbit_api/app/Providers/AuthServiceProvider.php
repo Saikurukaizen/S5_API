@@ -2,15 +2,18 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ProvidersAuthServiceProvider;
 use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ProvidersAuthServiceProvider{
 
-    protected $policies = [];
+    protected $policies = [
+        User::class => UserPolicy::class,
+    ];
 
-    public function boot(): void
-    {
+    public function boot(): void{
     $this->registerPolicies();
 
     Passport::personalAccessTokensExpireIn(now()->addDays(15));

@@ -20,15 +20,9 @@ class PassportSeeder extends Seeder{
                     'grant_types' => ['personal_access'],
                     'revoked' => false,
                 ]);
-                
-                echo "V- Personal Access Client created\n";
-            } else {
-                echo "V- Personal Access Client already exists\n";
-            }
-            
+            }            
         } catch(\Exception $e){
-            echo "! PassportSeeder: " . $e->getMessage() . "\n";
-            echo "  Personal Access Tokens will continue to work\n";
+            // Personal Access Tokens will continue to work
         }
     }
 }

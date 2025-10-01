@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller{
@@ -12,7 +13,7 @@ class UserController extends Controller{
         return $request->validate([
             'name' => 'required|string|max:150',
             'lastname' => 'required|string|max:150',
-            'dqte_of_birth' => 'required|date',
+            'date_of_birth' => 'required|date',
             'email' => 'required|email|unique:users,email, ' . ($request->id ?? 'NULL') . ',id',
             'password' => ($request->isMethod('post') ? 'required|' : 'nullable|') . 'confirmed|min:6',
             'bank_acc' => 'required|string|unique:users,bank_acc, ' . ($request->id ?? 'NULL') . ',id',
@@ -20,34 +21,37 @@ class UserController extends Controller{
         ]);
     }
 
-    public function index(){
+    public function index(): JsonResponse{
         $users = User::all();
+
         return response()->json([
             'data' => $users
         ], 200);
     }
 
-    public function show($id){
+    public function show($id): JsonResponse{
         $user = User::findOrFail($id);
+
         return response()->json([
             'data' => $user
         ], 200);
     }
 
-    public function store(Request $request){
+    public function store(Request $request): JsonResponse{
         $data = $this->validateData($request);
         if(isset($data['password'])){
             $data['password'] = bcrypt($data['password']);
         }
 
-        $user = User::create([$data]);
+        $user = User::create($data);
+
         return response()->json([
             'message' => 'User created succesfully',
             'data' => $user
         ], 201);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id): JsonResponse{
         $data = $this->validateData($request);
         if(isset($data['password'])){
             $data['password'] = bcrypt($data['password']);
@@ -62,11 +66,12 @@ class UserController extends Controller{
         ], 200);
     }
 
-    public function destroy($id){
+    public function destroy($id): JsonResponse{
         $user = User::findOrFail($id);
         $user->delete();
+        
         return response()->json([
-            'message' => 'User deleted succesfully'
+            'message' => 'User deleted successfully'
         ], 200);
     }
 

@@ -15,9 +15,16 @@ class DisciplineTest extends TestCase{
 
     use RefreshDatabase;
 
+    protected function setUp(): void{
+        parent::setUp();
+        Discipline::query()->delete();
+        User::query()->delete();
+    }
+
     #[Test]
     public function it_requires_name_and_description(): void{
         $this->expectException(QueryException::class);
+
         Discipline::factory()->create(['name' => null]);
         Discipline::factory()->create(['description' => null]);
     }
@@ -25,6 +32,7 @@ class DisciplineTest extends TestCase{
     #[Test]
     public function it_cannot_duplicate_discipline(): void{
         $this->expectException(QueryException::class);
+
         Discipline::factory()->create(['name' => 'Karate']);
         Discipline::factory()->create(['name' => 'Karate']);
     }
@@ -32,8 +40,9 @@ class DisciplineTest extends TestCase{
     #[Test]
     public function it_validates_data_types_correctly(): void{
         $this->expectException(QueryException::class);
-        Discipline::factory()->create(['name' => 12345]);
-        Discipline::factory()->create(['description' => 67890]);
+        
+        $longName = str_repeat('a', 300);
+        Discipline::factory()->create(['name' => $longName]);
     }
 
     #[Test]

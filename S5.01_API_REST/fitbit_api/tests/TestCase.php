@@ -14,6 +14,6 @@ abstract class TestCase extends BaseTestCase{
 
     $this->artisan('migrate:fresh --seed');
 
-    Passport::actingAs(UserFactory::new()->create());
+    Passport::actingAs(UserFactory::factory()->create());
 }
 }

@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Stats;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\DisciplineResource;
-use App\Http\Resources\DisciplineStatsResource;
 use App\Models\Discipline;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
-class DisciplineStatsController extends Controller
-{
-    public function index(): \Illuminate\Http\JsonResponse{
+class DisciplineStatsController extends Controller{
+
+    public function index(): JsonResponse{
         $totalDisciplines = Discipline::count();
         $totalUsers = User::count();
         $mostPopularDiscipline = Discipline::withCount('users')
@@ -25,7 +24,7 @@ class DisciplineStatsController extends Controller
         ]);
     }
 
-    public function ranking(): \Illuminate\Http\JsonResponse{
+    public function ranking(): JsonResponse{
         $ranking = Discipline::withCount('users')->orderByDesc('users_count')
             ->get(['id', 'name', 'users_count']);
 
@@ -34,7 +33,7 @@ class DisciplineStatsController extends Controller
         ]);
     }
 
-    public function percentage(): \Illuminate\Http\JsonResponse{
+    public function percentage(): JsonResponse{
         $totalUsers = User::count();
         $percentages = Discipline::withCount('users')->get()
             ->map(function($discipline) use ($totalUsers){
@@ -50,7 +49,7 @@ class DisciplineStatsController extends Controller
         ]);
     }
 
-    public function summary(): \Illuminate\Http\JsonResponse{
+    public function summary(): JsonResponse{
         $monthly = Discipline::select(
             DB::raw('MONTH(created_at) as month'),
             DB::raw('COUNT(*) as count')

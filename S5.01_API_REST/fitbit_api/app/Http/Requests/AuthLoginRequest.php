@@ -3,9 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Auth;
-
 
 class AuthLoginRequest extends FormRequest{
 
@@ -18,7 +15,6 @@ class AuthLoginRequest extends FormRequest{
             'email' => 'required|email',
             'password' => 'required|string|min:6',
         ];
-    }
-    
+    }    
 }
 ?>

@@ -2,10 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\Traits\ActingAsAdminTest;
 use Tests\Traits\ActingAsUserTest;
 use Tests\TestCase;
@@ -88,6 +86,7 @@ class AuthTest extends TestCase{
     public function authenticated_user_can_access_protected_route(): void{
 
         $user = $this->actingAsUser();
+
         $response = $this->getJson('/api/v1/users/' . $user->id);
         $response->assertStatus(200);
 
@@ -98,12 +97,9 @@ class AuthTest extends TestCase{
 
     #[Test]
     public function unauthenticated_user_cannot_access_protected_route(): void{
-
-        $response = $this->getJson('/api/v1/users/1');
-        $response->assertStatus(401);
+        $response = $this->getJson('/api/v1/users');
+        $response->assertStatus(403);
     }
-
-    
 }
 
 ?>

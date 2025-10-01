@@ -5,15 +5,14 @@ namespace App\Http\Controllers\Stats;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Discipline;
-use Illuminate\Http\Request;
-use App\Http\Resources\UserResource;
 use App\Http\Resources\UserStatsResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class UserStatsController extends Controller{
 
 
-    public function index(): \Illuminate\Http\JsonResponse{
+    public function index(): JsonResponse{
         $totalUsers = User::count();
         $totalDisciplines = Discipline::count();
         // El usuario más activo será el que tenga una disciplina asignada (o la disciplina más popular)
@@ -27,8 +26,7 @@ class UserStatsController extends Controller{
         ]);
     }
 
-    public function rankingUser(): UserStatsResource
-    {
+    public function rankingUser(): UserStatsResource{
         // Obtener usuarios con disciplina
         $usersWithDiscipline = User::whereNotNull('discipline_id')->with('discipline')->get();
 

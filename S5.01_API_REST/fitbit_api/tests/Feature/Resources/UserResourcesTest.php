@@ -19,6 +19,7 @@ class UserResourcesTest extends TestCase{
    #[Test]
     public function it_returns_expected_fields_in_user_list(): void{
         $this->actingAsAdmin();
+
         UserFactory::new()->count(3)->create();
 
         $response = $this->getJson('/api/v1/users');
@@ -42,6 +43,7 @@ class UserResourcesTest extends TestCase{
     #[Test]
     public function it_returns_correct_values(): void{
         $this->actingAsAdmin();
+
         $user = $this->actingAsUser();
 
         $response = $this->getJson('/api/v1/users/' . $user->id);
@@ -57,6 +59,7 @@ class UserResourcesTest extends TestCase{
     #[Test]
     public function it_does_not_return_extra_fields(): void{
         $this->actingAsAdmin();
+        
         $user = $this->actingAsUser();
 
         $response = $this->getJson('/api/v1/users/' . $user->id);
@@ -71,6 +74,7 @@ class UserResourcesTest extends TestCase{
     #[Test]
     public function it_returns_a_json_format(): void{
         $this->actingAsAdmin();
+
         $user = $this->actingAsUser();
 
         $response = $this->getJson('/api/v1/users/' . $user->id);

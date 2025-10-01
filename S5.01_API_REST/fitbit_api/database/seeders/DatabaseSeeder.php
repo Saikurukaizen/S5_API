@@ -56,10 +56,9 @@ class DatabaseSeeder extends Seeder{
         try{
             $user->createToken('API Token');
             $admin->createToken('API Token');
-            echo "V- Tokens created for users\n";
+            // Tokens created for users
         } catch(\Exception $e){
-            echo "! Tokens could not be created: " . $e->getMessage() . "\n";
-            echo "  Users are created and can use login to obtain tokens\n";
+            // Tokens could not be created - Users can use login to obtain tokens
         }
     }
 }
