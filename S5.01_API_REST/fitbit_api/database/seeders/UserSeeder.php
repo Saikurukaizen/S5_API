@@ -3,13 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder{
 
     public function run(): void{
-        $user = User::factory()->create([
+        $user = UserFactory::new()->create([
             'name' => 'Doom',
             'lastname' => 'Eternal',
             'date_of_birth' => '1999-06-06',
@@ -24,7 +25,7 @@ class UserSeeder extends Seeder{
 
         $user->createToken('Personal Access Token');
 
-        $admin = User::factory()->create([
+        $admin = UserFactory::new()->create([
             'name' => 'Lux',
             'lastname' => 'Triumfantis',
             'date_of_birth' => '2000-01-01',

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Discipline;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -18,7 +19,7 @@ class DatabaseSeeder extends Seeder{
         $firstDiscipline = Discipline::first();
         $disciplineId = $firstDiscipline ? $firstDiscipline->id : null;
 
-        $user = User::factory()->create([
+        $user = UserFactory::new()->create([
             'name' => 'Doom',
             'lastname' => 'Eternal',
             'date_of_birth' => '1999-06-06',
@@ -31,7 +32,7 @@ class DatabaseSeeder extends Seeder{
             'role' => 'user',
         ]);
 
-        $admin = User::factory()->create([
+        $admin = UserFactory::new()->create([
             'name' => 'Lux',
             'lastname' => 'Triumfantis',
             'date_of_birth' => '2000-01-01',
@@ -49,8 +50,6 @@ class DatabaseSeeder extends Seeder{
         ]);
 
         $this->createTokensIfPossible($user, $admin);
-        
-        echo "V- Database successfully seeding\n";
     }
     
     private function createTokensIfPossible($user, $admin): void{

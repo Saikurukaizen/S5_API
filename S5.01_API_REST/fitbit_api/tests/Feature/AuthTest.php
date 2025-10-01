@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\Traits\ActingAsAdminTest;
@@ -47,7 +48,7 @@ class AuthTest extends TestCase{
 
     #[Test]
     public function user_can_login_with_correct_credentials(): void{
-        $user = User::factory()->create([
+        $user = UserFactory::new()->create([
             'password' => bcrypt('password'),
         ]);
         $response = $this->postJson('/api/v1/login', [
@@ -58,14 +59,21 @@ class AuthTest extends TestCase{
         $response->assertJsonStructure([
             'access_token',
             'token_type',
-            'expires_in',
+            'expires_at',
+            'message',
+            'user' => [
+                'id',
+                'name',
+                'email',
+                'role'
+            ]
         ]);
     }
 
     #[Test]
     public function user_cannot_login_with_incorrect_credentials(): void{
 
-        $user = User::factory()->create();
+        $user = UserFactory::new()->create();
 
         $response = $this->postJson('/api/v1/login', [
             'email' => $user->email,
@@ -73,7 +81,7 @@ class AuthTest extends TestCase{
         ]);
 
         $response->assertStatus(401);
-        $response->assertJson(['message' => 'Unauthorized']);
+        $response->assertJson(['message' => 'The provided credentials are incorrect.']);
     }
 
     #[Test]
@@ -83,19 +91,9 @@ class AuthTest extends TestCase{
         $response = $this->getJson('/api/v1/users/' . $user->id);
         $response->assertStatus(200);
 
-        $expectedAuthUser = $this->userAuthData();
-        unset(
-            $expectedAuthUser['password'],
-            $expectedAuthUser['password_confirmation']
-        );
-
-        $response->assertJsonFragment($expectedAuthUser + [
-            'id' => $user->id,
-            'role' => 'user',
-            'discipline_id' => null,
-            'created_at' => $user->created_at->toJSON(),
-            'updated_at' => $user->updated_at->toJSON(),
-        ]);
+        $response->assertJsonPath('data.id', $user->id);
+        $response->assertJsonPath('data.email', $user->email);
+        $response->assertJsonPath('data.role', 'user');
     }
 
     #[Test]

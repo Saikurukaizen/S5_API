@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Traits\ActingAsAdminTest;
 use Tests\Traits\ActingAsUserTest;
@@ -19,7 +20,7 @@ class UserManagementTest extends TestCase{
     use ActingAsModeratorTest;
 
     protected function setUp(): void{
-        
+        parent::setUp();
     }
 
     protected function userData(array $overrides = []): array{
@@ -42,7 +43,10 @@ class UserManagementTest extends TestCase{
         $response = $this->postJson('/api/v1/register', $this->userData());
 
         $response->assertStatus(201);
-        $this->assertDatabaseHas($this->userData());
+        $this->assertDatabaseHas('users', [
+            'email' => 'newuser@example.com',
+            'name' => 'New User'
+        ]);
     }
 
     #[Test]
@@ -58,7 +62,7 @@ class UserManagementTest extends TestCase{
     #[Test]
     public function admin_cannot_update_user(): void{
         $this->actingAsAdmin();
-        $user = User::factory()->create();
+        $user = UserFactory::new()->create();
 
         $response = $this->putJson('/api/v1/users/' . $user->id, $this->userData());
         $response->assertStatus(403);
@@ -69,7 +73,7 @@ class UserManagementTest extends TestCase{
     #[Test]
     public function user_cannot_update_user(): void{
         $this->actingAsUser();
-        $user = User::factory()->create();
+        $user = UserFactory::new()->create();
 
         $response = $this->putJson('/api/v1/users/' . $user->id, $this->userData());
         $response->assertStatus(403);
@@ -80,7 +84,7 @@ class UserManagementTest extends TestCase{
     #[Test]
     public function admin_can_delete_a_user(): void{
         $this->actingAsAdmin();
-        $userToDelete = User::factory()->create();
+        $userToDelete = UserFactory::new()->create();
 
         $response = $this->deleteJson("/api/v1/users/{$userToDelete->id}");
         $response->assertStatus(200);
@@ -93,7 +97,7 @@ class UserManagementTest extends TestCase{
     #[Test]
     public function user_cannot_delete_a_user(): void{
         $this->actingAsUser();
-        $userToDelete = User::factory()->create();
+        $userToDelete = UserFactory::new()->create();
 
         $response = $this->deleteJson('/api/v1/users/' . $userToDelete->id);
         $response->assertStatus(403);
@@ -106,7 +110,7 @@ class UserManagementTest extends TestCase{
 
         $this->actingAsAdmin();
         $moderator = $this->actingAsModerator();
-        $userToBan = User::factory()->create();
+        $userToBan = UserFactory::new()->create();
 
         $response = $this->postJson('/api/v1/users/' . $userToBan->id . '/ban', [
             'moderator_id' => $moderator->id,
@@ -120,7 +124,7 @@ class UserManagementTest extends TestCase{
     #[Test]
     public function moderator_cannot_permanently_delete_user(): void {
         $moderator = $this->actingAsModerator();
-        $userToDelete = User::factory()->create();
+        $userToDelete = UserFactory::new()->create();
 
         $response = $this->deleteJson('/api/v1/users/' . $userToDelete->id, [
             'moderator_id' => $moderator->id

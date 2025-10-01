@@ -51,4 +51,14 @@ class User extends Authenticatable implements OAuthenticatable{
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\UserFactory::new();
+    }
 }

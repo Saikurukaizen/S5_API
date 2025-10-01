@@ -3,7 +3,7 @@
 namespace Tests;
 
 use App\Models\User;
-use Illuminate\Foundation\Auth\User as AuthUser;
+use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Laravel\Passport\Passport;
 
@@ -14,6 +14,6 @@ abstract class TestCase extends BaseTestCase{
 
     $this->artisan('migrate:fresh --seed');
 
-    Passport::actingAs(AuthUser::factory()->create());
+    Passport::actingAs(UserFactory::new()->create());
 }
 }

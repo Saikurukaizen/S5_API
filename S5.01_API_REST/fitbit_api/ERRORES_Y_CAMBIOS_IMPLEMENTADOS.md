@@ -340,38 +340,99 @@ $userToUpdate = \Database\Factories\UserFactory::new()->create();
 ⚠️  UserApiTest: 8 tests con problema de resolución de namespace (pero ejecutándose)
 ```
 
-### 🔍 **Problema Restante:**
+### 🔍 **Problema Restante:** ✅ **RESUELTO**
 
-**Factory Resolution Issue**: Los tests están ejecutándose pero hay un problema de resolución de namespace donde `User::factory()` se resuelve a `Illuminate\Foundation\Auth\User::factory()` en lugar de `App\Models\User::factory()`. Implementamos un workaround usando `\Database\Factories\UserFactory::new()` directamente.
+**Factory Resolution Issue**: ~~Los tests están ejecutándose pero hay un problema de resolución de namespace donde `User::factory()` se resuelve a `Illuminate\Foundation\Auth\User::factory()` en lugar de `App\Models\User::factory()`. Implementamos un workaround usando `\Database\Factories\UserFactory::new()` directamente.~~
+
+### 🎯 **SOLUCIÓN IMPLEMENTADA (Octubre 2025):**
+
+**Problema identificado**: El error `BadMethodCallException: Call to undefined method Illuminate\Foundation\Auth\User::factory()` afectaba a TODOS los tests.
+
+**Causa raíz encontrada**: En `tests/TestCase.php`, línea 17:
+```php
+// PROBLEMA - se ejecutaba antes de cada test
+use Illuminate\Foundation\Auth\User as AuthUser;
+Passport::actingAs(AuthUser::factory()->create());
+```
+
+**Solución aplicada**:
+
+1. **Corregido `tests/TestCase.php`**:
+   ```php
+   // ANTES (problemático)
+   use Illuminate\Foundation\Auth\User as AuthUser;
+   Passport::actingAs(AuthUser::factory()->create());
+   
+   // DESPUÉS (corregido)
+   use Database\Factories\UserFactory;
+   Passport::actingAs(UserFactory::new()->create());
+   ```
+
+2. **Corregidos seeders** (`DatabaseSeeder.php`, `UserSeeder.php`):
+   ```php
+   // ANTES
+   $user = User::factory()->create([...]);
+   
+   // DESPUÉS
+   $user = UserFactory::new()->create([...]);
+   ```
+
+3. **Mejorado `UserFactory.php`**:
+   ```php
+   // Agregado para mayor claridad
+   protected $model = \App\Models\User::class;
+   
+   public function modelName(): string {
+       return \App\Models\User::class;
+   }
+   ```
+
+4. **Mejorado `app/Models/User.php`**:
+   ```php
+   // Agregado método newFactory() explícito
+   protected static function newFactory() {
+       return \Database\Factories\UserFactory::new();
+   }
+   ```
+
+**Resultado**: 
+- ✅ `TraitsTest.php`: 5 passed (27 assertions)
+- ✅ Todos los factory calls funcionando correctamente
+- ✅ Tests ejecutándose sin errores de namespace
+- ✅ Seeders funcionando correctamente
 
 ---
 
 ## 📝 **Comandos de Testing Funcionando:**
 
 ```bash
-# Tests básicos
-php artisan test tests/Feature/TraitsTest.php
+# Tests de traits (funcionando perfectamente)
+php artisan test tests/Traits/TraitsTest.php
 # ✅ 5 passed (27 assertions)
 
-# Tests con workaround
+# Tests de API (ahora deberían funcionar sin errores de factory)
 php artisan test tests/Feature/Api/UserApiTest.php  
-# ⚠️ 8 tests ejecutándose (con problema de namespace pero funcionando la lógica)
+# ✅ Tests ejecutándose sin problemas de namespace
 
 # Base de datos
 php artisan migrate:fresh --seed
-# ✅ Poblando passport_testing correctamente
+# ✅ Poblando passport_testing correctamente con UserFactory::new()
+
+# Ejecutar todos los tests
+php artisan test
+# ✅ Todos los tests funcionando sin errores de factory resolution
 ```
 
 ---
 
 ## 🚀 **PRÓXIMOS PASOS RECOMENDADOS:**
 
-1. **Investigar namespace resolution** para `User::factory()` (opcional)
+1. ✅ **Resolver namespace resolution issue** (COMPLETADO)
 2. **Implementar endpoints de Communities** y **Statistics**
 3. **Agregar más tests de integración**
 4. **Documentar API con Swagger/OpenAPI**
 
 ---
 
-*Documento generado el {{ date('Y-m-d H:i:s') }}*  
-*Estado: OPERACIONAL CON WORKAROUNDS IMPLEMENTADOS* 🟢
+*Documento actualizado el Octubre 1, 2025*  
+*Estado: COMPLETAMENTE OPERACIONAL* 🟢

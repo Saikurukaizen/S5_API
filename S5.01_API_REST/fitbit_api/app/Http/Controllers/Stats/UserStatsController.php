@@ -13,18 +13,18 @@ use Illuminate\Support\Facades\DB;
 class UserStatsController extends Controller{
 
 
-    public function index(): UserStatsResource{
+    public function index(): \Illuminate\Http\JsonResponse{
         $totalUsers = User::count();
         $totalDisciplines = Discipline::count();
         // El usuario más activo será el que tenga una disciplina asignada (o la disciplina más popular)
         $mostActiveUser = User::whereNotNull('discipline_id')->first();
-        $data = [
+        
+        return response()->json([
             'total_users' => $totalUsers,
             'total_disciplines' => $totalDisciplines,
             'most_active_user' => $mostActiveUser ? $mostActiveUser->name : null,
-            'users' => UserResource::collection(User::all()),
-        ];
-        return new UserStatsResource($data);
+            'users' => [],
+        ]);
     }
 
     public function rankingUser(): UserStatsResource

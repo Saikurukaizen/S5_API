@@ -61,15 +61,13 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $user = User::where('email', $request->email)->first();
 
-        if (!Auth::attempt($credentials)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'The provided credentials are incorrect.'
             ], 401);
         }
-
-        $user = Auth::user();
 
         $tokenResult = $user->createToken('API Token');
         $token = $tokenResult->token;

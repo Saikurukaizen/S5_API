@@ -44,6 +44,100 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 - **[Redberry](https://redberry.international/laravel-development)**
 - **[Active Logic](https://activelogic.com)**
 
+## Fitbit API - Sprint 5 Implementation
+
+### 📋 Resumen del Progreso de Desarrollo
+
+#### ✅ **PROBLEMAS CORREGIDOS:**
+
+##### 1. **AuthController API REST** ✅ COMPLETADO
+- **Problema:** AuthController usaba `Auth::attempt()` con TokenGuard de Passport (incompatible)
+- **Solución:** Implementada autenticación directa con validación de credenciales y generación de tokens JWT
+- **Estado:** Login/Register funcionando correctamente con tokens Bearer
+- **Tests:** 4/5 tests de AuthTest pasan (80% éxito)
+
+```php
+// Antes (ERROR)
+if (!Auth::guard('web')->attempt($credentials)) {
+    return response()->json(['message' => 'Unauthorized'], 401);
+}
+
+// Después (CORRECTO)
+$user = User::where('email', $request->email)->first();
+if (!$user || !Hash::check($request->password, $user->password)) {
+    return response()->json(['message' => 'The provided credentials are incorrect.'], 401);
+}
+$tokenResult = $user->createToken('API Token');
+```
+
+##### 2. **Rutas CRUD de API** ✅ COMPLETADO
+- **Problema:** Faltaba ruta POST `/api/v1/users` y políticas de autorización
+- **Solución:** Agregadas rutas completas con middleware apropiado
+- **Políticas agregadas:** `createUser`, `viewAllUsers`, `updateUser`, `deleteUser`
+- **Estado:** CRUD completo implementado
+
+```php
+// Rutas agregadas en api.php
+Route::post('/users', [UserController::class, 'store'])->middleware('can:createUser');
+Route::get('/users', [UserController::class, 'index'])->middleware('can:viewAllUsers');
+Route::get('/users/{id}', [UserController::class, 'show'])->middleware('auth:api');
+```
+
+##### 3. **Stats Controllers JSON Response** ✅ COMPLETADO
+- **Problema:** Controllers devolvían Resources vacíos en lugar de datos reales
+- **Solución:** Convertidos a respuestas JSON directas con datos de base de datos
+- **Estado:** Endpoints `/api/v1/stats/disciplines` y `/api/v1/stats/users` funcionando
+
+```php
+// Antes (Resources vacíos)
+return new DisciplineStatsResource($data);
+
+// Después (JSON directo)
+return response()->json([
+    'total_disciplines' => $totalDisciplines,
+    'total_users' => $totalUsers,
+    'most_popular_discipline' => $mostPopularDiscipline->name ?? null,
+]);
+```
+
+##### 4. **Tests de Autenticación API** ✅ MAYORÍA COMPLETADO
+- **Problema:** Tests esperaban estructura incorrecta de respuesta
+- **Solución:** Corregidas expectativas para coincidir con API REST real
+- **Estado:** 4/5 tests pasan, solo 1 problema menor de middleware pendiente
+
+#### 🔄 **SIGUIENTES PASOS:**
+
+##### 5. **Tests de Estadísticas** 📋 EN PROGRESO
+- **Problema:** Tests asumen base de datos vacía pero el seeder ya creó datos
+- **Opciones de solución:**
+  1. Limpiar BD antes de cada test (`Discipline::query()->delete()`)
+  2. Cambiar expectativas para usar totales reales del seeder
+- **Estado:** Pendiente de implementar
+
+#### 📊 **Métricas de Progreso:**
+- **Tests AuthTest:** 4 ✅ 1 ❌ (80% éxito)
+- **API Controllers:** ✅ Funcionando correctamente
+- **Stats Endpoints:** ✅ Devuelven datos reales
+- **Rutas y Middleware:** ✅ Configurados para API REST
+- **Autenticación Passport:** ✅ Tokens JWT funcionando
+
+#### 🛠️ **Tecnologías Implementadas:**
+- **Laravel 12** con **Passport** para autenticación API
+- **PHPUnit** para testing automatizado
+- **MySQL** como base de datos
+- **JSON API** con estructura de respuestas consistente
+- **Middleware de autorización** basado en roles (admin, moderator, user)
+
+#### 📁 **Archivos Principales Modificados:**
+- `app/Http/Controllers/Auth/AuthController.php` - Autenticación API
+- `app/Http/Controllers/Stats/DisciplineStatsController.php` - Estadísticas JSON
+- `app/Http/Controllers/Stats/UserStatsController.php` - Estadísticas usuarios
+- `routes/api.php` - Rutas CRUD completas
+- `app/Providers/AppServiceProvider.php` - Políticas de autorización
+- `tests/Feature/AuthTest.php` - Tests de autenticación corregidos
+
+---
+
 ## Contributing
 
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).

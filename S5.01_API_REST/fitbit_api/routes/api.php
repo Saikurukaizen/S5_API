@@ -30,8 +30,9 @@ Route::middleware('auth:api')->prefix('v1')->group(function () {
     // Route::apiResource('communities', CommunityController::class);
 
     // Users
+    Route::post('/users', [UserController::class, 'store'])->middleware('can:createUser');
     Route::get('/users', [UserController::class, 'index'])->middleware('can:viewAllUsers');
-    Route::get('/users/{id}', [UserController::class, 'me']);
+    Route::get('/users/{id}', [UserController::class, 'show'])->middleware('auth:api');
     Route::put('/users/{id}', [UserController::class, 'update'])->middleware('can:updateUser');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('can:deleteUser');
     Route::put('/users/{id}/discipline', [UserController::class, 'changeDiscipline']);
