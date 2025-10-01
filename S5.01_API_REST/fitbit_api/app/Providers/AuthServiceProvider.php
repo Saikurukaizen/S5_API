@@ -2,19 +2,18 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ProvidersAuthServiceProvider;
 use Laravel\Passport\Passport;
 
-class AuthServiceProvider extends ProvidersAuthServiceProvider
-{
+class AuthServiceProvider extends ProvidersAuthServiceProvider{
+
+    protected $policies = [];
 
     public function boot(): void
     {
-        $this->registerPolicies();
+    $this->registerPolicies();
 
-        Gate::define('viewStats', [\App\Policies\DisciplinePolicy::class, 'viewStats']);
-
-        Passport::enablePasswordGrant();
+    Passport::personalAccessTokensExpireIn(now()->addDays(15));
+    Passport::enablePasswordGrant();
     }
 }

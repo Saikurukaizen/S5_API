@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 use App\Models\User;
+use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Traits\ActingAsAdminTest;
 use Tests\Traits\ActingAsUserTest;
@@ -63,7 +64,7 @@ class UserApiTest extends TestCase{
     #[Test]
     public function admin_can_update_a_user_in_api(): void{
         $this->actingAsAdmin();
-        $userToUpdate = User::factory()->create();
+        $userToUpdate = UserFactory::new()->create();
 
         $response = $this->putJson('/api/v1/users/' . $userToUpdate->id, [
             'name' => 'Updated Name',
@@ -78,7 +79,7 @@ class UserApiTest extends TestCase{
     #[Test]
     public function user_cannot_update_a_user_in_api(): void{
         $this->actingAsUser();
-        $otherUser = User::factory()->create();
+        $otherUser = UserFactory::new()->create();
 
         $response = $this->putJson('/api/v1/users/' . $otherUser->id, [
             'name' => 'Updated Name',
@@ -93,7 +94,7 @@ class UserApiTest extends TestCase{
     #[Test]
     public function admin_can_delete_a_user_in_api(): void{
         $this->actingAsAdmin();
-        $userToDelete = User::factory()->create();
+        $userToDelete = UserFactory::new()->create();
 
         $response = $this->deleteJson('/api/v1/users/' . $userToDelete->id);
 
@@ -103,7 +104,7 @@ class UserApiTest extends TestCase{
     #[Test]
     public function user_cannot_delete_a_user_in_api(): void{
         $this->actingAsUser();
-        $userToDelete = User::factory()->create();
+        $userToDelete = UserFactory::new()->create();
 
         $response = $this->deleteJson('/api/v1/users/' . $userToDelete->id);
 

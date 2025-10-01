@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthRegisterController extends Controller{
 
-    public function store(AuthRegisterRequest $request): JsonResponse{
+    public function register(AuthRegisterRequest $request): JsonResponse{
         $user = User::create([
             'name' => $request->input('name'),
             'lastname' => $request->input('lastname'),
@@ -23,7 +23,7 @@ class AuthRegisterController extends Controller{
 
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
-        $expiresAt = $tokenResult->token->expires_at;
+        $expiresAt = $tokenResult->token->expires_at;       
         $token->save();
 
         return response()->json([

@@ -55,6 +55,11 @@ class UserController extends Controller{
 
         $user = User::findOrFail($id);
         $user->update($data);
+        
+        return response()->json([
+            'message' => 'User updated successfully',
+            'data' => $user
+        ], 200);
     }
 
     public function destroy($id){

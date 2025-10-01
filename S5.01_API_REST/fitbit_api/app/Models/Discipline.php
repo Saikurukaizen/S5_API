@@ -10,13 +10,15 @@ use Illuminate\Database\Eloquent\Model;
 class Discipline extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'description'];
+    protected $fillable = [
+        'name', 'description'
+    ];
 
     public function users(){
         return $this->hasMany(User::class);
     }
 
-    public function communities(){
+    /* public function communities(){
         return $this->hasMany(Community::class);
-    }
+    } */
 }

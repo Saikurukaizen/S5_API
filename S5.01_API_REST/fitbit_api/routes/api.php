@@ -9,28 +9,38 @@ use App\Http\Controllers\Stats\UserStatsController as StatsUserStatsController;
 
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:api')->prefix('v1')->group(function (){
+// ✅ RUTAS PÚBLICAS (SIN AUTENTICACIÓN) - v1
+Route::prefix('v1')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
-    //Disciplines only admin
+// ✅ RUTAS PROTEGIDAS (CON AUTENTICACIÓN) - v1
+Route::middleware('auth:api')->prefix('v1')->group(function () {
+
+    // Auth routes (requieren autenticación)
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']);
+
+    // Disciplines only admin
     Route::apiResource('disciplines', DisciplineController::class)
-    ->middleware('can:manage-disciplines');
+        ->middleware('can:manage-disciplines');
 
-    //Communities
-    //Route::apiResource('communities', CommunityController::class);
+    // Communities
+    // Route::apiResource('communities', CommunityController::class);
 
-    //Users
+    // Users
+    Route::get('/users', [UserController::class, 'index'])->middleware('can:viewAllUsers');
     Route::get('/users/{id}', [UserController::class, 'me']);
+    Route::put('/users/{id}', [UserController::class, 'update'])->middleware('can:updateUser');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('can:deleteUser');
     Route::put('/users/{id}/discipline', [UserController::class, 'changeDiscipline']);
     Route::post('/users/{id}/communities/{community}', [UserController::class, 'joinCommunity']);
     Route::delete('/users/{id}/communities/{community}', [UserController::class, 'leaveCommunity']);
-
-    //Login and User Register
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::middleware(['auth:api', 'can:viewStats'])->group(function(){
+// ✅ RUTAS DE ESTADÍSTICAS (CON AUTORIZACIÓN ESPECÍFICA)
+Route::middleware(['auth:api', 'can:viewStats'])->prefix('v1')->group(function() {
     Route::get('/stats/disciplines', [StatsDisciplineStatsController::class, 'index']);
     Route::get('/stats/disciplines/ranking', [StatsDisciplineStatsController::class, 'ranking']);
     Route::get('/stats/disciplines/percentage', [StatsDisciplineStatsController::class, 'percentage']);

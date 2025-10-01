@@ -4,18 +4,16 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-use Laravel\Passport\HasApiTokens;
-use Laravel\Passport\Passport;
 
-class AuthController extends Controller{
+class AuthController extends Controller
+{
 
-    use HasApiTokens;
 
-    public function register(Request $request){
+    public function register(Request $request): JsonResponse{
         $request->validate([
             'name' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
@@ -34,38 +32,78 @@ class AuthController extends Controller{
             'password' => Hash::make($request->password),
             'bank_acc' => $request->bank_acc,
             'discipline_id' => $request->discipline_id,
+            'role' => 'user',
         ]);
 
-        $token = $user->createToken('/oauth/token')->accessToken;
-        Passport::personalAccessTokensExpireIn(now()->addDays(15));
+        $tokenResult = $user->createToken('API Token');
+        $token = $tokenResult->token;
+        
+        $token->expires_at = now()->addDays(15);
+        $token->save();
 
         return response()->json([
-            'access_token' => $token,
+            'message' => 'User registered successfully',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+            ],
+            'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
-        ]);
+            'expires_at' => $token->expires_at->toISOString(),
+        ], 201);
     }
 
-    public function login(Request $request){
+    public function login(Request $request): JsonResponse{
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
 
         $credentials = $request->only('email', 'password');
-        if(!Auth::attempt($credentials)){
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                'message' => 'The provided credentials are incorrect.'
+            ], 401);
         }
 
-        Auth::user();
-        $token = Auth::user()->createToken('auth_token')->accessToken;
-        Passport::personalAccessTokensExpireIn(now()->addDays(15));
+        $user = Auth::user();
+
+        $tokenResult = $user->createToken('API Token');
+        $token = $tokenResult->token;
+        
+        $token->expires_at = now()->addDays(15);
+        $token->save();
 
         return response()->json([
-            'access_token' => $token,
+            'message' => 'Login successful',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+            ],
+            'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
+            'expires_at' => $token->expires_at->toISOString(),
         ]);
-    }       
+    }
+
+    public function logout(Request $request): JsonResponse{
+        $request->user()->tokens()->delete();
+        
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ]);
+    }
+
+    public function me(Request $request): JsonResponse
+    {
+        return response()->json([
+            'user' => $request->user()
+        ]);
+    }
 }
 ?>
