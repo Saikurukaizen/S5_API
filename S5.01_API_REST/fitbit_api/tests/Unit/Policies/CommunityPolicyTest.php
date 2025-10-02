@@ -9,15 +9,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class CommunityPolicyTest extends TestCase
-{
+class CommunityPolicyTest extends TestCase{
     use RefreshDatabase;
 
     private CommunityPolicy $policy;
 
-    protected function setUp(): void
-    {
+    protected function setUp(): void{
         parent::setUp();
+
         $this->policy = new CommunityPolicy();
     }
 
@@ -36,19 +35,16 @@ class CommunityPolicyTest extends TestCase
     #[Test]
     public function moderator_can_view_and_manage_assigned_community(): void{
         $moderator = User::factory()->create(['role' => 'moderator']);
-        $community = Community::factory()->create(['moderator_id' => $moderator->id]);
+        $community = Community::factory()->create(['user_id' => $moderator->id]);
         $otherCommunity = Community::factory()->create();
         
-        // Can view all communities
         $this->assertTrue($this->policy->viewAny($moderator));
         
-        // Can view and manage assigned community
         $this->assertTrue($this->policy->view($moderator, $community));
         $this->assertTrue($this->policy->update($moderator, $community));
         
-        // Cannot manage other communities
         $this->assertFalse($this->policy->update($moderator, $otherCommunity));
-        $this->assertFalse($this->policy->delete($moderator, $community)); // Only admin can delete
+        $this->assertFalse($this->policy->delete($moderator, $community));
     }
 
     #[Test]
