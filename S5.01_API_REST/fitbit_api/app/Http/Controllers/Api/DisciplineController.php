@@ -24,7 +24,7 @@ class DisciplineController extends Controller{
         ], 200);
     }
 
-    public function show($id): JsonResponse{
+    public function show(int $id): JsonResponse{
         $discipline = Discipline::findOrFail($id);
 
         return response()->json([

@@ -13,7 +13,7 @@ class CommunityMemberController extends Controller{
 
     use AuthorizesRequests;
 
-    public function validateData(Request $request): array{
+    protected function validateData(Request $request): array{
         return $request->validate([
             'user_id' => 'required|exists:users,id',
             'community_id' => 'required|exists:communities,id',
