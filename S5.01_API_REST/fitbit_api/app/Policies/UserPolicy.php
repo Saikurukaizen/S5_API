@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Community;
 use App\Models\User;
 
 class UserPolicy{
@@ -65,5 +66,19 @@ class UserPolicy{
 
     public function grantTempBanPermissionBeingAdmin(User $user): bool{
         return $user->role === 'admin';
+    }
+
+    public function banUser(User $user, Community $community, User $target): bool{
+        if($target->role === 'admin' || $target->id === $community->moderator_id){
+            return false;
+        }
+
+        return $user->role === 'admin' || (
+            $user->role === 'moderator' && $community->moderator === $user->id
+        );
+    }
+
+    public function unbanUser(User $user, Community $community, User $target): bool{
+        return $this->banUser($user, $community, $target);
     }
 }

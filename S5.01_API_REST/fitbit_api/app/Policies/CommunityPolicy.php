@@ -7,7 +7,9 @@ use App\Models\User;
 
 class CommunityPolicy{
 
-    
+    public function assignModerator(User $admin, Community $community): bool{
+        return $admin->role === 'admin';
+    }
     public function viewAnyUser(User $user): bool{
         return in_array($user->role, ['admin', 'moderator', 'user']);
     }
@@ -24,28 +26,12 @@ class CommunityPolicy{
         return false;
     }
 
-    public function update(User $user, Community $community): bool{
-        if($user->role === 'admin'){
-            return true;
-        }
-
-        return false;
-    }
-
-    public function BanAnyUser(User $user): bool{
-        if($user->role === 'admin' && $user->role === 'moderator'){
-            return true;
-        }
-
-        return false;
+    public function update(User $user): bool{
+        return $user->role === 'admin';
     }
 
     public function delete(User $user, Community $community): bool{
-        if($user->role === 'admin'){
-            return true;
-        }
-
-        return false;
+        return $user->role === 'admin';
     }
 }
 ?>
