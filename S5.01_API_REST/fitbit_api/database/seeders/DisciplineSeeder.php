@@ -5,19 +5,19 @@ namespace Database\Seeders;
 use App\Models\Discipline;
 use Illuminate\Database\Seeder;
 
-class DisciplineSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     */
+class DisciplineSeeder extends Seeder{
+
     public function run(): void{
+        $karateExists = Discipline::where('name', 'Karate')->exists();
+        
+        if (!$karateExists){
+            Discipline::create(['name' => 'Karate', 'description' => 'Martial art from Japan']);
+        }
 
-        Discipline::create([
-            'name' => 'Karate',
-            'description' => 'Japanese martial art'
-        ]);
-
-        Discipline::factory()->count(5)->create();
-
+        $currentCount = Discipline::count();
+        if ($currentCount < 6) {
+            $needed = 6 - $currentCount;
+            Discipline::factory()->count($needed)->create();
+        }
     }
 }

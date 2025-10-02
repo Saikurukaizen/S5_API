@@ -19,22 +19,17 @@ return new class extends Migration
             $table->string('provider')->nullable();
             $table->text('redirect_uris');
             $table->text('grant_types');
+            $table->integer('create_access_client')->default(false);
             $table->boolean('revoked');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('oauth_clients');
     }
 
-    /**
-     * Get the migration connection name.
-     */
     public function getConnection(): ?string
     {
         return $this->connection ?? config('passport.connection');

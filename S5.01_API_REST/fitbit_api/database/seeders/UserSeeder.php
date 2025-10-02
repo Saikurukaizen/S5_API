@@ -3,22 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Discipline;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
-class DatabaseSeeder extends Seeder{
+class UserSeeder extends Seeder{
 
     public function run(): void{
-
-        $this->call([
-            DisciplineSeeder::class,
-        ]);
-
-        $firstDiscipline = Discipline::first();
-        $disciplineId = $firstDiscipline ? $firstDiscipline->id : null;
-
         $user = UserFactory::new()->create([
             'name' => 'Doom',
             'lastname' => 'Eternal',
@@ -28,9 +19,11 @@ class DatabaseSeeder extends Seeder{
             'password' => bcrypt('666'),
             'remember_token' => Str::random(10),
             'bank_acc' => '666666666D',
-            'discipline_id' => $disciplineId,
+            'discipline_id' => 1,
             'role' => 'user',
         ]);
+
+        $user->createToken('Personal Access Token');
 
         $admin = UserFactory::new()->create([
             'name' => 'Lux',
@@ -44,21 +37,7 @@ class DatabaseSeeder extends Seeder{
             'discipline_id' => null,
             'role' => 'admin',
         ]);
-
-        $this->call([
-            PassportSeeder::class,
-        ]);
-
-        $this->createTokensIfPossible($user, $admin);
-    }
-    
-    private function createTokensIfPossible($user, $admin): void{
-        try{
-            $user->createToken('API Token');
-            $admin->createToken('API Token');
-            // Tokens created for users
-        } catch(\Exception $e){
-            // Tokens could not be created - Users can use login to obtain tokens
-        }
+        $admin->createToken('Personal Access Token');
     }
 }
+?>
