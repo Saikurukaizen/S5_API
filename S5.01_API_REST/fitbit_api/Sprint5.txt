@@ -560,18 +560,18 @@ UPDATE 6/10/25, LISTA DE TAREAS PARA LA Feature
 
 Controladores - Primordial
 
-- [ ] Arreglar error de sintaxis en línea 29
+- [V] Arreglar error de sintaxis en línea 29
 - [ ] Cambiar firma de métodos para usar Request en lugar de model injection
 - [ ] Implementar uso de validateData() correctamente
 - [ ] Añadir manejo de errores robusto
 
 Rutas API - Primordial
 
-- [ ] POST /api/v1/communities/{community}/members/{user}
-- [ ] DELETE /api/v1/communities/{community}/members/{user}
-- [ ] GET /api/v1/communities/{community}/members
-- [ ] Aplicar middleware auth:api
-- [ ] Aplicar policies correspondientes
+- [V] POST /api/v1/communities/{community}/members/{user}
+- [V] DELETE /api/v1/communities/{community}/members/{user}
+- [V] GET /api/v1/communities/{community}/members
+- [V] Aplicar middleware auth:api
+- [V] Aplicar policies correspondientes
 
 Controladores faltantes - Media prioridad
 
