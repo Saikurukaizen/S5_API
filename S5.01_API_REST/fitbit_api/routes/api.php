@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\DisciplineController;
 use App\Http\Controllers\Api\CommunityController;
+use App\Http\Controllers\Api\CommunityMemberController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Stats\DisciplineStatsController;
@@ -18,6 +19,9 @@ Route::prefix('v1')->group(function (){
     // Public discipline read access
     Route::get('/disciplines', [DisciplineController::class, 'index']);
     Route::get('/disciplines/{discipline}', [DisciplineController::class, 'show']);
+
+    Route::get('/communities', [CommunityController::class, 'index']);
+    Route::get('/communities/{community}', [CommunityController::class, 'show']);
 });
 
 // ✅ RUTAS PROTEGIDAS (CON AUTENTICACIÓN) - v1
@@ -41,6 +45,12 @@ Route::middleware(['auth:api'])->prefix('v1')->group(function (){
         ->middleware('can:manage-communities');
     Route::delete('/communities/{community}', [CommunityController::class, 'destroy'])
         ->middleware('can:manage-communities');
+
+    // Communities Membership
+    Route::get('/communities/{community}/members',[CommunityMemberController::class, 'index']);
+    Route::post('/communities/{community}/members/{user}', [CommunityMemberController::class, 'addMember']);
+    Route::delete('/communities/{community}/members/{user}', [CommunityMemberController::class, 'removeMember']);
+
 
     // Users for admin policy
     Route::post('/users', [UserController::class, 'store'])->middleware('can:createUser');

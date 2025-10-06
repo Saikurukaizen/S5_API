@@ -556,7 +556,63 @@ Respuestas JSON: Correcto, pero mejor usar Resources para respuestas complejas.
 Paginación: Recomendado para endpoints que devuelven colecciones grandes.
 Middleware: Asegúrate de proteger los endpoints con autenticación y autorización.
 
+UPDATE 6/10/25, LISTA DE TAREAS PARA LA Feature
 
+Controladores - Primordial
 
+- [ ] Arreglar error de sintaxis en línea 29
+- [ ] Cambiar firma de métodos para usar Request en lugar de model injection
+- [ ] Implementar uso de validateData() correctamente
+- [ ] Añadir manejo de errores robusto
 
+Rutas API - Primordial
+
+- [ ] POST /api/v1/communities/{community}/members/{user}
+- [ ] DELETE /api/v1/communities/{community}/members/{user}
+- [ ] GET /api/v1/communities/{community}/members
+- [ ] Aplicar middleware auth:api
+- [ ] Aplicar policies correspondientes
+
+Controladores faltantes - Media prioridad
+
+- [ ] CommunityController CRUD completo
+- [ ] CommunityStatsController para estadísticas
+- [ ] Implementar Resources para respuestas JSON consistentes
+
+Tests Unitarios - Prioridad
+
+- [ ] CommunityApiTest (0/17 tests pasando)
+- [ ] CommunityManagementTest (0/9 tests pasando)
+- [ ] CommunityResourcesTest (0/5 tests pasando)
+- [ ] CommunityStatsTest (0/10 tests pasando)
+- [ ] CommunityTest modelo (0/6 tests pasando)
+
+Documentacion API - Media prioridad
+- [ ] Documentar endpoints en OpenAPI/Swagger
+- [ ] Crear ejemplos de request/response
+- [ ] Documentar códigos de error
+- [ ] Actualizar README con nuevos endpoints
+
+PLAN DE ACCIÓN RECOMENDADO
+
+FASE 1: Correcciones Críticas (1-2 horas)
+Arreglar CommunityMemberController
+Crear rutas API básicas
+Ejecutar migraciones pendientes
+
+FASE 2: Implementación Core (3-4 horas)
+Crear CommunityController completo
+Implementar CommunityResource
+Hacer pasar tests básicos de API
+
+FASE 3: Features Avanzadas (2-3 horas)
+Implementar CommunityStatsController
+Completar todos los tests
+Optimizar queries y performance
+
+FASE 4: Documentación y Limpieza (1-2 horas)
+Documentar API completa
+Limpiar código y comments
+Actualizar archivo de cambios
+Preparar para merge
 	

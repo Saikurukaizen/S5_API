@@ -30,7 +30,7 @@ class CommunityMemberController extends Controller{
         }
 
         $community->members()->attach($user->id);
-        return response()->json()([
+        return response()->json([
             'message' => 'User added to community successfully.'
         ], 200);
     }
