@@ -22,7 +22,7 @@ class UserStatsTest extends TestCase{
     #[Test]
     public function it_cannot_access_if_not_authenticated(): void{
         $response = $this->getJson('/api/v1/stats/users');
-        $response->assertStatus(403);
+        $response->assertStatus(401);
     }
 
     #[Test]

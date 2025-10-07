@@ -14,10 +14,8 @@ class AppServiceProvider extends ServiceProvider{
 
     public function boot(): void{
 
-        Passport::tokensCan([
-            'place-orders' => 'Place orders',
-            'check-status' => 'Check order status',
-        ]);
+        // Configuración simple de Passport para Personal Access Tokens
+        Passport::personalAccessTokensExpireIn(now()->addDays(15));
 
         Gate::define('createUser', function ($user){
             return in_array($user->role, ['admin', 'moderator']);

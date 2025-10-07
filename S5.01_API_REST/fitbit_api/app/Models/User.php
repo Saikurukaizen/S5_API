@@ -6,10 +6,9 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable implements OAuthenticatable{
+class User extends Authenticatable{
 
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -49,6 +48,14 @@ class User extends Authenticatable implements OAuthenticatable{
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get all communities that belong to this user.
+     */
+    public function communities()
+    {
+        return $this->belongsToMany(Community::class, 'community_user');
     }
 
     /**

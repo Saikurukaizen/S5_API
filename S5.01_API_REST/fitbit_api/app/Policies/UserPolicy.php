@@ -2,9 +2,14 @@
 
 namespace App\Policies;
 
+use App\Models\Community;
 use App\Models\User;
 
 class UserPolicy{
+
+    public function viewAny(User $user): bool{
+        return in_array($user->role, ['admin', 'moderator']);
+    }
 
     public function viewAnyModelBeingAdminOrModerator(User $user): bool{
         return in_array($user->role, ['admin', 'moderator']);
@@ -55,7 +60,15 @@ class UserPolicy{
         return true;
     }
 
+    public function viewBankAcc(User $user): bool{
+        return $user->role === 'admin';
+    }
+
     public function viewBankAccBeingAdmin(User $user): bool{
+        return $user->role === 'admin';
+    }
+
+    public function assignRole(User $user): bool{
         return $user->role === 'admin';
     }
 
@@ -63,7 +76,25 @@ class UserPolicy{
         return $user->role === 'admin';
     }
 
+    public function grantTempBanPermission(User $user): bool{
+        return $user->role === 'admin';
+    }
+
     public function grantTempBanPermissionBeingAdmin(User $user): bool{
         return $user->role === 'admin';
+    }
+
+    public function banUser(User $user, Community $community, User $target): bool{
+        if($target->role === 'admin' || $target->id === $community->moderator_id){
+            return false;
+        }
+
+        return $user->role === 'admin' || (
+            $user->role === 'moderator' && $community->moderator === $user->id
+        );
+    }
+
+    public function unbanUser(User $user, Community $community, User $target): bool{
+        return $this->banUser($user, $community, $target);
     }
 }

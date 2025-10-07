@@ -34,10 +34,7 @@ class AuthController extends Controller{
         ]);
 
         $tokenResult = $user->createToken('API Token');
-        $token = $tokenResult->token;
-        
-        $token->expires_at = now()->addDays(15);
-        $token->save();
+        $token = $tokenResult->accessToken;
 
         return response()->json([
             'message' => 'User registered successfully',
@@ -47,9 +44,9 @@ class AuthController extends Controller{
                 'email' => $user->email,
                 'role' => $user->role,
             ],
-            'access_token' => $tokenResult->accessToken,
+            'access_token' => $token,
             'token_type' => 'Bearer',
-            'expires_at' => $token->expires_at->toISOString(),
+            'expires_at' => now()->addDays(15)->toISOString(),
         ], 201);
     }
 
@@ -67,10 +64,7 @@ class AuthController extends Controller{
         }
 
         $tokenResult = $user->createToken('API Token');
-        $token = $tokenResult->token;
-        
-        $token->expires_at = now()->addDays(15);
-        $token->save();
+        $token = $tokenResult->accessToken;
 
         return response()->json([
             'message' => 'Login successful',
@@ -80,9 +74,9 @@ class AuthController extends Controller{
                 'email' => $user->email,
                 'role' => $user->role,
             ],
-            'access_token' => $tokenResult->accessToken,
+            'access_token' => $token,
             'token_type' => 'Bearer',
-            'expires_at' => $token->expires_at->toISOString(),
+            'expires_at' => now()->addDays(15)->toISOString(),
         ]);
     }
 

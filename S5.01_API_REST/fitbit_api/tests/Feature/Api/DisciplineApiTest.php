@@ -65,7 +65,7 @@ class DisciplineApiTest extends TestCase{
             'description' => 'Discipline Description',
         ]);
 
-        $response->assertStatus(403);
+        $response->assertStatus(401);
     }
 
     #[Test]
@@ -222,7 +222,7 @@ class DisciplineApiTest extends TestCase{
             'description' => 'Updated Description',
         ]);
 
-        $response->assertStatus(403);
+        $response->assertStatus(401);
     }
 
     #[Test]
@@ -258,7 +258,7 @@ class DisciplineApiTest extends TestCase{
         
         $response = $this->deleteJson("/api/v1/disciplines/{$discipline->id}");
 
-        $response->assertStatus(403);
+        $response->assertStatus(401);
         $this->assertCount(1, Discipline::all()); // Should still exist
     }
 

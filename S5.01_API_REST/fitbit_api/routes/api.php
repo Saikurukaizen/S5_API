@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Api\DisciplineController;
 use App\Http\Controllers\Api\CommunityController;
+use App\Http\Controllers\Api\CommunityMemberController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Stats\DisciplineStatsController;
 use App\Http\Controllers\Stats\UserStatsController;
+use App\Http\Controllers\Stats\CommunityStatsController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +19,9 @@ Route::prefix('v1')->group(function (){
     // Public discipline read access
     Route::get('/disciplines', [DisciplineController::class, 'index']);
     Route::get('/disciplines/{discipline}', [DisciplineController::class, 'show']);
+
+    Route::get('/communities', [CommunityController::class, 'index']);
+    Route::get('/communities/{community}', [CommunityController::class, 'show']);
 });
 
 // ✅ RUTAS PROTEGIDAS (CON AUTENTICACIÓN) - v1
@@ -34,7 +39,20 @@ Route::middleware(['auth:api'])->prefix('v1')->group(function (){
         ->middleware('can:manage-disciplines');
 
     // Communities
-    // Route::apiResource('communities', CommunityController::class);
+    Route::get('/communities/create', [CommunityController::class, 'create'])
+        ->middleware('can:manage-communities');
+    Route::post('/communities', [CommunityController::class, 'store'])
+        ->middleware('can:manage-communities');
+    Route::put('/communities/{community}', [CommunityController::class, 'update'])
+        ->middleware('can:manage-communities');
+    Route::delete('/communities/{community}', [CommunityController::class, 'destroy'])
+        ->middleware('can:manage-communities');
+
+    // Communities Membership
+    Route::get('/communities/{community}/members',[CommunityMemberController::class, 'index']);
+    Route::post('/communities/{community}/members/{user}', [CommunityMemberController::class, 'addMember']);
+    Route::delete('/communities/{community}/members/{user}', [CommunityMemberController::class, 'removeMember']);
+
 
     // Users for admin policy
     Route::post('/users', [UserController::class, 'store'])->middleware('can:createUser');
@@ -59,4 +77,10 @@ Route::middleware(['auth:api', 'can:viewStats'])->prefix('v1')->group(function()
     Route::get('/stats/users/ranking', [UserStatsController::class, 'ranking']);
     Route::get('/stats/users/percentage', [UserStatsController::class, 'percentage']);
     Route::get('/stats/users/summary', [UserStatsController::class, 'summary']);
+
+    Route::get('/stats/communities', [CommunityStatsController::class, 'index']);
+    Route::get('/stats/communities/ranking', [CommunityStatsController::class, 'ranking']);
+    Route::get('/stats/communities/percentage', [CommunityStatsController::class, 'percentage']);
+    Route::get('/stats/communities/summary', [CommunityStatsController::class, 'summary']);
+    Route::get('/stats/communities/by-discipline', [CommunityStatsController::class, 'byDiscipline']);
 });

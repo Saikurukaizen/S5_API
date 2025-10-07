@@ -20,7 +20,7 @@ class DisciplineStatsTest extends TestCase{
     #[Test]
     public function it_cannot_access_if_not_authenticated(): void{
         $response = $this->getJson('/api/v1/stats/disciplines');
-        $response->assertStatus(403);
+        $response->assertStatus(401);
     }
 
     #[Test]
@@ -56,18 +56,24 @@ class DisciplineStatsTest extends TestCase{
         ]);
     }
 
-    /* #[Test]
+    #[Test]
     public function it_returns_count_of_disciplines_after_creating(): void{
+        Discipline::query()->delete();
+        User::query()->delete();
+
         $this->actingAsAdmin();
+
+        $discipline = Discipline::factory()->create();
+
         $this->postJson('/api/v1/disciplines', [
             'name' => 'Karate',
             'description' => 'Japanese martial art',
         ]);
         $response = $this->getJson('/api/v1/stats/disciplines');
         $response->assertStatus(200)->assertJsonFragment([
-            'total_disciplines' => 1,
+            'total_disciplines' => 2,
         ]);
-    } */
+    }
 
     #[Test]
     public function it_returns_count_of_disciplines_after_deleting(): void{
@@ -172,13 +178,13 @@ class DisciplineStatsTest extends TestCase{
             ->map(function($discipline) use ($userCounts){
                 return [
                     'name' => $discipline->name,
-                    'user_count' => $userCounts[$discipline->id] ?? 0,
+                    'users_count' => $userCounts[$discipline->id] ?? 0,
                 ];
-            })->sortByDesc('user_count')->values()->all();
+            })->sortByDesc('users_count')->values()->all();
 
         $response = $this->getJson('/api/v1/stats/disciplines/ranking');
         $response->assertStatus(200);
-        $response->assertJson(['data' => $ranking]);
+        $response->assertJson(['ranking' => $ranking]);
     }
 
     #[Test]
@@ -202,6 +208,19 @@ class DisciplineStatsTest extends TestCase{
         $expectedAverage = round($totalUsers / $totalDisciplines, 2);
 
         $response = $this->getJson('/api/v1/stats/disciplines');
+        $response->assertStatus(200)->assertJsonFragment([
+            'average_users_per_discipline' => $expectedAverage,
+        ]);
+    }
+}
+?>
+/stats/disciplines');
+        $response->assertStatus(200)->assertJsonFragment([
+            'average_users_per_discipline' => $expectedAverage,
+        ]);
+    }
+}
+?>$response = $this->getJson('/api/v1/stats/disciplines');
         $response->assertStatus(200)->assertJsonFragment([
             'average_users_per_discipline' => $expectedAverage,
         ]);
