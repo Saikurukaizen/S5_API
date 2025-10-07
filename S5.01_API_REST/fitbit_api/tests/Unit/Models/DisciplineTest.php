@@ -5,7 +5,6 @@ namespace Tests\Unit\Models;
 use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use App\Models\User;
-use App\Models\Community;
 use App\Models\Discipline;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\QueryException;

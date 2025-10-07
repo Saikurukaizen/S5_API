@@ -51,6 +51,14 @@ class User extends Authenticatable{
     }
 
     /**
+     * Get the discipline that owns the user.
+     */
+    public function discipline()
+    {
+        return $this->belongsTo(Discipline::class);
+    }
+
+    /**
      * Get all communities that belong to this user.
      */
     public function communities()

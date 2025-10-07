@@ -79,3 +79,127 @@ php artisan tinker
 **Fecha de finalización**: Enero 2025  
 **Estado**: PRODUCTION READY 🚀  
 **Siguiente fase**: Implementación de endpoints de negocio (Communities, Stats)
+
+protected function setUp(): void
+    {
+        parent::setUp();
+        User::query()->delete();
+        Discipline::query()->delete();
+        Community::query()->delete();
+    }
+
+    #[Test]
+    public function it_requires_name_lastname_and_email(): void
+    {
+        $user = new User();
+        $user->name = 'John';
+        $user->lastname = 'Doe';
+        $user->email = 'john@example.com';
+        $user->password = 'password123';
+
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertEquals('John', $user->name);
+        $this->assertEquals('Doe', $user->lastname);
+        $this->assertEquals('john@example.com', $user->email);
+    }
+
+    #[Test]
+    public function it_cannot_duplicate_email(): void
+    {
+        $this->expectException(QueryException::class);
+
+        User::factory()->create(['email' => 'duplicate@example.com']);
+        User::factory()->create(['email' => 'duplicate@example.com']);
+    }
+
+    #[Test]
+    public function it_has_default_role_user(): void
+    {
+        $user = User::factory()->create();
+        
+        $this->assertEquals('user', $user->role);
+    }
+
+    #[Test]
+    public function it_can_have_admin_role(): void
+    {
+        $user = User::factory()->admin()->create();
+        
+        $this->assertEquals('admin', $user->role);
+    }
+
+    #[Test]
+    public function it_can_have_moderator_role(): void
+    {
+        $user = User::factory()->moderator()->create();
+        
+        $this->assertEquals('moderator', $user->role);
+    }
+
+    #[Test]
+    public function it_can_belong_to_a_discipline(): void
+    {
+        $discipline = Discipline::factory()->create();
+        $user = User::factory()->create(['discipline_id' => $discipline->id]);
+
+        $this->assertInstanceOf(Discipline::class, $user->discipline);
+        $this->assertEquals($discipline->id, $user->discipline_id);
+    }
+
+    #[Test]
+    public function it_can_belong_to_many_communities(): void
+    {
+        $discipline = Discipline::factory()->create();
+        $user = User::factory()->create(['discipline_id' => $discipline->id]);
+        
+        $community1 = Community::factory()->create(['discipline_id' => $discipline->id]);
+        $community2 = Community::factory()->create(['discipline_id' => $discipline->id]);
+
+        $user->communities()->attach([$community1->id, $community2->id]);
+
+        $this->assertCount(2, $user->communities);
+        $this->assertTrue($user->communities->contains($community1));
+        $this->assertTrue($user->communities->contains($community2));
+    }
+
+    #[Test]
+    public function it_validates_data_types_correctly(): void
+    {
+        $this->expectException(QueryException::class);
+        
+        $longName = str_repeat('a', 300);
+        User::factory()->create(['name' => $longName]);
+    }
+
+    #[Test]
+    public function it_hides_password_and_remember_token(): void
+    {
+        $user = User::factory()->create();
+        $hiddenAttributes = $user->getHidden();
+
+        $this->assertContains('password', $hiddenAttributes);
+        $this->assertContains('remember_token', $hiddenAttributes);
+    }
+
+    #[Test]
+    public function it_can_be_created_with_fillable_attributes(): void
+    {
+        $userData = [
+            'name' => 'Jane',
+            'lastname' => 'Smith',
+            'email' => 'jane@example.com',
+            'password' => 'secret123',
+            'role' => 'moderator',
+            'date_of_birth' => '1990-01-01',
+            'bank_acc' => '1234567890'
+        ];
+
+        $user = User::factory()->create($userData);
+
+        $this->assertEquals('Jane', $user->name);
+        $this->assertEquals('Smith', $user->lastname);
+        $this->assertEquals('jane@example.com', $user->email);
+        $this->assertEquals('moderator', $user->role);
+        $this->assertEquals('1990-01-01', $user->date_of_birth);
+        $this->assertEquals('1234567890', $user->bank_acc);
+    }

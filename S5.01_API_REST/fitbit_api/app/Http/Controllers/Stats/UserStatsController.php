@@ -19,14 +19,16 @@ class UserStatsController extends Controller{
         $mostActiveUser = User::whereNotNull('discipline_id')->first();
         
         return response()->json([
-            'total_users' => $totalUsers,
-            'total_disciplines' => $totalDisciplines,
-            'most_active_user' => $mostActiveUser ? $mostActiveUser->name : null,
-            'users' => [],
+            'data' => [
+                'total_users' => $totalUsers,
+                'total_disciplines' => $totalDisciplines,
+                'most_active_user' => $mostActiveUser ? $mostActiveUser->name : null,
+                'users' => [],
+            ]
         ]);
     }
 
-    public function rankingUser(): UserStatsResource{
+    public function ranking(): JsonResponse{
         // Obtener usuarios con disciplina
         $usersWithDiscipline = User::whereNotNull('discipline_id')->with('discipline')->get();
 
@@ -50,13 +52,14 @@ class UserStatsController extends Controller{
             ];
         })->values();
 
-        $data = [
-            'ranking' => $ranking,
-        ];
-        return new UserStatsResource($data);
+        return response()->json([
+            'data' => [
+                'ranking' => $ranking,
+            ]
+        ]);
     }
 
-    public function percentageUser(): UserStatsResource{
+    public function percentage(): JsonResponse{
         $totalUsers = User::count();
         $percentagesUser = Discipline::withCount('users')->get()
             ->map(function($discipline) use ($totalUsers) {
@@ -67,13 +70,14 @@ class UserStatsController extends Controller{
                 ];
             });
 
-        $data = [
-            'percentages' => $percentagesUser,
-        ];
-        return new UserStatsResource($data);
+        return response()->json([
+            'data' => [
+                'percentages' => $percentagesUser,
+            ]
+        ]);
     }
 
-    public function summaryUser(): UserStatsResource{
+    public function summary(): JsonResponse{
         $monthly = User::select(
             DB::raw('MONTH(created_at) as month'),
             DB::raw('COUNT(*) as count')
@@ -81,9 +85,10 @@ class UserStatsController extends Controller{
         ->groupBy(DB::raw('MONTH(created_at)'))
         ->get();
 
-        $data = [
-            'monthly_summary' => $monthly,
-        ];
-        return new UserStatsResource($data);
+        return response()->json([
+            'data' => [
+                'monthly_summary' => $monthly,
+            ]
+        ]);
     }
 }
