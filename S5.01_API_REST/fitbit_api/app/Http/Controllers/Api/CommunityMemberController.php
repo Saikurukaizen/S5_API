@@ -13,7 +13,7 @@ class CommunityMemberController extends Controller{
 
     use AuthorizesRequests;
 
-    public function index(Request $request, Community $community): JsonResponse{
+    public function index(Community $community): JsonResponse{
         $this->authorize('view', $community);
         
         $members = $community->members()->paginate(10);
@@ -30,7 +30,7 @@ class CommunityMemberController extends Controller{
     }
 
 
-    public function addMember(Request $request, Community $community, User $user): JsonResponse{
+    public function addMember(Community $community, User $user): JsonResponse{
         $this->authorize('update', $community);
 
         if($community->members->contains($user->id)){
@@ -51,7 +51,7 @@ class CommunityMemberController extends Controller{
         ], 201);
     }
 
-    public function removeMember(Request $request, Community $community, User $user): JsonResponse{
+    public function removeMember(Community $community, User $user): JsonResponse{
         $this->authorize('update', $community);
 
         if(!$community->members->contains($user->id)){
