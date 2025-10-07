@@ -18,7 +18,7 @@ class Discipline extends Model
         return $this->hasMany(User::class);
     }
 
-    /* public function communities(){
+    public function communities(){
         return $this->hasMany(Community::class);
-    } */
+    }
 }

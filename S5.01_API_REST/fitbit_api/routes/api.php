@@ -39,6 +39,8 @@ Route::middleware(['auth:api'])->prefix('v1')->group(function (){
         ->middleware('can:manage-disciplines');
 
     // Communities
+    Route::get('/communities/create', [CommunityController::class, 'create'])
+        ->middleware('can:manage-communities');
     Route::post('/communities', [CommunityController::class, 'store'])
         ->middleware('can:manage-communities');
     Route::put('/communities/{community}', [CommunityController::class, 'update'])
@@ -80,4 +82,5 @@ Route::middleware(['auth:api', 'can:viewStats'])->prefix('v1')->group(function()
     Route::get('/stats/communities/ranking', [CommunityStatsController::class, 'ranking']);
     Route::get('/stats/communities/percentage', [CommunityStatsController::class, 'percentage']);
     Route::get('/stats/communities/summary', [CommunityStatsController::class, 'summary']);
+    Route::get('/stats/communities/by-discipline', [CommunityStatsController::class, 'byDiscipline']);
 });

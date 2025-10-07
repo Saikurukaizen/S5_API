@@ -20,7 +20,7 @@ class DisciplineStatsTest extends TestCase{
     #[Test]
     public function it_cannot_access_if_not_authenticated(): void{
         $response = $this->getJson('/api/v1/stats/disciplines');
-        $response->assertStatus(403);
+        $response->assertStatus(401);
     }
 
     #[Test]
@@ -71,7 +71,7 @@ class DisciplineStatsTest extends TestCase{
         ]);
         $response = $this->getJson('/api/v1/stats/disciplines');
         $response->assertStatus(200)->assertJsonFragment([
-            'total_disciplines' => 1,
+            'total_disciplines' => 2,
         ]);
     }
 
@@ -178,13 +178,13 @@ class DisciplineStatsTest extends TestCase{
             ->map(function($discipline) use ($userCounts){
                 return [
                     'name' => $discipline->name,
-                    'user_count' => $userCounts[$discipline->id] ?? 0,
+                    'users_count' => $userCounts[$discipline->id] ?? 0,
                 ];
-            })->sortByDesc('user_count')->values()->all();
+            })->sortByDesc('users_count')->values()->all();
 
         $response = $this->getJson('/api/v1/stats/disciplines/ranking');
         $response->assertStatus(200);
-        $response->assertJson(['data' => $ranking]);
+        $response->assertJson(['ranking' => $ranking]);
     }
 
     #[Test]

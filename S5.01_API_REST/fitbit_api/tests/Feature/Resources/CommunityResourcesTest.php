@@ -22,7 +22,6 @@ class CommunityResourcesTest extends TestCase
         $moderator = User::factory()->create(['role' => 'moderator']);
         $community = Community::factory()->create([
             'discipline_id' => $discipline->id,
-            'moderator_id' => $moderator->id
         ]);
         
         $response = $this->getJson('/api/v1/communities');
@@ -35,7 +34,7 @@ class CommunityResourcesTest extends TestCase
                     'name',
                     'description',
                     'discipline_id',
-                    'moderator_id',
+                    'user_id',
                     'created_at',
                     'updated_at',
                     'discipline' => [
@@ -68,11 +67,12 @@ class CommunityResourcesTest extends TestCase
             'name' => 'Hermanos del Do',
             'description' => 'Comunidad avanzada',
             'discipline_id' => $discipline->id,
-            'moderator_id' => $moderator->id
+            'user_id' => $moderator->id,
         ]);
         
         // Create some users in the community
-        User::factory()->count(3)->create(['community_id' => $community->id]);
+        $users = User::factory()->count(3)->create();
+        $community->members()->attach($users->pluck('id'));
         
         $response = $this->getJson('/api/v1/communities/' . $community->id);
         
@@ -130,13 +130,14 @@ class CommunityResourcesTest extends TestCase
             'name' => 'Elite Judo',
             'description' => 'Elite practitioners',
             'discipline_id' => $discipline->id,
-            'moderator_id' => $moderator->id
+            'user_id' => $moderator->id,
         ]);
         
         // Create users to test count
-        User::factory()->count(2)->create(['community_id' => $community->id]);
+        $users = User::factory()->count(2)->create();
+        $community->members()->attach($users->pluck('id'));
         
-        $resource = new CommunityResource($community->load(['discipline', 'moderator', 'users']));
+        $resource = new CommunityResource($community->load(['discipline', 'user', 'members']));
         $array = $resource->toArray(request());
         
         $this->assertEquals('Elite Judo', $array['name']);

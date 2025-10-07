@@ -98,9 +98,14 @@ class CommunityStatsTest extends TestCase
         $community3 = Community::factory()->create(['name' => 'Medium Community']);
         
         // Create users for each community
-        User::factory()->count(2)->create(['community_id' => $community1->id]);
-        User::factory()->count(8)->create(['community_id' => $community2->id]);
-        User::factory()->count(5)->create(['community_id' => $community3->id]);
+        $users1 = User::factory()->count(2)->create();
+        $users2 = User::factory()->count(8)->create();
+        $users3 = User::factory()->count(5)->create();
+        
+        // Attach users to communities
+        $community1->members()->attach($users1->pluck('id'));
+        $community2->members()->attach($users2->pluck('id'));
+        $community3->members()->attach($users3->pluck('id'));
         
         $response = $this->getJson('/api/v1/stats/communities');
         
@@ -119,8 +124,12 @@ class CommunityStatsTest extends TestCase
         $community2 = Community::factory()->create(['name' => 'Community B']);
         
         // Create 6 users in community1 and 4 in community2 (total 10)
-        User::factory()->count(6)->create(['community_id' => $community1->id]);
-        User::factory()->count(4)->create(['community_id' => $community2->id]);
+        $users1 = User::factory()->count(6)->create();
+        $users2 = User::factory()->count(4)->create();
+        
+        // Attach users to communities
+        $community1->members()->attach($users1->pluck('id'));
+        $community2->members()->attach($users2->pluck('id'));
         
         $response = $this->getJson('/api/v1/stats/communities/percentage');
         
@@ -152,9 +161,8 @@ class CommunityStatsTest extends TestCase
 
         foreach($communities as $community){
             $count = rand(1, 5);
-            User::factory()->count($count)->create([
-                'community_id' => $community->id,
-            ]);
+            $users = User::factory()->count($count)->create();
+            $community->members()->attach($users->pluck('id'));
             $userCounts[$community->id] = $count;
         }
 

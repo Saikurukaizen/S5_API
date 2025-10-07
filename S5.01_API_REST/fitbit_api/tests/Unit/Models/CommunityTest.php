@@ -29,11 +29,14 @@ class CommunityTest extends TestCase
     #[Test]
     public function it_cannot_duplicate_community_name_within_same_discipline(): void{
         $discipline = Discipline::factory()->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
         
         Community::create([
             'name' => 'Hermanos del Do',
             'description' => 'Primera comunidad',
             'discipline_id' => $discipline->id,
+            'user_id' => $user1->id,
         ]);
         
         $this->expectException(\Illuminate\Database\QueryException::class);
@@ -42,6 +45,7 @@ class CommunityTest extends TestCase
             'name' => 'Hermanos del Do',
             'description' => 'Segunda comunidad',
             'discipline_id' => $discipline->id,
+            'user_id' => $user2->id,
         ]);
     }
 
@@ -49,17 +53,21 @@ class CommunityTest extends TestCase
     public function it_can_have_same_name_in_different_disciplines(): void{
         $karate = Discipline::factory()->create(['name' => 'Karate']);
         $judo = Discipline::factory()->create(['name' => 'Judo']);
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
         
         $community1 = Community::create([
             'name' => 'Warriors',
             'description' => 'Karate Warriors',
             'discipline_id' => $karate->id,
+            'user_id' => $user1->id,
         ]);
         
         $community2 = Community::create([
             'name' => 'Warriors',
             'description' => 'Judo Warriors',
             'discipline_id' => $judo->id,
+            'user_id' => $user2->id,
         ]);
         
         $this->assertNotEquals($community1->id, $community2->id);
@@ -79,20 +87,23 @@ class CommunityTest extends TestCase
     #[Test]
     public function it_has_many_users(): void{
         $community = Community::factory()->create();
-        $users = User::factory()->count(3)->create(['community_id' => $community->id]);
+        $users = User::factory()->count(3)->create();
+        $community->members()->attach($users->pluck('id'));
         
-        $this->assertCount(3, $community->users);
-        $this->assertInstanceOf(User::class, $community->users->first());
+        $this->assertCount(3, $community->members);
+        $this->assertInstanceOf(User::class, $community->members->first());
     }
 
     #[Test]
     public function it_validates_data_types_correctly(): void{
+        $user = User::factory()->create();
         $community = new Community();
         $community->name = 123; // Should be string
         $community->description = true; // Should be string
         $community->discipline_id = 'invalid'; // Should be integer
+        $community->user_id = $user->id;
         
-        $this->expectException(\TypeError::class);
+        $this->expectException(\Illuminate\Database\QueryException::class);
         $community->save();
     }
 }

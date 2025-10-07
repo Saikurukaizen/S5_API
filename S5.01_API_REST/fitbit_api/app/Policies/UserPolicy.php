@@ -7,6 +7,10 @@ use App\Models\User;
 
 class UserPolicy{
 
+    public function viewAny(User $user): bool{
+        return in_array($user->role, ['admin', 'moderator']);
+    }
+
     public function viewAnyModelBeingAdminOrModerator(User $user): bool{
         return in_array($user->role, ['admin', 'moderator']);
     }
@@ -56,11 +60,23 @@ class UserPolicy{
         return true;
     }
 
+    public function viewBankAcc(User $user): bool{
+        return $user->role === 'admin';
+    }
+
     public function viewBankAccBeingAdmin(User $user): bool{
         return $user->role === 'admin';
     }
 
+    public function assignRole(User $user): bool{
+        return $user->role === 'admin';
+    }
+
     public function assignRoleBeingAdmin(User $user): bool{
+        return $user->role === 'admin';
+    }
+
+    public function grantTempBanPermission(User $user): bool{
         return $user->role === 'admin';
     }
 

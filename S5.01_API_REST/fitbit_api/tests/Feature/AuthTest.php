@@ -98,7 +98,7 @@ class AuthTest extends TestCase{
     #[Test]
     public function unauthenticated_user_cannot_access_protected_route(): void{
         $response = $this->getJson('/api/v1/users');
-        $response->assertStatus(403);
+        $response->assertStatus(401);
     }
 }
 

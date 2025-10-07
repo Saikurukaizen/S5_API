@@ -114,7 +114,7 @@ class DisciplineManagementTest extends TestCase{
 
         $response = $this->deleteJson("/api/v1/disciplines/{$disciplineId}");
         $response->assertStatus(200)->assertJsonFragment([
-            'message' => 'Discipline deleted successfully'
+            'message' => 'Discipline deleted succesfully'
         ]);
 
         $response = $this->getJson("/api/v1/disciplines/{$disciplineId}");

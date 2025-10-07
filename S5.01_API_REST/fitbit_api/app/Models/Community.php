@@ -24,7 +24,6 @@ class Community extends Model{
         return $this->belongsTo(User::class);
     }
     public function members(){
-        return $this->belongsToMany(User::class, 'community_user', 'community_id', 'user_id')
-            ->withTimestamps();
+        return $this->belongsToMany(User::class, 'community_user');
     }
 }

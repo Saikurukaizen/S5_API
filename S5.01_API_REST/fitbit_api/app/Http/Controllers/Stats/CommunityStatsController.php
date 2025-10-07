@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Discipline;
 use App\Models\Community;
 use App\Models\User;
-use Illuminate\Container\Attributes\DB as AttributesDB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -21,19 +20,21 @@ class CommunityStatsController extends Controller{
         $communitiesPerDiscipline = Discipline::withCount('communities')->get();
 
         return response()->json([
-            'total_communities' => $totalCommunities,
-            'total_users' => $totalUsers,
-            'most_popular_community' => $mostPopularCommunity ? [
-                'id' => $mostPopularCommunity->id,
-                'name' => $mostPopularCommunity->name,
-                'members_count' => $mostPopularCommunity->membersCount
-            ]: null,
-            'communities_per_discipline' => $communitiesPerDiscipline->map(function($discipline){
-                return [
-                    'discipline' => $discipline->name,
-                    'communities_count' => $discipline->communities_count
-                ];
-            })
+            'data' => [
+                'total_communities' => $totalCommunities,
+                'total_users' => $totalUsers,
+                'most_popular_community' => $mostPopularCommunity ? [
+                    'id' => $mostPopularCommunity->id,
+                    'name' => $mostPopularCommunity->name,
+                    'users_count' => $mostPopularCommunity->members_count
+                ]: null,
+                'communities_per_discipline' => $communitiesPerDiscipline->map(function($discipline){
+                    return [
+                        'discipline' => $discipline->name,
+                        'communities_count' => $discipline->communities_count
+                    ];
+                })
+            ]
         ]);
     }
 
@@ -42,43 +43,65 @@ class CommunityStatsController extends Controller{
             ->orderBy('members_count', 'desc')->take(10)->get();
 
         return response()->json([
-            'top_communities' => $topCommunities->map(function($community){
+            'data' => $topCommunities->map(function($community){
                 return [
                     'id' => $community->id,
                     'name' => $community->name,
-                    'members_count' => $community->membersCount
+                    'users_count' => $community->members_count
                 ];
             })
         ]);
     }
 
     public function percentage(): JsonResponse{
-        $totalUsers = User::count();
-        $totalCommunities = Community::count();
-        $percentage = Community::withCount('members')->get()->map(function($community) use ($totalUsers){
+        $totalUsersInCommunities = DB::table('community_user')->count();
+        $percentage = Community::withCount('members')->get()->map(function($community) use ($totalUsersInCommunities){
             return [
                 'id' => $community->id,
-                'name' => $community->name,
-                'members_count' => $community->membersCount,
-                'percentage_of_total_users' => $totalUsers > 0 ? ($community->membersCount / $totalUsers) * 100 : 0
+                'community_name' => $community->name,
+                'users_count' => $community->members_count,
+                'percentage' => $totalUsersInCommunities > 0 ? ($community->members_count / $totalUsersInCommunities) * 100 : 0
             ];
         });
 
         return response()->json([
-            'total_users' => $totalUsers,
-            'total_communities' => $totalCommunities,
-            'percentage' => $percentage
+            'data' => $percentage
         ]);
     }
 
     public function summary(): JsonResponse{
-        $monthly = Community::select(
-            DB::raw('MONTH(created_at) as month'),
-            DB::raw('COUNT(*) as count')
-        )->groupBy('month')->get();
+        $totalCommunities = Community::count();
+        $communitiesWithModerators = 0; // Assuming no moderator field for now
+        $communitiesWithoutModerators = $totalCommunities;
+        
+        $totalMembers = DB::table('community_user')->count();
+        $averageUsersPerCommunity = $totalCommunities > 0 ? $totalMembers / $totalCommunities : 0;
+        
+        $mostActiveDiscipline = Discipline::withCount('communities')
+            ->orderBy('communities_count', 'desc')
+            ->first();
 
         return response()->json([
-            'monthly_community_creation' => $monthly
+            'data' => [
+                'total_communities' => $totalCommunities,
+                'communities_with_moderators' => $communitiesWithModerators,
+                'communities_without_moderators' => $communitiesWithoutModerators,
+                'average_users_per_community' => round($averageUsersPerCommunity, 2),
+                'most_active_discipline' => $mostActiveDiscipline ? $mostActiveDiscipline->name : null
+            ]
+        ]);
+    }
+
+    public function byDiscipline(): JsonResponse{
+        $communitiesPerDiscipline = Discipline::withCount('communities')->get();
+
+        return response()->json([
+            'data' => $communitiesPerDiscipline->map(function($discipline){
+                return [
+                    'discipline_name' => $discipline->name,
+                    'communities_count' => $discipline->communities_count
+                ];
+            })
         ]);
     }
 }
