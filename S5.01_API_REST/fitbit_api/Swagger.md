@@ -161,8 +161,3 @@ storage/
 - ✅ **Facilita el desarrollo** de clientes
 - ✅ **Documentación profesional** para equipos
 
----
-
-## 🎉 **¡DOCUMENTACIÓN SWAGGER IMPLEMENTADA EXITOSAMENTE!**
-
-Tu API está ahora completamente documentada y lista para ser utilizada por desarrolladores frontend, mobile o cualquier cliente que necesite consumir tus endpoints.
