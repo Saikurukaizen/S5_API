@@ -14,7 +14,6 @@ class AppServiceProvider extends ServiceProvider{
 
     public function boot(): void{
 
-        // Configuración simple de Passport para Personal Access Tokens
         Passport::personalAccessTokensExpireIn(now()->addDays(15));
 
         Gate::define('createUser', function ($user){

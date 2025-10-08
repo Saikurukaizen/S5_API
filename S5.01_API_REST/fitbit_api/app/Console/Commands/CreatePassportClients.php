@@ -6,8 +6,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\Client;
-class CreatePassportClients extends Command
-{
+class CreatePassportClients extends Command{
+    
     protected $signature = 'app:create-passport-clients';
     protected $description = 'Create Passport Personal and Password Grant Clients';
 

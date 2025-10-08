@@ -81,21 +81,6 @@ class CommunityManagementTest extends TestCase
     }
 
     #[Test]
-    public function moderator_can_be_assigned_to_community(): void{
-        // Note: moderator_id field doesn't exist in current schema
-        // This test is skipped until moderator functionality is implemented
-        $this->markTestSkipped('Moderator functionality not implemented in current schema');
-        
-        $community = Community::factory()->create();
-        $moderator = User::factory()->create(['role' => 'moderator']);
-        
-        $community->update(['moderator_id' => $moderator->id]);
-        
-        $this->assertEquals($moderator->id, $community->fresh()->moderator_id);
-        $this->assertInstanceOf(User::class, $community->fresh()->moderator);
-    }
-
-    #[Test]
     public function community_belongs_to_discipline(): void{
         $discipline = Discipline::factory()->create(['name' => 'Karate']);
         $community = Community::factory()->create(['discipline_id' => $discipline->id]);

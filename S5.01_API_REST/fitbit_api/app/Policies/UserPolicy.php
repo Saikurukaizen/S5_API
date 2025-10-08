@@ -40,20 +40,16 @@ class UserPolicy{
     }
 
     public function deleteBeingAdmin(User $user, User $model): bool{
-        // Solo admin puede eliminar
         if ($user->role !== 'admin'){
             return false;
         }
         
-        // Si el modelo a eliminar es admin
         if ($model->role === 'admin'){
-            // Si es a sí mismo, verificar que no sea el último admin
             if ($user->id === $model->id){
                 $totalAdmins = User::where('role', 'admin')->count();
 
                 return $totalAdmins > 1;
             }
-            // Un admin no puede eliminar a otro admin
             return false;
         }
         
@@ -71,16 +67,8 @@ class UserPolicy{
     public function assignRole(User $user): bool{
         return $user->role === 'admin';
     }
-
-    public function assignRoleBeingAdmin(User $user): bool{
-        return $user->role === 'admin';
-    }
-
+    
     public function grantTempBanPermission(User $user): bool{
-        return $user->role === 'admin';
-    }
-
-    public function grantTempBanPermissionBeingAdmin(User $user): bool{
         return $user->role === 'admin';
     }
 

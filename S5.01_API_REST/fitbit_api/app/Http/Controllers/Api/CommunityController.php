@@ -11,6 +11,23 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @OA\Get(
+ *      path="/api/v1/communities",
+ *      operationId="getCommunities",
+ *      tags={"Communities"},
+ *      summary="Obtener lista de comunidades",
+ *      description="Devuelve lista paginada de comunidades",
+ *      @OA\Response(
+ *          response=200,
+ *          description="Lista de comunidades",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Community"))
+ *          )
+ *      )
+ * )
+ */
+
 class CommunityController extends Controller{
 
     use AuthorizesRequests;
@@ -30,6 +47,43 @@ class CommunityController extends Controller{
             'data' => CommunityResource::collection($communities)
         ], 200);
     }
+
+    /**
+ * @OA\Post(
+ *      path="/api/v1/communities",
+ *      operationId="createCommunity",
+ *      tags={"Communities"},
+ *      summary="Crear nueva comunidad",
+ *      description="Crea una nueva comunidad (solo admin)",
+ *      security={{"bearer_token":{}}},
+ *      @OA\RequestBody(
+ *          required=true,
+ *          description="Datos de la comunidad",
+ *          @OA\JsonContent(
+ *              required={"name","discipline_id"},
+ *              @OA\Property(property="name", type="string", example="Boxing Community"),
+ *              @OA\Property(property="description", type="string", example="Community for boxing enthusiasts"),
+ *              @OA\Property(property="discipline_id", type="integer", example=1)
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=201,
+ *          description="Comunidad creada exitosamente",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Community created successfully"),
+ *              @OA\Property(property="data", ref="#/components/schemas/Community")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="No autorizado"
+ *      ),
+ *      @OA\Response(
+ *          response=403,
+ *          description="Acceso denegado"
+ *      )
+ * )
+ */
 
     public function create(): JsonResponse{
         $this->authorize('create', Community::class);

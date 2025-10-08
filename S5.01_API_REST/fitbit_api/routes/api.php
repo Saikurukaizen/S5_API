@@ -11,12 +11,12 @@ use App\Http\Controllers\Stats\CommunityStatsController;
 
 use Illuminate\Support\Facades\Route;
 
-// ✅ RUTAS PÚBLICAS (SIN AUTENTICACIÓN) - v1
+
 Route::prefix('v1')->group(function (){
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     
-    // Public discipline read access
+
     Route::get('/disciplines', [DisciplineController::class, 'index']);
     Route::get('/disciplines/{discipline}', [DisciplineController::class, 'show']);
 
@@ -24,13 +24,11 @@ Route::prefix('v1')->group(function (){
     Route::get('/communities/{community}', [CommunityController::class, 'show']);
 });
 
-// ✅ RUTAS PROTEGIDAS (CON AUTENTICACIÓN) - v1
 Route::middleware(['auth:api'])->prefix('v1')->group(function (){
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
 
-    // Discipline management only for admin
     Route::post('/disciplines', [DisciplineController::class, 'store'])
         ->middleware('can:manage-disciplines');
     Route::put('/disciplines/{discipline}', [DisciplineController::class, 'update'])
@@ -38,7 +36,6 @@ Route::middleware(['auth:api'])->prefix('v1')->group(function (){
     Route::delete('/disciplines/{discipline}', [DisciplineController::class, 'destroy'])
         ->middleware('can:manage-disciplines');
 
-    // Communities
     Route::get('/communities/create', [CommunityController::class, 'create'])
         ->middleware('can:manage-communities');
     Route::post('/communities', [CommunityController::class, 'store'])
@@ -48,25 +45,22 @@ Route::middleware(['auth:api'])->prefix('v1')->group(function (){
     Route::delete('/communities/{community}', [CommunityController::class, 'destroy'])
         ->middleware('can:manage-communities');
 
-    // Communities Membership
     Route::get('/communities/{community}/members',[CommunityMemberController::class, 'index']);
     Route::post('/communities/{community}/members/{user}', [CommunityMemberController::class, 'addMember']);
     Route::delete('/communities/{community}/members/{user}', [CommunityMemberController::class, 'removeMember']);
 
-
-    // Users for admin policy
     Route::post('/users', [UserController::class, 'store'])->middleware('can:createUser');
     Route::get('/users', [UserController::class, 'index'])->middleware('can:viewAllUsers');
     Route::put('/users/{id}', [UserController::class, 'update'])->middleware('can:updateUser');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('can:deleteUser');
-    // Users
+
     Route::get('/users/{id}', [UserController::class, 'show']);    
     Route::put('/users/{id}/discipline', [UserController::class, 'changeDiscipline']);
     Route::post('/users/{id}/communities/{community}', [UserController::class, 'joinCommunity']);
     Route::delete('/users/{id}/communities/{community}', [UserController::class, 'leaveCommunity']);
 });
 
-// ✅ RUTAS DE ESTADÍSTICAS (CON AUTORIZACIÓN ESPECÍFICA)
+
 Route::middleware(['auth:api', 'can:viewStats'])->prefix('v1')->group(function(){
     Route::get('/stats/disciplines', [DisciplineStatsController::class, 'index']);
     Route::get('/stats/disciplines/ranking', [DisciplineStatsController::class, 'ranking']);
