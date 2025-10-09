@@ -2,7 +2,7 @@ FROM php:8.3-fpm-alpine
 
 # Instala dependencias necesarias
 RUN apk add --no-cache \
-    bash git curl zip unzip libpng-dev libjpeg-turbo-dev libfreetype-dev \
+    bash git curl zip unzip libpng-dev libjpeg-turbo-dev freetype-dev \
     oniguruma-dev zlib-dev icu-dev autoconf g++ make \
     libzip-dev netcat-openbsd
 
