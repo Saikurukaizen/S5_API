@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitbit Tracker - Diseño Compacto Moderno</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        /* Progress bars for stats */
+            .progress-bar {
+                width: 100%;
+                height: 4px;
+                background: var(--border-color);
+                border-radius: 2px;
+                margin-top: 8px;
+                overflow: hidden;
+            }
+
+            .progress-fill {
+                height: 100%;
+                background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
+                border-radius: 2px;
+                transition: width 0.6s ease;
+            }
+
+            /* Activity bars for communities */
+            .activity-bar {
+                width: 100%;
+                height: 3px;
+                background: var(--border-color);
+                border-radius: 2px;
+                margin-top: 12px;
+                overflow: hidden;
+            }
+
+            .activity-fill {
+                height: 100%;
+                background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+                border-radius: 2px;
+                transition: width 0.8s ease;
+            }
+
+            /* Status indicators */
+            .community-status {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                position: absolute;
+                top: 12px;
+                left: 12px;
+                border: 2px solid var(--bg-color);
+                z-index: 2;
+            }
+
+            .community-status.online {
+                background: #00ff88;
+                box-shadow: 0 0 6px rgba(0, 255, 136, 0.4);
+                animation: pulse-online 2s infinite;
+            }
+
+            .community-status.offline {
+                background: #666;
+            }
+
+            @keyframes pulse-online {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.6; }
+            }
+
+            /* Notification dots */
+            .notification-dot {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                background: linear-gradient(135deg, #ff4757, #ff3742);
+                color: white;
+                font-size: 10px;
+                font-weight: 600;
+                padding: 2px 6px;
+                border-radius: 10px;
+                min-width: 16px;
+                text-align: center;
+                z-index: 3;
+                animation: notification-pulse 1.5s infinite;
+                box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+            }
+
+            .notification-dot.hidden {
+                display: none;
+            }
+
+            @keyframes notification-pulse {
+                0%, 100% { 
+                    transform: scale(1);
+                    box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+                }
+                50% { 
+                    transform: scale(1.1);
+                    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.5);
+                }
+            }
+
+            /* Community card updates */
+            .community-card {
+                position: relative;
+                background: var(--card-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+                padding: 20px;
+                transition: all 0.3s ease;
+                overflow: hidden;
+            }
+
+            .community-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+                border-color: var(--accent-color);
+            }
+
+            body.dark .community-card:hover {
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            }
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        
+        body.dark .topbar {
+            background: #1e293b;
+            border-bottom-color: #334155;
+        }
+        
+        body.dark .sidebar {
+            background: #1e293b;
+            border-right-color: #334155;
+        }
+        
+        body.dark .main-content {
+            background: #0f172a;
+        }
+        
+        body.dark .section {
+            background: #1e293b;
+            border-color: #334155;
+        }
+        
+        body.dark .stat-card {
+            background: #1e293b;
+            border-color: #334155;
+        }
+        
+        body.dark .community-card {
+            background: #0f172a;
+            border-color: #334155;
+        }
+        
+        body.dark .community-card:hover {
+            background: #1e293b;
+        }
+        
+        body.dark .discipline-card {
+            background: #0f172a;
+            border-color: #334155;
+        }
+        
+        body.dark .discipline-card:hover {
+            background: #1e293b;
+        }
+        
+        body.dark .nav-item:hover {
+            background: #334155;
+        }
+        
+        body.dark .nav-item.active {
+            background: #1e3a8a;
+            color: #93c5fd;
+        }
+        
+        body.dark .user-menu {
+            background: #334155;
+        }
+        
+        body.dark .user-menu:hover {
+            background: #475569;
+        }
+        
+        body.dark .section-header {
+            border-bottom-color: #334155;
+        }
+        
+        body.dark .community-members {
+            background: #334155;
+            border-color: #475569;
+        }
+        
+        body.dark .chart-container {
+            background: #0f172a;
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            grid-template-rows: 60px 1fr;
+            height: 100vh;
+            gap: 0;
+        }
+        
+        /* ===== TOPBAR ===== */
+        .topbar {
+            grid-column: 1 / -1;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #667eea;
+            font-size: 18px;
+        }
+        
+        .topbar-stats {
+            display: flex;
+            gap: 24px;
+            font-size: 13px;
+            color: #64748b;
+            align-items: center;
+        }
+        
+        /* ===== DARK MODE TOGGLE ===== */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 12px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+        
+        .theme-label {
+            font-size: 12px;
+            color: #64748b;
+            user-select: none;
+        }
+        
+        body.dark .theme-label {
+            color: #94a3b8;
+        }
+        
+        body.dark .toggle-switch {
+            background: #475569;
+        }
+        
+        .topbar-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .topbar-stat .value {
+            font-weight: 600;
+            color: #334155;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 12px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        
+        .user-menu:hover {
+            background: #e2e8f0;
+        }
+        
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        .role-badge {
+            background: #ddd6fe;
+            color: #7c3aed;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: #f8fafc;
+            color: #334155;
+        }
+        
+        .nav-item.active {
+            background: #f0f4ff;
+            color: #667eea;
+            border-left-color: #667eea;
+        }
+        
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            padding: 24px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+        
+        .page-header {
+            margin-bottom: 24px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        
+        .page-subtitle {
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .stat-icon {
+            width: 32px;
+            height: 32px;
+            background: #f0f4ff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            font-size: 16px;
+        }
+        
+        .stat-trend {
+            font-size: 12px;
+            color: #059669;
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        
+        /* ===== ACCENT COLORS FOR STATS ===== */
+        .stat-card:nth-child(1) .stat-icon {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .stat-card:nth-child(1) .stat-trend {
+            color: #10b981;
+        }
+        
+        .stat-card:nth-child(2) .stat-icon {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        
+        .stat-card:nth-child(2) .stat-trend {
+            color: #f59e0b;
+        }
+        
+        .stat-card:nth-child(3) .stat-icon {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        
+        .stat-card:nth-child(3) .stat-trend {
+            color: #ef4444;
+        }
+        
+        .stat-card:nth-child(4) .stat-icon {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+        
+        .stat-card:nth-child(4) .stat-trend {
+            color: #8b5cf6;
+        }
+        
+        /* ===== PROGRESS BARS ===== */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            transition: width 0.8s ease;
+        }
+        
+        body.dark .progress-bar {
+            background: #334155;
+        }
+        
+        /* ===== NOTIFICATION DOT ===== */
+        .notification-dot {
+            position: relative;
+        }
+        
+        .notification-dot::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 2px solid white;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        body.dark .notification-dot::after {
+            border-color: #1e293b;
+        }
+        
+        /* ===== COMMUNITY STATUS INDICATORS ===== */
+        .status-online {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+        
+        .status-offline {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #6b7280;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        /* ===== SECTIONS ===== */
+        .section {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-action {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .section-action:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+        
+        .section-content {
+            padding: 20px;
+        }
+        
+        /* ===== COMMUNITIES GRID ===== */
+        .communities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .community-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .community-card:hover {
+            border-color: #667eea;
+            background: white;
+        }
+        
+        .community-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+        
+        .community-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 2px;
+        }
+        
+        .community-discipline {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .community-members {
+            font-size: 12px;
+            color: #64748b;
+            background: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .community-stats {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        .community-stat {
+            font-size: 11px;
+            color: #64748b;
+        }
+        
+        .community-stat .value {
+            font-weight: 600;
+            color: #334155;
+        }
+        
+        /* ===== CHART SECTION ===== */
+        .chart-container {
+            height: 200px;
+            background: #f8fafc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        /* ===== DISCIPLINES GRID ===== */
+        .disciplines-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+        }
+        
+        .discipline-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .discipline-card:hover {
+            border-color: #667eea;
+            background: white;
+            transform: translateY(-2px);
+        }
+        
+        .discipline-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .discipline-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: #334155;
+        }
+        
+        /* ===== FLOATING ACTION BUTTON ===== */
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .fab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 60px 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .communities-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .disciplines-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .topbar-stats {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="logo">
+                <span>🏃</span>
+                <span>FITBIT TRACKER</span>
+            </div>
+            
+            <div class="topbar-stats">
+                <div class="topbar-stat">
+                    <span>👟</span>
+                    <span class="value">12.4k</span>
+                    <span>pasos</span>
+                </div>
+                <div class="topbar-stat">
+                    <span>🔥</span>
+                    <span class="value">720</span>
+                    <span>kcal</span>
+                </div>
+                <div class="topbar-stat">
+                    <span>😴</span>
+                    <span class="value">6h 45m</span>
+                    <span>sueño</span>
+                </div>
+                
+                <div class="theme-toggle">
+                    <span class="theme-label">☀️</span>
+                    <button class="toggle-switch" onclick="toggleDarkMode()"></button>
+                    <span class="theme-label">🌙</span>
+                </div>
+            </div>
+            
+            <div class="user-menu">
+                <div class="avatar">MS</div>
+                <span>Marc Sanchez</span>
+                <span class="role-badge">User</span>
+                <span>▾</span>
+            </div>
+        </header>
+        
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <a href="#" class="nav-item active">
+                <div class="nav-icon">📊</div>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">👥</div>
+                <span>Comunidades</span>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">🎯</div>
+                <span>Disciplinas</span>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">📈</div>
+                <span>Estadísticas</span>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">👤</div>
+                <span>Mi Perfil</span>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">⚙️</div>
+                <span>Configuración</span>
+            </a>
+        </nav>
+        
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">Resumen de tu actividad física y comunidades</p>
+            </div>
+            
+            <!-- STATS CARDS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-trend">+12%</div>
+                    </div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Comunidades</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 60%;"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">🏃</div>
+                        <div class="stat-trend">+8%</div>
+                    </div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Disciplinas</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80%;"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-trend">+24%</div>
+                    </div>
+                    <div class="stat-value">142</div>
+                    <div class="stat-label">Miembros Activos</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 95%;"></div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-trend">+5%</div>
+                    </div>
+                    <div class="stat-value">89%</div>
+                    <div class="stat-label">Objetivos</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 89%;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- COMMUNITIES SECTION -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span>🏆</span>
+                        <span>Mis Comunidades Activas</span>
+                    </h2>
+                    <button class="section-action">Ver Todas</button>
+                </div>
+                <div class="section-content">
+                    <div class="communities-grid">
+                        <div class="community-card">
+                            <div class="community-header">
+                                <div class="community-status online"></div>
+                                <span class="notification-dot">5</span>
+                                <div class="community-info">
+                                    <h4>Running Club Barcelona</h4>
+                                    <div class="community-discipline">🏃 Running</div>
+                                </div>
+                                <div class="community-members">156 miembros</div>
+                            </div>
+                            <div class="community-stats">
+                                <div class="community-stat">
+                                    <span class="value">23</span> activos hoy
+                                </div>
+                                <div class="community-stat">
+                                    <span class="value">4.2</span> km promedio
+                                </div>
+                            </div>
+                            <div class="activity-bar">
+                                <div class="activity-fill" style="width: 78%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="community-card">
+                            <div class="community-header">
+                                <div class="community-status online"></div>
+                                <span class="notification-dot">12</span>
+                                <div class="community-info">
+                                    <h4>Cycling Masters</h4>
+                                    <div class="community-discipline">🚴 Cycling</div>
+                                </div>
+                                <div class="community-members">89 miembros</div>
+                            </div>
+                            <div class="community-stats">
+                                <div class="community-stat">
+                                    <span class="value">15</span> activos hoy
+                                </div>
+                                <div class="community-stat">
+                                    <span class="value">28</span> km promedio
+                                </div>
+                            </div>
+                            <div class="activity-bar">
+                                <div class="activity-fill" style="width: 65%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="community-card">
+                            <div class="community-header">
+                                <div class="community-status offline"></div>
+                                <span class="notification-dot hidden">0</span>
+                                <div class="community-info">
+                                    <h4>Swimming Team Pro</h4>
+                                    <div class="community-discipline">🏊 Swimming</div>
+                                </div>
+                                <div class="community-members">67 miembros</div>
+                            </div>
+                            <div class="community-stats">
+                                <div class="community-stat">
+                                    <span class="value">8</span> activos hoy
+                                </div>
+                                <div class="community-stat">
+                                    <span class="value">1.2</span> km promedio
+                                </div>
+                            </div>
+                            <div class="activity-bar">
+                                <div class="activity-fill" style="width: 42%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="community-card">
+                            <div class="community-header">
+                                <div class="community-status online"></div>
+                                <span class="notification-dot">3</span>
+                                <div class="community-info">
+                                    <h4>Fitness Warriors</h4>
+                                    <div class="community-discipline">💪 Gym</div>
+                                </div>
+                                <div class="community-members">45 miembros</div>
+                            </div>
+                            <div class="community-stats">
+                                <div class="community-stat">
+                                    <span class="value">12</span> activos hoy
+                                </div>
+                                <div class="community-stat">
+                                    <span class="value">45</span> min promedio
+                                </div>
+                            </div>
+                            <div class="activity-bar">
+                                <div class="activity-fill" style="width: 67%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PROGRESS CHART -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span>📈</span>
+                        <span>Progreso Semanal</span>
+                    </h2>
+                    <button class="section-action">Exportar</button>
+                </div>
+                <div class="section-content">
+                    <div class="chart-container">
+                        📊 Gráfica de progreso semanal (Recharts aquí)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DISCIPLINES SECTION -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span>🎯</span>
+                        <span>Disciplinas Disponibles</span>
+                    </h2>
+                    <button class="section-action">+ Nueva</button>
+                </div>
+                <div class="section-content">
+                    <div class="disciplines-grid">
+                        <div class="discipline-card">
+                            <div class="discipline-icon">🏃</div>
+                            <div class="discipline-name">Running</div>
+                        </div>
+                        <div class="discipline-card">
+                            <div class="discipline-icon">🚴</div>
+                            <div class="discipline-name">Cycling</div>
+                        </div>
+                        <div class="discipline-card">
+                            <div class="discipline-icon">🏊</div>
+                            <div class="discipline-name">Swimming</div>
+                        </div>
+                        <div class="discipline-card">
+                            <div class="discipline-icon">💪</div>
+                            <div class="discipline-name">Gym</div>
+                        </div>
+                        <div class="discipline-card">
+                            <div class="discipline-icon">⚽</div>
+                            <div class="discipline-name">Football</div>
+                        </div>
+                        <div class="discipline-card">
+                            <div class="discipline-icon">🧘</div>
+                            <div class="discipline-name">Yoga</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- FLOATING ACTION BUTTON -->
+        <button class="fab" title="Unirse a nueva comunidad">+</button>
+    </div>
+
+    <script>
+        // Dark mode toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        // Check for saved theme preference or default to light mode
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        body.className = savedTheme;
+        themeToggle.checked = savedTheme === 'dark';
+        
+        // Toggle theme
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                body.className = 'dark';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.className = 'light';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Simulate real-time notifications
+        function updateNotifications() {
+            const notificationDots = document.querySelectorAll('.notification-dot:not(.hidden)');
+            notificationDots.forEach(dot => {
+                const currentValue = parseInt(dot.textContent);
+                if (Math.random() > 0.7) {
+                    dot.textContent = currentValue + Math.floor(Math.random() * 3);
+                }
+            });
+        }
+
+        // Update notifications every 10 seconds
+        setInterval(updateNotifications, 10000);
+
+        // Animate progress bars on load
+        window.addEventListener('load', function() {
+            const progressFills = document.querySelectorAll('.progress-fill, .activity-fill');
+            progressFills.forEach(fill => {
+                const width = fill.style.width;
+                fill.style.width = '0%';
+                setTimeout(() => {
+                    fill.style.width = width;
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>

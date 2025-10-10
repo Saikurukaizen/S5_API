@@ -1,0 +1,154 @@
+.dashboard {
+  position: relative;
+  min-height: 100%;
+}
+
+.dashboard-header {
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  position: relative;
+}
+
+.dashboard-header::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(0, 230, 230, 0.06) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: -1;
+  animation: cyberpunk-glow 4s infinite;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  font-size: 42px;
+  font-weight: 900;
+  font-family: 'Orbitron', monospace;
+  color: var(--neon-cyan);
+  margin: 0 0 var(--spacing-sm) 0;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 
+    0 0 10px var(--neon-cyan),
+    0 0 20px var(--neon-cyan),
+    0 0 30px var(--neon-cyan);
+}
+
+/* Light mode adjustments for page title */
+:root .page-title {
+  text-shadow: 
+    0 0 6px var(--neon-cyan),
+    0 0 1px rgba(0, 0, 0, 0.4);
+  animation: neon-pulse-light 8s infinite alternate;
+}
+
+body.dark .page-title {
+  text-shadow: 
+    0 0 10px var(--neon-cyan),
+    0 0 20px var(--neon-cyan),
+    0 0 30px var(--neon-cyan);
+  animation: neon-pulse 3s infinite alternate;
+}
+
+.title-icon {
+  font-size: 48px;
+  background: var(--gradient-neon);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px var(--neon-cyan));
+  animation: cyberpunk-glow 3s infinite;
+}
+
+.page-subtitle {
+  color: var(--text-secondary);
+  font-size: 18px;
+  margin: 0;
+  font-weight: 400;
+  font-family: 'Exo 2', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px var(--text-secondary);
+  opacity: 0.9;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.dashboard-section {
+  width: 100%;
+}
+
+/* Floating Action Button */
+.fab {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  color: white;
+  font-size: 24px;
+  font-weight: 300;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+  transition: all var(--transition-normal);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(52, 152, 219, 0.5);
+}
+
+.fab:active {
+  transform: translateY(0) scale(0.95);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 24px;
+  }
+
+  .title-icon {
+    font-size: 28px;
+  }
+
+  .page-subtitle {
+    font-size: 14px;
+  }
+
+  .fab {
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .dashboard-content {
+    gap: var(--spacing-lg);
+  }
+}

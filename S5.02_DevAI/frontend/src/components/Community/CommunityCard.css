@@ -1,0 +1,210 @@
+.community-card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  backdrop-filter: blur(15px);
+}
+
+.community-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(0, 255, 255, 0.05) 0%, 
+    transparent 50%, 
+    rgba(255, 0, 128, 0.05) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.community-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 20px 40px rgba(0, 255, 255, 0.2),
+    0 0 30px rgba(0, 255, 255, 0.3),
+    inset 0 0 30px rgba(0, 255, 255, 0.1);
+  border-color: var(--neon-cyan);
+}
+
+.community-card.clickable {
+  cursor: pointer;
+}
+
+.community-card.clickable:active {
+  transform: translateY(-4px);
+}
+
+/* Header */
+.community-header {
+  position: relative;
+  margin-bottom: var(--spacing-lg);
+}
+
+.community-status {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.community-notifications {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+}
+
+.community-info {
+  margin: 0 var(--spacing-lg);
+}
+
+.community-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  margin-bottom: var(--spacing-xs);
+  line-height: 1.2;
+  font-family: 'Orbitron', monospace;
+  text-shadow: 0 0 15px var(--neon-cyan);
+  letter-spacing: 1px;
+}
+
+.community-discipline {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-family: 'Exo 2', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 1rem;
+}
+
+.discipline-icon {
+  font-size: 14px;
+  background: var(--gradient-neon);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px var(--neon-cyan));
+}
+
+.community-members {
+  font-size: 12px;
+  color: var(--neon-pink);
+  font-weight: 600;
+  font-family: 'Orbitron', monospace;
+  text-shadow: 0 0 10px var(--neon-pink);
+  margin-top: var(--spacing-xs);
+}
+
+/* Light mode - More saturated member count */
+:root .community-members {
+  color: var(--neon-pink);
+  font-weight: 700;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .community-members {
+  text-shadow: 0 0 10px var(--neon-pink);
+}
+
+/* Stats */
+.community-stats {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--bg-color);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.community-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+/* Light mode - More saturated numbers */
+:root .stat-value {
+  color: var(--neon-cyan);
+  font-weight: 800;
+}
+
+body.dark .stat-value {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 15px var(--neon-cyan);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* Activity */
+.community-activity {
+  margin-top: var(--spacing-md);
+}
+
+.activity-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.activity-label span:first-child {
+  color: var(--text-secondary);
+}
+
+.activity-percentage {
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+.activity-progress {
+  margin-top: var(--spacing-xs);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .community-card {
+    padding: var(--spacing-md);
+  }
+
+  .community-stats {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .community-stat {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
+}

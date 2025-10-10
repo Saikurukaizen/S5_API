@@ -1,0 +1,27 @@
+.layout {
+  min-height: 100vh;
+  background: var(--bg-color);
+}
+
+.layout-body {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  min-height: calc(100vh - 70px);
+  background: var(--bg-color);
+}
+
+.content-wrapper {
+  padding: var(--spacing-xl);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: var(--spacing-md);
+  }
+}

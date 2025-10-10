@@ -1,0 +1,187 @@
+.discipline-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+  background: var(--card-bg);
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  border-radius: var(--radius-lg);
+  transition: all 0.3s ease;
+  position: relative;
+  min-height: 120px;
+  text-align: center;
+  overflow: hidden;
+  backdrop-filter: blur(15px);
+}
+
+.discipline-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(0, 255, 255, 0.05) 0%, 
+    transparent 50%, 
+    rgba(255, 0, 128, 0.05) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.discipline-card::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(45deg, 
+    var(--neon-cyan), 
+    var(--neon-pink), 
+    var(--neon-purple), 
+    var(--neon-cyan));
+  background-size: 300% 300%;
+  border-radius: var(--radius-lg);
+  z-index: -1;
+  opacity: 0;
+  animation: gradient-shift 3s ease infinite;
+  transition: opacity 0.3s ease;
+}
+
+.discipline-card:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 
+    0 25px 50px rgba(0, 255, 255, 0.25),
+    0 0 40px rgba(0, 255, 255, 0.4),
+    inset 0 0 30px rgba(0, 255, 255, 0.1);
+  border-color: var(--neon-cyan);
+}
+
+.discipline-card:hover::after {
+  opacity: 1;
+}
+
+.discipline-card.clickable {
+  cursor: pointer;
+}
+
+.discipline-card.clickable:active {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.discipline-card.selected {
+  border-color: var(--neon-cyan);
+  background: linear-gradient(135deg, 
+    rgba(0, 255, 255, 0.15) 0%, 
+    rgba(255, 0, 128, 0.1) 100%);
+  box-shadow: 
+    0 12px 30px rgba(0, 255, 255, 0.3),
+    0 0 30px rgba(0, 255, 255, 0.4);
+}
+
+.discipline-card.active {
+  border-color: var(--neon-green);
+  background: linear-gradient(135deg, 
+    rgba(0, 255, 136, 0.15) 0%, 
+    rgba(0, 255, 255, 0.1) 100%);
+  box-shadow: 
+    0 12px 30px rgba(0, 255, 136, 0.3),
+    0 0 30px rgba(0, 255, 136, 0.4);
+}
+
+.discipline-card.active:hover {
+  border-color: var(--neon-green);
+  box-shadow: 
+    0 20px 40px rgba(0, 255, 136, 0.4),
+    0 0 40px rgba(0, 255, 136, 0.5);
+}
+
+/* Icon */
+.discipline-icon {
+  font-size: 40px;
+  margin-bottom: var(--spacing-md);
+  line-height: 1;
+  background: var(--gradient-neon);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px var(--neon-cyan));
+  position: relative;
+  z-index: 2;
+  animation: cyberpunk-glow 3s infinite alternate;
+}
+
+.discipline-card:hover .discipline-icon {
+  filter: drop-shadow(0 0 30px var(--neon-cyan));
+  animation: cyberpunk-glow 1s infinite alternate;
+  transform: scale(1.1);
+}
+
+.discipline-card.selected .discipline-icon,
+.discipline-card.active .discipline-icon {
+  filter: drop-shadow(0 0 25px var(--neon-cyan));
+  transform: scale(1.05);
+}
+
+/* Name */
+.discipline-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  line-height: 1.2;
+  font-family: 'Orbitron', monospace;
+  text-shadow: 0 0 15px var(--neon-cyan);
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 2;
+}
+
+.discipline-card.selected .discipline-name {
+  color: var(--neon-pink);
+  text-shadow: 0 0 20px var(--neon-pink);
+}
+
+.discipline-card.active .discipline-name {
+  color: var(--neon-green);
+  text-shadow: 0 0 20px var(--neon-green);
+}
+
+.discipline-card.active .discipline-name {
+  color: var(--success-color);
+}
+
+/* Active Indicator */
+.active-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.active-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--success-color);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse-online 2s infinite;
+  box-shadow: 0 0 6px rgba(46, 204, 113, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .discipline-card {
+    padding: var(--spacing-md);
+    min-height: 100px;
+  }
+
+  .discipline-icon {
+    font-size: 28px;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .discipline-name {
+    font-size: 12px;
+  }
+}
