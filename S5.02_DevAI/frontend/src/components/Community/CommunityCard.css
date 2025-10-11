@@ -77,7 +77,7 @@
 .community-discipline {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-md);
   font-size: 12px;
   color: var(--text-secondary);
   font-weight: 500;
