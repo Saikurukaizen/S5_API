@@ -2,22 +2,23 @@ import React from 'react';
 import StatsGrid from '../components/Stats/StatsGrid';
 import CommunityGrid from '../components/Community/CommunityGrid';
 import DisciplineGrid from '../components/Discipline/DisciplineGrid';
+import { AuthenticatedOnly } from '../components/RoleGuard/RoleGuard';
 import { useMockData } from '../hooks/useMockData';
-import { Stat, Community, Discipline } from '../types';
+import { Community, Discipline } from '../types';
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
   const { 
-    stats, 
     communities, 
     disciplines, 
     updateCommunityStatus, 
     toggleDiscipline 
   } = useMockData();
 
-  const handleStatClick = (stat: Stat) => {
-    console.log('Stat clicked:', stat);
-    // TODO: Navigate to detailed stat view
+  const handleStatClick = (statType: string) => {
+    console.log('Stat type clicked:', statType);
+    // TODO: Navigate to detailed stat view based on type
+    // e.g., navigate to /users, /disciplines, /activities
   };
 
   const handleCommunityClick = (community: Community) => {
@@ -49,12 +50,17 @@ const Dashboard: React.FC = () => {
 
       <div className="dashboard-content">
         {/* Stats Section */}
-        <section className="dashboard-section">
-          <StatsGrid 
-            stats={stats}
-            onStatClick={handleStatClick}
-          />
-        </section>
+        <AuthenticatedOnly fallback={
+          <div className="auth-required">
+            <p>Inicia sesión para ver las estadísticas</p>
+          </div>
+        }>
+          <section className="dashboard-section">
+            <StatsGrid 
+              onStatClick={handleStatClick}
+            />
+          </section>
+        </AuthenticatedOnly>
 
         {/* Communities Section */}
         <section className="dashboard-section">

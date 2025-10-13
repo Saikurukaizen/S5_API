@@ -104,33 +104,33 @@ export const useMockData = () => {
     { id: '8', name: 'Yoga', icon: '🧘', isActive: true },
   ]);
 
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Update community notifications
-      setCommunities(prev => prev.map(community => ({
-        ...community,
-        notifications: community.isOnline && Math.random() > 0.7 
-          ? community.notifications + Math.floor(Math.random() * 3)
-          : community.notifications,
-        activeToday: community.isOnline 
-          ? community.activeToday + (Math.random() > 0.8 ? 1 : 0)
-          : community.activeToday,
-      })));
+  // Simulate real-time updates - DISABLED to fix stats
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     // Update community notifications
+  //     setCommunities(prev => prev.map(community => ({
+  //       ...community,
+  //       notifications: community.isOnline && Math.random() > 0.7 
+  //         ? community.notifications + Math.floor(Math.random() * 3)
+  //         : community.notifications,
+  //       activeToday: community.isOnline 
+  //         ? community.activeToday + (Math.random() > 0.8 ? 1 : 0)
+  //         : community.activeToday,
+  //     })));
 
-      // Update stats occasionally
-      if (Math.random() > 0.9) {
-        setStats(prev => prev.map(stat => ({
-          ...stat,
-          value: typeof stat.value === 'number' 
-            ? stat.value + (Math.random() > 0.5 ? 1 : -1)
-            : stat.value,
-        })));
-      }
-    }, 5000);
+  //     // Update stats occasionally
+  //     if (Math.random() > 0.9) {
+  //       setStats(prev => prev.map(stat => ({
+  //         ...stat,
+  //         value: typeof stat.value === 'number' 
+  //           ? stat.value + (Math.random() > 0.5 ? 1 : -1)
+  //           : stat.value,
+  //       })));
+  //     }
+  //   }, 5000);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const updateCommunityStatus = (communityId: string, isOnline: boolean) => {
     setCommunities(prev => prev.map(community => 

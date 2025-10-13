@@ -1,4 +1,5 @@
 import React from 'react';
+import { RoleGuard, AdminOnly, ModeratorPlus } from '../RoleGuard/RoleGuard';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -14,6 +15,17 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
     { id: 'achievements', icon: '🏆', label: 'Logros', notifications: 2 },
     { id: 'profile', icon: '👤', label: 'Perfil', notifications: 0 },
     { id: 'settings', icon: '⚙️', label: 'Configuración', notifications: 0 },
+  ];
+
+  const moderatorItems = [
+    { id: 'moderation', icon: '🛡️', label: 'Moderación', notifications: 0 },
+    { id: 'reports', icon: '📋', label: 'Reportes', notifications: 3 },
+  ];
+
+  const adminItems = [
+    { id: 'admin', icon: '👑', label: 'Panel Admin', notifications: 0 },
+    { id: 'users', icon: '👥', label: 'Usuarios', notifications: 0 },
+    { id: 'analytics', icon: '📈', label: 'Analytics', notifications: 0 },
   ];
 
   return (
@@ -58,6 +70,50 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
             ))}
           </ul>
         </div>
+
+        <ModeratorPlus>
+          <div className="nav-section">
+            <h3 className="nav-title">Moderación</h3>
+            <ul className="nav-menu">
+              {moderatorItems.map((item) => (
+                <li key={item.id} className="nav-item">
+                  <button
+                    className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
+                    onClick={() => onSectionChange(item.id)}
+                  >
+                    <span className="nav-icon">{item.icon}</span>
+                    <span className="nav-label">{item.label}</span>
+                    {item.notifications > 0 && (
+                      <span className="nav-badge">{item.notifications}</span>
+                    )}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </ModeratorPlus>
+
+        <AdminOnly>
+          <div className="nav-section">
+            <h3 className="nav-title">Administración</h3>
+            <ul className="nav-menu">
+              {adminItems.map((item) => (
+                <li key={item.id} className="nav-item">
+                  <button
+                    className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
+                    onClick={() => onSectionChange(item.id)}
+                  >
+                    <span className="nav-icon">{item.icon}</span>
+                    <span className="nav-label">{item.label}</span>
+                    {item.notifications > 0 && (
+                      <span className="nav-badge">{item.notifications}</span>
+                    )}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </AdminOnly>
       </nav>
 
       <div className="sidebar-footer">
