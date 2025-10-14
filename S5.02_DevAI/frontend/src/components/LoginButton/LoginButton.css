@@ -1,0 +1,246 @@
+/* Login Button Component - Cyberpunk Design System */
+.login-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid var(--neon-cyan);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Orbitron', monospace;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  background: rgba(0, 255, 255, 0.1);
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.login-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.login-button:hover {
+  background: rgba(0, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 0 20px var(--neon-cyan),
+    0 4px 15px rgba(0, 255, 255, 0.3);
+}
+
+.login-button:hover::before {
+  left: 100%;
+}
+
+.login-button:active {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 0 15px var(--neon-cyan),
+    0 2px 8px rgba(0, 255, 255, 0.3);
+}
+
+.login-icon {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.login-text {
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Modal Overlay - Cyberpunk Design */
+.login-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: modalOverlayAppear 0.3s ease-out;
+}
+
+@keyframes modalOverlayAppear {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Modal Container - Using Card System */
+.login-modal {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(0, 255, 255, 0.1),
+    0 0 30px var(--neon-cyan);
+  max-width: 420px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow: hidden;
+  animation: modalAppear 0.3s ease-out;
+  position: relative;
+  backdrop-filter: blur(15px);
+}
+
+.login-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(0, 255, 255, 0.1) 50%, 
+    transparent 100%);
+  transition: left 0.6s ease-in-out;
+  z-index: 1;
+}
+
+.login-modal:hover::before {
+  left: 100%;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    box-shadow: 0 0 0 rgba(0, 255, 255, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    box-shadow: 
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(0, 255, 255, 0.1),
+      0 0 30px var(--neon-cyan);
+  }
+}
+
+/* Modal Header - Cyberpunk Styling */
+.login-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  z-index: 2;
+  background: rgba(0, 255, 255, 0.02);
+}
+
+.login-modal-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  font-family: 'Orbitron', monospace;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.close-button {
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid var(--neon-cyan);
+  border-radius: var(--radius-sm);
+  font-size: 1.2rem;
+  color: var(--neon-cyan);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-family: 'Orbitron', monospace;
+  font-weight: bold;
+}
+
+.close-button:hover {
+  background: rgba(0, 255, 255, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+.close-button:active {
+  transform: scale(0.95);
+}
+
+/* Modal Content */
+.login-modal-content {
+  padding: var(--spacing-lg);
+  position: relative;
+  z-index: 2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .login-button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 12px;
+    gap: var(--spacing-xs);
+  }
+  
+  .login-text {
+    display: none; /* Solo mostrar icono en mobile */
+  }
+  
+  .login-modal {
+    width: 95vw;
+    margin: 1rem;
+  }
+  
+  .login-modal-header {
+    padding: var(--spacing-md);
+  }
+  
+  .login-modal-header h2 {
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+  }
+  
+  .login-modal-content {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-button {
+    padding: var(--spacing-xs);
+    font-size: 10px;
+  }
+  
+  .login-icon {
+    font-size: 0.875rem;
+  }
+  
+  .login-modal-header h2 {
+    font-size: 1rem;
+  }
+}

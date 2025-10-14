@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { LoginRequest, RegisterRequest } from '../api/types';
+import { useAuth } from '../../contexts/AuthContext';
+import { LoginRequest, RegisterRequest } from '../../api/types';
 import './Auth.css';
 
 interface AuthFormProps {

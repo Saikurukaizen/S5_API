@@ -1,0 +1,13 @@
+/* DevTools - OCULTO */
+/* Ocultar completamente el botón del DevTools */
+
+button[aria-label*="React Query Devtools"],
+button[aria-label*="Open React Query"],
+button[aria-label*="Toggle React Query"],
+[class*="tsqd-open-btn"],
+[data-testid*="react-query-devtools-toggle"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

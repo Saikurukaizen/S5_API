@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { RoleBadge } from '../RoleBadge/RoleBadge';
+import LoginButton from '../LoginButton/LoginButton';
 import './Header.css';
 
 const Header: React.FC = () => {
@@ -55,6 +56,7 @@ const Header: React.FC = () => {
           </div>
         </div>
         <div className="header-right">
+          <LoginButton />
           <div className="theme-toggle">
             <label className="toggle-switch">
               <input

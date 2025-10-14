@@ -51,8 +51,8 @@ const Dashboard: React.FC = () => {
       <div className="dashboard-content">
         {/* Stats Section */}
         <AuthenticatedOnly fallback={
-          <div className="auth-required">
-            <p>Inicia sesión para ver las estadísticas</p>
+          <div className="stats-placeholder">
+            <p>📊 Las estadísticas aparecerán aquí una vez que inicies sesión</p>
           </div>
         }>
           <section className="dashboard-section">

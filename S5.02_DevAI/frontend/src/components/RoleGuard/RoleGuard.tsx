@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRole } from '../hooks/useRole';
+import { useRole } from '../../hooks/useRole';
 
 type UserRole = 'User' | 'Admin' | 'Moderator';
 

@@ -1,0 +1,27 @@
+/* Data Stream Lines */
+.data-stream {
+  position: fixed;
+  width: 1px;
+  height: 100px;
+  background: linear-gradient(to bottom, transparent, var(--neon-cyan), transparent);
+  animation: data-stream 3s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes data-stream {
+  0% { 
+    transform: translateY(-100%); 
+    opacity: 0; 
+  }
+  10% { 
+    opacity: 0.5; 
+  }
+  90% { 
+    opacity: 0.5; 
+  }
+  100% { 
+    transform: translateY(100vh); 
+    opacity: 0; 
+  }
+}
