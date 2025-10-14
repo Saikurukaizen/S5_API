@@ -21,14 +21,24 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Simulated logged in user for testing
+  const [user, setUser] = useState<User | null>({
+    id: 1,
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    role: 'User',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  });
+  const [token, setToken] = useState<string | null>('mock-jwt-token-for-testing');
+  const [isLoading, setIsLoading] = useState(false);
 
   const isAuthenticated = !!user && !!token;
 
   // Initialize auth state on app start
   useEffect(() => {
+    // Commented out for testing - user is already simulated as logged in
+    /*
     const initializeAuth = async () => {
       const savedToken = getAuthToken();
       
@@ -49,6 +59,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     initializeAuth();
+    */
   }, []);
 
   const login = async (credentials: LoginRequest): Promise<void> => {

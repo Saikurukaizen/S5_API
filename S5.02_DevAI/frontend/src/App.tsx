@@ -6,6 +6,7 @@ import { ApiProvider } from './providers/ApiProvider';
 import Layout from './components/Layout/Layout';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
+import UserProfile from './pages/UserProfile';
 import { useAuth } from './contexts/AuthContext';
 import './styles/globals.css';
 
@@ -45,6 +46,17 @@ function App() {
                   <ProtectedRoute>
                     <Layout>
                       <Dashboard />
+                    </Layout>
+                  </ProtectedRoute>
+                } 
+              />
+              
+              <Route 
+                path="/profile" 
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <UserProfile />
                     </Layout>
                   </ProtectedRoute>
                 } 
