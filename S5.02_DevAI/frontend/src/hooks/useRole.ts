@@ -17,9 +17,12 @@ interface RolePermissions {
 }
 
 export const useRole = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
 
-  const userRole: UserRole | null = user?.role || null;
+  // Normalize role to handle case variations from backend
+  const rawRole = user?.role;
+  const normalizedRole = rawRole ? (rawRole.charAt(0).toUpperCase() + rawRole.slice(1).toLowerCase()) as UserRole : null;
+  const userRole: UserRole | null = normalizedRole;
 
   const isUser = userRole === 'User';
   const isModerator = userRole === 'Moderator';
@@ -71,6 +74,7 @@ export const useRole = () => {
     isModerator,
     isAdmin,
     isAuthenticated,
+    isLoading,
     hasMinimumRole,
     permissions,
   };

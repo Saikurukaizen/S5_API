@@ -21,69 +21,84 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // Simulated logged in user for testing
-  const [user, setUser] = useState<User | null>({
-    id: 1,
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    role: 'User',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  });
-  const [token, setToken] = useState<string | null>('mock-jwt-token-for-testing');
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const isAuthenticated = !!user && !!token;
 
   // Initialize auth state on app start
   useEffect(() => {
-    // Commented out for testing - user is already simulated as logged in
-    /*
     const initializeAuth = async () => {
+      console.log('🔐 AuthContext: Starting auth initialization...');
       const savedToken = getAuthToken();
       
       if (savedToken) {
         try {
+          console.log('🔐 AuthContext: Found saved token, validating...');
           // Verify token is still valid by fetching user
           const userData = await authService.me();
+          console.log('🔐 AuthContext: Token valid, user data received:', {
+            userName: userData.name,
+            userRole: userData.role
+          });
           setUser(userData);
           setToken(savedToken);
         } catch (error) {
-          // Token is invalid or expired
-          console.error('Token validation failed:', error);
+          // Token is invalid or expired - clean up all state
+          console.error('🔐 AuthContext: Token validation failed:', error);
           removeAuthToken();
+          setUser(null);
+          setToken(null);
         }
+      } else {
+        console.log('🔐 AuthContext: No saved token found');
       }
       
+      console.log('🔐 AuthContext: Auth initialization completed, setting loading to false');
       setIsLoading(false);
     };
 
     initializeAuth();
-    */
   }, []);
 
   const login = async (credentials: LoginRequest): Promise<void> => {
+    console.log('🔐 AuthContext: Starting login process...');
     try {
       setIsLoading(true);
+      console.log('🔐 AuthContext: Set loading to true');
+      
       const response: AuthResponse = await authService.login(credentials);
+      console.log('🔐 AuthContext: Login API response received:', {
+        userExists: !!response.user,
+        tokenExists: !!response.access_token,
+        userName: response.user?.name,
+        userRole: response.user?.role
+      });
       
       // Set token in API client and localStorage
       setAuthToken(response.access_token);
+      console.log('🔐 AuthContext: Token set in localStorage and API client');
       
       // Update state
       setUser(response.user);
       setToken(response.access_token);
+      console.log('🔐 AuthContext: User and token state updated');
       
       console.log('Login successful:', {
         user: response.user.name,
         role: response.user.role,
         expiresIn: response.expires_in
       });
-    } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
-    } finally {
+      
+      // Ensure loading is set to false after successful login
       setIsLoading(false);
+      console.log('🔐 AuthContext: Set loading to false - Login completed');
+    } catch (error) {
+      console.error('🔐 AuthContext: Login failed:', error);
+      setIsLoading(false);
+      console.log('🔐 AuthContext: Set loading to false - Login error');
+      throw error;
     }
   };
 

@@ -31,7 +31,7 @@ export const useDisciplineStats = (): UseQueryResult<ApiResponse<DisciplineStats
   });
 };
 
-// Activity statistics hook
+// Activity statistics hook (now mapped to community stats)
 export const useActivityStats = (): UseQueryResult<ApiResponse<ActivityStats>, Error> => {
   return useQuery({
     queryKey: statsKeys.activities(),
@@ -75,3 +75,6 @@ export const useAllStats = () => {
     },
   };
 };
+
+// Main hook that components expect to import
+export const useStats = useAllStats;

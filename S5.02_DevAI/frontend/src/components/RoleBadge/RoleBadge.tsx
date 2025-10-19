@@ -20,7 +20,10 @@ export const RoleBadge: React.FC<RoleBadgeProps> = ({
   }
 
   const getRoleConfig = (role: string) => {
-    switch (role) {
+    // Normalize role to handle case variations from backend
+    const normalizedRole = role?.charAt(0).toUpperCase() + role?.slice(1).toLowerCase();
+    
+    switch (normalizedRole) {
       case 'Admin':
         return {
           icon: '👑',

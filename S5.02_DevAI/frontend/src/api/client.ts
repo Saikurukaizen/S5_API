@@ -1,87 +1,108 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { ApiError } from './types';
+import { AUTH_CONFIG } from '../config/auth.config';
 
-// API Configuration
-export const API_BASE_URL = 'http://localhost:8000/api/v1';
-
-// Create axios instance with default configuration
+// Create axios instance with configuration from auth.config
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
+  baseURL: AUTH_CONFIG.API_BASE_URL,
+  timeout: AUTH_CONFIG.SECURITY.API_TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
 });
 
-// Token management
-export const setAuthToken = (token: string) => {
-  apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  localStorage.setItem('auth_token', token);
+// Token management with centralized configuration
+export const setAuthToken = (token: string): void => {
+  localStorage.setItem(AUTH_CONFIG.TOKEN.STORAGE_KEY, token);
+  apiClient.defaults.headers.common['Authorization'] = 
+    `${AUTH_CONFIG.TOKEN.HEADER_PREFIX} ${token}`;
 };
 
 export const getAuthToken = (): string | null => {
-  const token = localStorage.getItem('auth_token');
-  if (token) {
-    apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  }
-  return token;
+  return localStorage.getItem(AUTH_CONFIG.TOKEN.STORAGE_KEY);
 };
 
-export const removeAuthToken = () => {
+export const removeAuthToken = (): void => {
+  localStorage.removeItem(AUTH_CONFIG.TOKEN.STORAGE_KEY);
   delete apiClient.defaults.headers.common['Authorization'];
-  localStorage.removeItem('auth_token');
 };
 
-// Initialize token on app start
-getAuthToken();
+// Initialize token from storage on app start
+const savedToken = getAuthToken();
+if (savedToken) {
+  apiClient.defaults.headers.common['Authorization'] = 
+    `${AUTH_CONFIG.TOKEN.HEADER_PREFIX} ${savedToken}`;
+}
 
 // Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    // Add any request interceptors here (logging, etc.)
+    const token = getAuthToken();
+    if (token && !config.headers.Authorization) {
+      config.headers.Authorization = `${AUTH_CONFIG.TOKEN.HEADER_PREFIX} ${token}`;
+    }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor
+// Response interceptor with enhanced error handling
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
-  (error) => {
-    // Handle common error responses
+  (response: AxiosResponse) => response,
+  (error: AxiosError) => {
     if (error.response?.status === 401) {
       // Unauthorized - remove token and redirect to login
       removeAuthToken();
-      // You might want to dispatch a logout action here
-      window.location.href = '/login';
+      // Dispatch event for Auth Context to handle
+      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
     }
-
-    // Transform error to our ApiError format
-    const apiError: ApiError = {
-      message: error.response?.data?.message || error.message || 'An error occurred',
-      errors: error.response?.data?.errors,
-      status: error.response?.status || 500,
-    };
-
-    return Promise.reject(apiError);
+    
+    return Promise.reject(transformError(error));
   }
 );
 
-// Generic API call helper
-export const apiCall = async <T>(
-  config: AxiosRequestConfig
-): Promise<T> => {
-  try {
-    const response = await apiClient(config);
-    return response.data;
-  } catch (error) {
-    throw error as ApiError;
+// Error transformer following documentation patterns
+const transformError = (error: AxiosError): ApiError => {
+  if (error.response?.data) {
+    const data = error.response.data as any;
+    return {
+      message: data.message || 'Error del servidor',
+      status: error.response.status,
+      errors: data.errors,
+    };
   }
+  
+  if (error.request) {
+    return {
+      message: 'Error de conexión con el servidor',
+      status: 0,
+    };
+  }
+  
+  return {
+    message: error.message || 'Error desconocido',
+    status: 500,
+  };
+};
+
+// Generic API call helper with proper typing
+interface ApiCallConfig {
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  url: string;
+  data?: any;
+  params?: any;
+}
+
+export const apiCall = async <T>(config: ApiCallConfig): Promise<T> => {
+  const response = await apiClient.request<T>({
+    method: config.method,
+    url: config.url,
+    data: config.data,
+    params: config.params,
+  });
+  
+  return response.data;
 };
 
 export default apiClient;

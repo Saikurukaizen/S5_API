@@ -30,7 +30,7 @@ export interface User {
   name: string;
   email: string;
   email_verified_at?: string;
-  role: 'User' | 'Admin' | 'Moderator';
+  role: 'user' | 'admin' | 'moderator' | 'User' | 'Admin' | 'Moderator'; // Support both cases
   created_at: string;
   updated_at: string;
 }
@@ -40,7 +40,7 @@ export interface UpdateUserRequest {
   email?: string;
   password?: string;
   password_confirmation?: string;
-  role?: 'User' | 'Admin' | 'Moderator';
+  role?: 'user' | 'admin' | 'moderator' | 'User' | 'Admin' | 'Moderator'; // Support both cases
 }
 
 // Discipline Types
@@ -181,3 +181,73 @@ export interface ActivityQueryParams extends PaginationParams {
   sort_by?: 'date' | 'duration' | 'calories_burned';
   sort_order?: 'asc' | 'desc';
 }
+
+// Community Types (for future implementation)
+export interface Community {
+  id: number;
+  name: string;
+  description?: string;
+  discipline_id: number;
+  discipline?: Discipline;
+  members_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateCommunityRequest {
+  name: string;
+  description?: string;
+  discipline_id: number;
+}
+
+export interface CommunityQueryParams extends PaginationParams {
+  discipline_id?: number;
+  search?: string;
+}
+
+// Stats Types (for Stats page)
+export interface StatsOverview {
+  total_users: number;
+  total_communities: number;
+  total_disciplines: number;
+  average_members: number;
+  growth_rate: number;
+}
+
+export interface CommunityRanking {
+  id: number;
+  name: string;
+  discipline: string;
+  members_count: number;
+  rank: number;
+}
+
+// Future XP System Types (commented for future implementation)
+/*
+export interface UserLevel {
+  current_level: number;
+  current_xp: number;
+  total_xp: number;
+  xp_for_next: number;
+  progress_percentage: number;
+}
+
+export interface XpHistoryItem {
+  id: number;
+  action_name: string;
+  xp_gained: number;
+  earned_at: string;
+  reference_type?: string;
+  reference_id?: number;
+}
+
+export interface LeaderboardEntry {
+  rank: number;
+  user: {
+    id: number;
+    name: string;
+  };
+  current_level: number;
+  total_xp: number;
+}
+*/

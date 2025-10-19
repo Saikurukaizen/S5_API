@@ -168,9 +168,7 @@ class AuthController extends Controller{
             ], 401);
         }
         
-        return response()->json([
-            'user' => $user
-        ]);
+        return response()->json($user);
     }
 }
 ?>

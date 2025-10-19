@@ -23,7 +23,7 @@ class UserSeeder extends Seeder{
             'role' => 'user',
         ]);
 
-        $user->createToken('Personal Access Token');
+        // $user->createToken('Personal Access Token');
 
         $admin = UserFactory::new()->create([
             'name' => 'Lux',
@@ -37,7 +37,6 @@ class UserSeeder extends Seeder{
             'discipline_id' => null,
             'role' => 'admin',
         ]);
-        $admin->createToken('Personal Access Token');
+        // $admin->createToken('Personal Access Token');
     }
 }
-?>

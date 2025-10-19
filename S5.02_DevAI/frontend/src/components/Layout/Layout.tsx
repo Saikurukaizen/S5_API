@@ -10,6 +10,8 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
 
+  console.log('🏗️ Layout: Rendering with activeSection:', activeSection);
+
   return (
     <div className="layout">
       <Header />

@@ -18,23 +18,7 @@ const Header: React.FC = () => {
     }
   };
 
-  // ⚠️ TEMPORARY MOCK DATA - Replace with useUserLevel hook when API v2 is ready
-  // TODO: Implement XP/Level system in backend API v2
-  // See AUTHENTICATION_IMPLEMENTATION.md for full implementation details
-  /*
-  FUTURE IMPLEMENTATION:
-  const { levelData, isLoading: levelLoading } = useUserLevel();
-  const userLevel = levelData?.current_level || 1;
-  const userXp = levelData?.current_xp || 0;
-  const maxXp = levelData?.xp_for_next || 100;
-  const progressPercentage = levelData?.progress_percentage || 0;
-  */
-  
-  // Mock data for current version (will be replaced)
-  const userLevel = 12;
-  const userXp = 2450;
-  const maxXp = 3000;
-  const progressPercentage = (userXp / maxXp) * 100;
+  // Level/XP system removed - to be implemented in future version
 
   if (!isAuthenticated || !user) {
     return (
@@ -123,26 +107,7 @@ const Header: React.FC = () => {
               <span className="user-name">{user.name}</span>
               <RoleBadge size="small" />
             </div>
-            {/* ⚠️ TEMPORARY XP/LEVEL DISPLAY - Will be replaced with UserLevelDisplay component */}
-            {/* TODO: Replace with <UserLevelDisplay /> when API v2 XP system is implemented */}
-            <div className="user-level">
-              <span className="level-text">Nivel {userLevel}</span>
-              <div className="xp-bar">
-                <div 
-                  className="xp-fill" 
-                  style={{ width: `${progressPercentage}%` }}
-                ></div>
-              </div>
-              <span className="xp-text">{userXp}/{maxXp} XP</span>
-            </div>
-            {/* 
-            FUTURE IMPLEMENTATION (when API v2 is ready):
-            {levelLoading ? (
-              <div className="level-skeleton">Cargando nivel...</div>
-            ) : (
-              <UserLevelDisplay />
-            )}
-            */}
+            {/* Level/XP system removed - to be implemented in future version */}
           </div>
           <div className="user-avatar">
             <div className="avatar-placeholder">

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRole } from '../../hooks/useRole';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 type UserRole = 'User' | 'Admin' | 'Moderator';
 
@@ -18,7 +19,12 @@ export const RoleGuard: React.FC<RoleGuardProps> = ({
   requireAuth = true,
   fallback = null,
 }) => {
-  const { userRole, isAuthenticated, hasMinimumRole } = useRole();
+  const { userRole, isAuthenticated, hasMinimumRole, isLoading } = useRole();
+
+  // Show loading while checking authentication and role
+  if (isLoading) {
+    return <LoadingSpinner message="Verificando permisos..." size="small" />;
+  }
 
   // Check authentication requirement
   if (requireAuth && !isAuthenticated) {
@@ -49,7 +55,12 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = ({
   permission,
   fallback = null,
 }) => {
-  const { permissions } = useRole();
+  const { permissions, isLoading } = useRole();
+
+  // Show loading while checking permissions
+  if (isLoading) {
+    return <LoadingSpinner message="Verificando permisos..." size="small" />;
+  }
 
   if (!permissions[permission]) {
     return fallback as React.ReactElement;

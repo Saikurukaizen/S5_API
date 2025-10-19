@@ -8,7 +8,9 @@ interface ActivityItem {
   type: 'join' | 'event' | 'update' | 'achievement';
 }
 
-// Mock activity data - TODO: Replace with API call
+// TODO: Connect to API - activity data will come from backend
+// The activityService exists in src/api/activities.ts but needs integration
+// Mock activity data - Replace with real API integration when activities endpoint is implemented
 const mockActivities: ActivityItem[] = [
   {
     id: '1',
@@ -43,6 +45,12 @@ const mockActivities: ActivityItem[] = [
 ];
 
 export const ActivityTimeline: React.FC = () => {
+  // TODO: Replace with real API call
+  // const { data: activities, isLoading } = useQuery({
+  //   queryKey: ['user-activities'],
+  //   queryFn: () => activityService.getActivities({ user_id: user?.id })
+  // });
+
   return (
     <div className="card activity-timeline-card">
       <h3 className="section-title">📊 ACTIVIDAD RECIENTE</h3>

@@ -9,6 +9,7 @@ interface DisciplineGridProps {
   selectedDisciplines?: string[];
   title?: string;
   subtitle?: string;
+  isLoading?: boolean;
 }
 
 const DisciplineGrid: React.FC<DisciplineGridProps> = ({
@@ -17,6 +18,7 @@ const DisciplineGrid: React.FC<DisciplineGridProps> = ({
   selectedDisciplines = [],
   title = 'Disciplinas Deportivas',
   subtitle = 'Selecciona las disciplinas que más te interesan',
+  isLoading = false,
 }) => {
   return (
     <div className="discipline-section">
@@ -31,17 +33,30 @@ const DisciplineGrid: React.FC<DisciplineGridProps> = ({
       </div>
       
       <div className="discipline-grid">
-        {disciplines.map((discipline) => (
-          <DisciplineCard
-            key={discipline.id}
-            discipline={discipline}
-            onClick={onDisciplineClick}
-            selected={selectedDisciplines.includes(discipline.id)}
-          />
-        ))}
+        {isLoading ? (
+          // Loading skeleton
+          [...Array(6)].map((_, index) => (
+            <div key={index} className="discipline-card-skeleton">
+              <div className="skeleton-content">
+                <div className="skeleton-icon"></div>
+                <div className="skeleton-text skeleton-name"></div>
+                <div className="skeleton-text skeleton-description"></div>
+              </div>
+            </div>
+          ))
+        ) : (
+          disciplines.map((discipline) => (
+            <DisciplineCard
+              key={discipline.id}
+              discipline={discipline}
+              onClick={onDisciplineClick}
+              selected={selectedDisciplines.includes(discipline.id)}
+            />
+          ))
+        )}
       </div>
       
-      {disciplines.length === 0 && (
+      {!isLoading && disciplines.length === 0 && (
         <div className="empty-state">
           <div className="empty-icon">🏃‍♂️</div>
           <h3>No hay disciplinas disponibles</h3>
