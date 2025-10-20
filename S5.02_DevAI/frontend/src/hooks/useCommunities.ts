@@ -16,19 +16,12 @@ const communityQueryKeys = {
 export const useCommunities = (params?: any) => {
   return useQuery({
     queryKey: communityQueryKeys.all(params),
-    queryFn: () => {
-      console.log('🏘️ useCommunities: Fetching communities...');
-      return communitiesApi.getAll(params);
+    queryFn: async () => {
+      const result = await communitiesApi.getAll(params);
+      console.log('🏘️ useCommunities: Fetch result:', result);
+      return result;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    onError: (error) => {
-      console.error('🏘️ useCommunities: Error fetching communities:', error);
-    },
-    onSuccess: (data) => {
-      console.log('🏘️ useCommunities: Successfully fetched communities:', {
-        count: data?.data?.length || 0
-      });
-    },
   });
 };
 

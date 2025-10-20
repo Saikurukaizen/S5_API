@@ -137,7 +137,7 @@ export const DisciplineDistribution: React.FC = () => {
     );
   }
 
-  const disciplines = disciplinesResponse?.data || [];
+  const disciplines = Array.isArray(disciplinesResponse) ? disciplinesResponse : [];
   const disciplineData = generateDistributionFromDisciplines(disciplines);
   
   if (disciplineData.length === 0) {

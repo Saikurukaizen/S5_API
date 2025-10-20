@@ -74,7 +74,7 @@ export const GeneralSummary: React.FC = () => {
     );
   }
 
-  const disciplines = disciplinesResponse?.data || [];
+  const disciplines = Array.isArray(disciplinesResponse) ? disciplinesResponse : [];
   
   // Calculate summary data from real API responses
   const totalUsers = userStats?.total_users || 0;

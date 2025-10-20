@@ -34,25 +34,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const savedToken = getAuthToken();
       
       if (savedToken) {
+        console.log('🔐 AuthContext: Found saved token, length:', savedToken.length);
         try {
-          console.log('🔐 AuthContext: Found saved token, validating...');
+          console.log('🔐 AuthContext: Calling /me endpoint to validate token...');
           // Verify token is still valid by fetching user
           const userData = await authService.me();
           console.log('🔐 AuthContext: Token valid, user data received:', {
             userName: userData.name,
-            userRole: userData.role
+            userRole: userData.role,
+            userId: userData.id
           });
           setUser(userData);
           setToken(savedToken);
+          console.log('🔐 AuthContext: User state set successfully');
         } catch (error) {
           // Token is invalid or expired - clean up all state
           console.error('🔐 AuthContext: Token validation failed:', error);
+          console.log('🔐 AuthContext: Cleaning up invalid token...');
           removeAuthToken();
           setUser(null);
           setToken(null);
         }
       } else {
-        console.log('🔐 AuthContext: No saved token found');
+        console.log('🔐 AuthContext: No saved token found in localStorage');
       }
       
       console.log('🔐 AuthContext: Auth initialization completed, setting loading to false');

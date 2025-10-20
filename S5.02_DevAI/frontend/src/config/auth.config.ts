@@ -4,10 +4,10 @@ export const AUTH_CONFIG = {
   AUTH_TYPE: 'jwt-bearer' as const,
   
   ENDPOINTS: {
-    login: '/login',
-    register: '/register',
-    logout: '/logout',
-    me: '/me',
+    login: 'login',
+    register: 'register',
+    logout: 'logout',
+    me: 'me',
   },
   
   TOKEN: {
@@ -31,6 +31,8 @@ export const AUTH_CONFIG = {
     MAX_LOGIN_ATTEMPTS: 3,
   },
 } as const;
+
+  console.log('DEBUG VITE_API_BASE_URL:', AUTH_CONFIG.API_BASE_URL);
 
 export const validateAuthConfig = (): boolean => {
   if (!AUTH_CONFIG.API_BASE_URL) {

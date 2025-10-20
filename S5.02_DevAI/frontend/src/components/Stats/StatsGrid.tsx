@@ -66,9 +66,11 @@ const StatsGrid: React.FC<StatsGridProps> = ({ onStatClick }) => {
         icon: '👥',
         value: userStats.total_users.toLocaleString(),
         label: 'Usuarios Totales',
-        trend: userStats.user_growth_percentage > 0 
-          ? `+${userStats.user_growth_percentage.toFixed(1)}%` 
-          : `${userStats.user_growth_percentage.toFixed(1)}%`,
+        trend: typeof userStats.user_growth_percentage === 'number'
+          ? (userStats.user_growth_percentage > 0
+              ? `+${userStats.user_growth_percentage.toFixed(1)}%`
+              : `${userStats.user_growth_percentage.toFixed(1)}%`)
+          : '-',
         type: 'users',
       },
       {
@@ -84,9 +86,11 @@ const StatsGrid: React.FC<StatsGridProps> = ({ onStatClick }) => {
         icon: '🆕',
         value: userStats.new_users_this_month.toLocaleString(),
         label: 'Nuevos Este Mes',
-        trend: userStats.user_growth_percentage > 0 
-          ? `+${userStats.user_growth_percentage.toFixed(1)}%` 
-          : `${userStats.user_growth_percentage.toFixed(1)}%`,
+        trend: typeof userStats.user_growth_percentage === 'number'
+          ? (userStats.user_growth_percentage > 0
+              ? `+${userStats.user_growth_percentage.toFixed(1)}%`
+              : `${userStats.user_growth_percentage.toFixed(1)}%`)
+          : '-',
         type: 'users',
       }
     );

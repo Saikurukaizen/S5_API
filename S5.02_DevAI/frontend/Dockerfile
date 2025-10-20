@@ -1,9 +1,11 @@
 FROM node:20-alpine
 
 WORKDIR /app
+
 COPY package*.json ./
+COPY .env.local ./
+COPY . ./
 RUN npm ci
-COPY . .
 
 EXPOSE 5173
 

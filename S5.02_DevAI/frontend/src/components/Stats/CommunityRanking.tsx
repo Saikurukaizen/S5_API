@@ -123,7 +123,7 @@ export const CommunityRanking: React.FC = () => {
     );
   }
 
-  const disciplines = disciplinesResponse?.data || [];
+  const disciplines = Array.isArray(disciplinesResponse) ? disciplinesResponse : [];
   const communityRanking = generateRankingFromDisciplines(disciplines);
 
   return (

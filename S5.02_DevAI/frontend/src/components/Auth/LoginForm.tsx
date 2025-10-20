@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './AuthForms.css';
 
@@ -9,6 +10,7 @@ interface LoginFormData {
 
 export const LoginForm: React.FC = () => {
   const { login, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: ''
@@ -29,11 +31,24 @@ export const LoginForm: React.FC = () => {
     e.preventDefault();
     setError('');
 
+    console.log('🔑 LoginForm: Starting login process with:', {
+      email: formData.email,
+      passwordLength: formData.password.length
+    });
+
     try {
+      console.log('🔑 LoginForm: Calling login function...');
       await login(formData);
-      // Navigation will be handled by ProtectedRoute in App.tsx
+      console.log('🔑 LoginForm: Login function completed successfully');
+      // Redirigir manualmente al dashboard tras login exitoso
+      navigate('/dashboard', { replace: true });
     } catch (err: any) {
-      console.error('Login error:', err);
+      console.error('🔑 LoginForm: Login error:', err);
+      console.log('🔑 LoginForm: Error details:', {
+        status: err?.response?.status,
+        message: err?.response?.data?.message,
+        data: err?.response?.data
+      });
       setError(err?.response?.data?.message || 'Error de autenticación. Verifica tus credenciales.');
     }
   };

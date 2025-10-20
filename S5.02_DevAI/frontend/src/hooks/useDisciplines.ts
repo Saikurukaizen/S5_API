@@ -12,19 +12,12 @@ import {
 export const useDisciplines = (params?: PaginationParams) => {
   return useQuery({
     queryKey: queryKeys.disciplines(params),
-    queryFn: () => {
-      console.log('🏋️ useDisciplines: Fetching disciplines...');
-      return disciplineService.getDisciplines(params);
+    queryFn: async () => {
+      const result = await disciplineService.getDisciplines(params);
+      console.log('🏋️ useDisciplines: Fetch result:', result);
+      return result;
     },
     staleTime: 10 * 60 * 1000, // 10 minutes - disciplines don't change often
-    onError: (error) => {
-      console.error('🏋️ useDisciplines: Error fetching disciplines:', error);
-    },
-    onSuccess: (data) => {
-      console.log('🏋️ useDisciplines: Successfully fetched disciplines:', {
-        count: data?.data?.length || 0
-      });
-    },
   });
 };
 
