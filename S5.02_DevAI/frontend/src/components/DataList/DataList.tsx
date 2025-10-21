@@ -61,9 +61,9 @@ export function DataList<T extends { id: number }>({
       // Add search and sort params if supported by the API
       const response = await fetchData(params);
       
-      setData(response.data);
-      setTotalPages(response.meta.last_page);
-      setTotalItems(response.meta.total);
+  setData(response?.data || []);
+  setTotalPages(response?.meta?.last_page ?? 1);
+  setTotalItems(response?.meta?.total ?? 0);
     } catch (err: any) {
       setError(err.message || 'Error loading data');
       setData([]);

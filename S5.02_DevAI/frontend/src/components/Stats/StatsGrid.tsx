@@ -64,7 +64,7 @@ const StatsGrid: React.FC<StatsGridProps> = ({ onStatClick }) => {
       {
         id: 'total-users',
         icon: '👥',
-        value: userStats.total_users.toLocaleString(),
+  value: typeof userStats.total_users === 'number' ? userStats.total_users.toLocaleString() : '-',
         label: 'Usuarios Totales',
         trend: typeof userStats.user_growth_percentage === 'number'
           ? (userStats.user_growth_percentage > 0
@@ -76,7 +76,7 @@ const StatsGrid: React.FC<StatsGridProps> = ({ onStatClick }) => {
       {
         id: 'active-users',
         icon: '🟢',
-        value: userStats.active_users.toLocaleString(),
+  value: typeof userStats.active_users === 'number' ? userStats.active_users.toLocaleString() : '-',
         label: 'Usuarios Activos',
         progress: userStats.total_users > 0 ? (userStats.active_users / userStats.total_users) * 100 : 0,
         type: 'users',
@@ -84,7 +84,7 @@ const StatsGrid: React.FC<StatsGridProps> = ({ onStatClick }) => {
       {
         id: 'new-users',
         icon: '🆕',
-        value: userStats.new_users_this_month.toLocaleString(),
+  value: typeof userStats.new_users_this_month === 'number' ? userStats.new_users_this_month.toLocaleString() : '-',
         label: 'Nuevos Este Mes',
         trend: typeof userStats.user_growth_percentage === 'number'
           ? (userStats.user_growth_percentage > 0
@@ -102,14 +102,14 @@ const StatsGrid: React.FC<StatsGridProps> = ({ onStatClick }) => {
       {
         id: 'total-disciplines',
         icon: '🏃',
-        value: disciplineStats.total_disciplines.toLocaleString(),
+  value: typeof disciplineStats.total_disciplines === 'number' ? disciplineStats.total_disciplines.toLocaleString() : '-',
         label: 'Disciplinas',
         type: 'disciplines',
       },
       {
         id: 'disciplines-with-activities',
         icon: '📊',
-        value: disciplineStats.disciplines_with_activities.toLocaleString(),
+  value: typeof disciplineStats.disciplines_with_activities === 'number' ? disciplineStats.disciplines_with_activities.toLocaleString() : '-',
         label: 'Con Actividades',
         progress: disciplineStats.total_disciplines > 0 
           ? (disciplineStats.disciplines_with_activities / disciplineStats.total_disciplines) * 100 
@@ -122,7 +122,7 @@ const StatsGrid: React.FC<StatsGridProps> = ({ onStatClick }) => {
       stats.push({
         id: 'popular-discipline',
         icon: '🏆',
-        value: disciplineStats.most_popular_discipline.activity_count.toLocaleString(),
+  value: disciplineStats.most_popular_discipline && typeof disciplineStats.most_popular_discipline.activity_count === 'number' ? disciplineStats.most_popular_discipline.activity_count.toLocaleString() : '-',
         label: `Top: ${disciplineStats.most_popular_discipline.name}`,
         type: 'disciplines',
       });
@@ -166,7 +166,7 @@ const StatsGrid: React.FC<StatsGridProps> = ({ onStatClick }) => {
       stats.push({
         id: 'most-active-user',
         icon: '🌟',
-        value: activityStats.most_active_user.activity_count.toLocaleString(),
+  value: activityStats.most_active_user && typeof activityStats.most_active_user.activity_count === 'number' ? activityStats.most_active_user.activity_count.toLocaleString() : '-',
         label: `Top: ${activityStats.most_active_user.name}`,
         type: 'activities',
       });

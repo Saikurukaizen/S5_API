@@ -1,16 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import Dashboard from '../../pages/Dashboard';
+import { DisciplinesList } from '../DisciplinesList/DisciplinesList';
+const UserProfile = React.lazy(() => import('../../pages/UserProfile'));
+import { useCommunities } from '../../hooks/useCommunities';
+import CommunityGrid from '../Community/CommunityGrid';
+import { adaptCommunitiesToFrontend } from '../../utils/adapters';
 import './Layout.css';
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
+  const { data: communitiesResponse, isLoading: communitiesLoading } = useCommunities();
+  const communities = communitiesResponse?.data ? adaptCommunitiesToFrontend(communitiesResponse.data) : [];
 
   console.log('🏗️ Layout: Rendering with activeSection:', activeSection);
+
+  let content;
+  if (activeSection === 'dashboard') {
+    content = <Dashboard />;
+  } else if (activeSection === 'disciplines') {
+    content = <DisciplinesList />;
+  } else if (activeSection === 'communities') {
+    content = <CommunityGrid communities={communities} isLoading={communitiesLoading} />;
+  } else if (activeSection === 'profile') {
+    content = (
+      <Suspense fallback={<div>Cargando perfil...</div>}>
+        <UserProfile />
+      </Suspense>
+    );
+  } else {
+    content = <Dashboard />;
+  }
 
   return (
     <div className="layout">
@@ -22,7 +43,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         />
         <main className="main-content">
           <div className="content-wrapper">
-            {children}
+            {content}
           </div>
         </main>
       </div>

@@ -1,0 +1,463 @@
+/* DisciplinesList.css - Cyberpunk Style Fitbit */
+
+:root {
+  /* Neon Colors */
+  --neon-cyan: #00e6e6;
+  --neon-pink: #e6007a;
+  --neon-purple: #7a00e6;
+  --neon-green: #00e66e;
+  --neon-red: #ff3366;
+  
+  /* Backgrounds */
+  --bg-color: #0a0a0f;
+  --bg-secondary: #0f0f1a;
+  --card-bg: rgba(20, 20, 35, 0.8);
+  --sidebar-bg: rgba(10, 10, 15, 0.95);
+  
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3cc;
+  --text-muted: #666680;
+  
+  /* Borders */
+  --border-color: rgba(0, 230, 230, 0.3);
+  
+  /* Spacing */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Radius */
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-normal: 0.3s ease-in-out;
+}
+
+/* Cyberpunk List Styles */
+.cyberpunk-list .discipline-name {
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cyberpunk-list .description-cell {
+  color: var(--text-secondary);
+  font-size: 13px;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Cyberpunk Modal */
+.cyberpunk-modal {
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  min-width: 500px;
+  max-width: 95vw;
+  backdrop-filter: blur(15px);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(0, 255, 255, 0.1);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  animation: modalSlideIn 0.3s ease-out, hologramFlicker 4s infinite;
+  font-family: 'Orbitron', monospace;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Modal con borde animado */
+.cyberpunk-modal::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg, 
+    var(--neon-cyan), 
+    var(--neon-pink), 
+    var(--neon-purple), 
+    var(--neon-cyan)
+  );
+  background-size: 400%;
+  border-radius: var(--radius-lg);
+  opacity: 0;
+  z-index: -1;
+  animation: borderGlow 3s linear infinite;
+  transition: opacity 0.3s;
+}
+
+.cyberpunk-modal:hover::before {
+  opacity: 1;
+}
+
+@keyframes borderGlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Modal Danger Variant */
+.modal-danger {
+  border-color: var(--neon-red);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(255, 51, 102, 0.2);
+}
+
+.modal-danger::before {
+  background: linear-gradient(
+    45deg, 
+    var(--neon-red), 
+    var(--neon-pink), 
+    var(--neon-red)
+  );
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h2 {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px var(--neon-cyan);
+  animation: neonPulse 2s infinite alternate;
+  margin: 0;
+}
+
+.modal-danger .modal-header h2 {
+  color: var(--neon-red);
+  text-shadow: 0 0 10px var(--neon-red);
+}
+
+@keyframes neonPulse {
+  0%, 100% { 
+    text-shadow: 0 0 5px currentColor, 0 0 10px currentColor; 
+  }
+  50% { 
+    text-shadow: 0 0 3px currentColor, 0 0 6px currentColor; 
+  }
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.close-btn:hover {
+  color: var(--neon-pink);
+  transform: rotate(90deg);
+}
+
+.close-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Modal Body */
+.modal-body {
+  margin-bottom: var(--spacing-lg);
+}
+
+.warning-text {
+  font-size: 16px;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.5;
+}
+
+.warning-text strong {
+  color: var(--neon-cyan);
+  font-weight: 700;
+}
+
+.modal-danger .warning-text strong {
+  color: var(--neon-red);
+}
+
+.warning-subtext {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding: var(--spacing-md);
+  background: rgba(255, 51, 102, 0.1);
+  border-left: 3px solid var(--neon-red);
+  border-radius: var(--radius-md);
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.cyber-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.cyber-input,
+.cyber-textarea {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text-primary);
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-fast);
+}
+
+.cyber-input::placeholder,
+.cyber-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.cyber-input:focus,
+.cyber-textarea:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: 
+    0 0 15px var(--neon-cyan),
+    inset 0 1px 0 rgba(0, 255, 255, 0.2);
+  background: rgba(0, 255, 255, 0.05);
+}
+
+.cyber-input:disabled,
+.cyber-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cyber-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Error Message */
+.error-message {
+  background: rgba(255, 51, 102, 0.1);
+  border: 1px solid var(--neon-red);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  color: var(--neon-red);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Modal Actions */
+.modal-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+}
+
+.btn-cyber {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border: 2px solid var(--neon-cyan);
+  border-radius: var(--radius-md);
+  font-family: 'Orbitron', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.btn-cyber::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg, 
+    transparent, 
+    rgba(0, 255, 255, 0.3), 
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.btn-cyber:hover::before {
+  left: 100%;
+}
+
+/* Button Primary */
+.btn-primary {
+  background: rgba(0, 230, 230, 0.1);
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: rgba(0, 230, 230, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px var(--neon-cyan);
+}
+
+/* Button Secondary */
+.btn-secondary {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  transform: translateY(-2px);
+}
+
+/* Button Danger */
+.btn-danger {
+  background: rgba(255, 51, 102, 0.1);
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: rgba(255, 51, 102, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px var(--neon-red);
+}
+
+.btn-danger::before {
+  background: linear-gradient(
+    90deg, 
+    transparent, 
+    rgba(255, 51, 102, 0.3), 
+    transparent
+  );
+}
+
+.btn-cyber:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Spinner */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cyberpunk-modal {
+    min-width: auto;
+    width: 90vw;
+    padding: var(--spacing-lg);
+  }
+
+  .modal-header h2 {
+    font-size: 18px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .btn-cyber {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Hologram Flicker Effect */
+@keyframes hologramFlicker {
+  0%, 100% { opacity: 1; }
+  98% { opacity: 1; }
+  99% { opacity: 0.85; }
+  99.5% { opacity: 1; }
+}
+
+.cyberpunk-modal {
+  /* Card flicker effect for modal */
+  animation: modalSlideIn 0.3s ease-out, hologramFlicker 4s infinite;
+}
