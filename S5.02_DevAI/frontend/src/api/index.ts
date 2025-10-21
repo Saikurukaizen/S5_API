@@ -18,6 +18,7 @@ import { disciplineService } from './disciplines';
 import { activityService } from './activities';
 import { statsService } from './stats';
 
+
 // Combined API object for convenience
 export const api = {
   auth: authService,

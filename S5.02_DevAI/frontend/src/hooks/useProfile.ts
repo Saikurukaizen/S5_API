@@ -33,7 +33,7 @@ export interface ChangePasswordData {
 const profileApi = {
   // Get current user profile
   getProfile: async (): Promise<{ data: UserProfile }> => {
-    const response = await apiClient.get('/profile');
+    const response = await apiClient.get('/me');
     return response.data;
   },
 

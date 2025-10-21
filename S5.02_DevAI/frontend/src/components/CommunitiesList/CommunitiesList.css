@@ -1,0 +1,42 @@
+/* src/components/CommunitiesList/CommunitiesList.css */
+.communities-list {
+  padding: var(--spacing-lg, 1.5rem);
+  background: var(--card-bg, rgba(20, 20, 35, 0.8));
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: 0 0 20px var(--neon-cyan, #00e6e6);
+}
+
+.community-badge {
+  background: var(--neon-purple, #7a00e6);
+  color: #fff;
+  border-radius: var(--radius-md, 8px);
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 0 8px var(--neon-purple, #7a00e6);
+}
+
+/* Modales y botones estilo cyberpunk */
+.modal-cyberpunk {
+  background: var(--bg-secondary, #0f0f1a);
+  border: 2px solid var(--neon-cyan, #00e6e6);
+  box-shadow: 0 0 30px var(--neon-cyan, #00e6e6);
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--spacing-lg, 1.5rem);
+  color: var(--text-primary, #fff);
+}
+
+.btn-cyber {
+  background: linear-gradient(90deg, var(--neon-cyan, #00e6e6), var(--neon-purple, #7a00e6));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md, 8px);
+  padding: 8px 16px;
+  font-weight: 700;
+  box-shadow: 0 0 10px var(--neon-cyan, #00e6e6);
+  transition: box-shadow 0.2s;
+}
+
+.btn-cyber:hover {
+  box-shadow: 0 0 20px var(--neon-purple, #7a00e6);
+}

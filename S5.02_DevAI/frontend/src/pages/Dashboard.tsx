@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import StatsGrid from '../components/Stats/StatsGrid';
+import { useRole } from '../hooks/useRole';
 import CommunityGrid from '../components/Community/CommunityGrid';
 import DisciplineGrid from '../components/Discipline/DisciplineGrid';
 import { AuthenticatedOnly } from '../components/RoleGuard/RoleGuard';
@@ -25,6 +26,9 @@ const Dashboard: React.FC = () => {
   // Adapt API data to frontend types
   const disciplines = disciplinesResponse?.data ? adaptDisciplinesToFrontend(disciplinesResponse.data) : [];
   const communities = communitiesResponse?.data ? adaptCommunitiesToFrontend(communitiesResponse.data) : [];
+
+  // Role logic for stats visibility
+  const { isAdmin, isModerator } = useRole();
 
   console.log('📊 Dashboard: Adapted data:', {
     disciplinesCount: disciplines.length,
@@ -81,18 +85,12 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="dashboard-content">
-        {/* Stats Section */}
-        <AuthenticatedOnly fallback={
-          <div className="stats-placeholder">
-            <p>📊 Las estadísticas aparecerán aquí una vez que inicies sesión</p>
-          </div>
-        }>
+        {/* Stats Section: Only for Admin/Moderator */}
+        {(isAdmin || isModerator) && (
           <section className="dashboard-section">
-            <StatsGrid 
-              onStatClick={handleStatClick}
-            />
+            <StatsGrid onStatClick={handleStatClick} />
           </section>
-        </AuthenticatedOnly>
+        )}
 
         {/* Communities Section */}
         <section className="dashboard-section">

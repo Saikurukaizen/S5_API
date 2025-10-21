@@ -7,6 +7,8 @@ interface RolePermissions {
   canCreateDisciplines: boolean;
   canEditDisciplines: boolean;
   canDeleteDisciplines: boolean;
+  canEditCommunities: boolean;
+  canDeleteCommunities: boolean;
   canManageUsers: boolean;
   canViewUserStats: boolean;
   canEditUsers: boolean;
@@ -46,12 +48,13 @@ export const useRole = () => {
     canCreateDisciplines: hasMinimumRole('User'),
     canEditDisciplines: false, // Only own disciplines
     canDeleteDisciplines: false, // Only own disciplines
-    
+    // Communities
+    canEditCommunities: hasMinimumRole('Moderator'),
+    canDeleteCommunities: hasMinimumRole('Admin'),
     // Moderator permissions
     canManageUsers: hasMinimumRole('Moderator'),
     canViewUserStats: hasMinimumRole('Moderator'),
     canModerateActivities: hasMinimumRole('Moderator'),
-    
     // Admin permissions
     canEditUsers: hasMinimumRole('Admin'),
     canDeleteUsers: hasMinimumRole('Admin'),

@@ -1,0 +1,56 @@
+/* src/components/UsersList/UsersList.css */
+.users-list {
+  padding: var(--spacing-lg, 1.5rem);
+  background: var(--card-bg, rgba(20, 20, 35, 0.8));
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: 0 0 20px var(--neon-cyan, #00e6e6);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--neon-cyan, #00e6e6), var(--neon-pink, #e6007a));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 0 8px var(--neon-cyan, #00e6e6);
+}
+
+.role-badge {
+  background: var(--neon-green, #00e66e);
+  color: #fff;
+  border-radius: var(--radius-md, 8px);
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 0 8px var(--neon-green, #00e66e);
+}
+
+/* Modales y botones estilo cyberpunk */
+.modal-cyberpunk {
+  background: var(--bg-secondary, #0f0f1a);
+  border: 2px solid var(--neon-cyan, #00e6e6);
+  box-shadow: 0 0 30px var(--neon-cyan, #00e6e6);
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--spacing-lg, 1.5rem);
+  color: var(--text-primary, #fff);
+}
+
+.btn-cyber {
+  background: linear-gradient(90deg, var(--neon-cyan, #00e6e6), var(--neon-pink, #e6007a));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md, 8px);
+  padding: 8px 16px;
+  font-weight: 700;
+  box-shadow: 0 0 10px var(--neon-cyan, #00e6e6);
+  transition: box-shadow 0.2s;
+}
+
+.btn-cyber:hover {
+  box-shadow: 0 0 20px var(--neon-pink, #e6007a);
+}

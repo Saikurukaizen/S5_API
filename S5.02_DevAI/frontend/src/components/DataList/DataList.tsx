@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PaginatedResponse, PaginationParams } from '../../api/types';
 import './DataList.css';
 
-interface Column<T> {
+export interface Column<T> {
   key: keyof T;
   label: string;
   render?: (value: any, item: T) => React.ReactNode;

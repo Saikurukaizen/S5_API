@@ -29,6 +29,13 @@ const Layout: React.FC = () => {
         <UserProfile />
       </Suspense>
     );
+  } else if (activeSection === 'analytics' || activeSection === 'stats') {
+    const Stats = React.lazy(() => import('../../pages/Stats'));
+    content = (
+      <Suspense fallback={<div>Cargando estadísticas...</div>}>
+        <Stats />
+      </Suspense>
+    );
   } else {
     content = <Dashboard />;
   }

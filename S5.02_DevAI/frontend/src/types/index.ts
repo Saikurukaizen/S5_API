@@ -16,20 +16,6 @@ export interface Stat {
   progress: number;
 }
 
-export interface Community {
-  id: string;
-  name: string;
-  discipline: string;
-  icon: string;
-  members: number;
-  activeToday: number;
-  averageDistance?: number;
-  averageTime?: number;
-  unit: string;
-  isOnline: boolean;
-  notifications: number;
-  activityLevel: number;
-}
 
 export interface Discipline {
   id: string;
