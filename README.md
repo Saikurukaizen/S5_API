@@ -1,9 +1,9 @@
 # 🏃‍♂️ Kaizen Fitbit Tracker
 
-## 👤 Alumno
-Desarrollado por Marc Sanchez
 
 <div align="center">
+## 👤 Alumno
+Desarrollado por Marc Sanchez
 
 ![Kaizen Logo](https://via.placeholder.com/200x200/667eea/ffffff?text=KAIZEN)
 
@@ -15,7 +15,6 @@ Desarrollado por Marc Sanchez
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
 [Características](#-características-principales) • [Demo](#-demo-interactiva) • [Tecnologías](#-stack-tecnológico) • [Instalación](#-instalación-rápida) • [Roadmap](#-roadmap-20)
-
 </div>
 
 ---
@@ -32,6 +31,7 @@ Desarrollado por Marc Sanchez
 - [Roadmap 2.0](#-roadmap-20)
 - [Contribución](#-contribución)
 - [Autor](#-sobre-el-autor)
+- [Agradecimientos](#-agradecimientos)
 - [Licencia](#-licencia)
 
 ---
@@ -39,6 +39,10 @@ Desarrollado por Marc Sanchez
 ## 📄 Descripción
 
 **Kaizen Fitbit Tracker** es una plataforma full-stack moderna para la gestión integral de comunidades deportivas. Diseñada con arquitectura escalable y siguiendo las mejores prácticas de desarrollo, permite a usuarios, moderadores y administradores gestionar disciplinas, crear comunidades y analizar estadísticas en tiempo real.
+
+Consta de una API REST para el servidor backend y una interfaz de cliente frontend.
+
+DISCLAIMER: Es un proyecto en fase de mejora, y devuelve tanto datos de la db (como el perfil de usuario y rol o el listado de Disciplinas), como datos mockeados para testear la visualización completa del frontend. Así como algunos apartados a la espera de ser ampliados en ambas partes, mejoras en los tiempos de carga, etc.
 
 ### 🌟 ¿Por qué Kaizen?
 
@@ -63,6 +67,8 @@ Desarrollado por Marc Sanchez
 - Docker
 - Deploy
 
+## IA
+
 ### Implementaciones de IA
 
 - Toda la implementación frontend UX/UI ha sido usando motores y agentes de IA como requisito obligatorio para este proyecto, usando metodologías de prompt como ASPECCT.
@@ -71,8 +77,48 @@ Desarrollado por Marc Sanchez
 - **Responsable de diseño**: Claude Sonnet 4 - Fitbit Frontend Design.
 - **Frontend React Senior**: GPT React Assistant.
 - **Frontend TypeScript Senior**: Claude Sonnet 4.5 TypeScript Frontend.
+- **Especialista SEO Frontend**: ChatGPT 4o & Claude Sonnet 4.5
 - **Full-Stack Mid-Senior Assistant**: Github Copilot integrado en IDE.
-- **SEO integration**: Marc Sanchez & ChatGPT 4o
+
+### Flujo de trabajo de IA
+
+Planificación (Claude & ChatGPT 4o) 
+   ↓
+Diseño UX/UI (Claude)
+   ↓
+Implementación React (React Frontend Assistant + Copilot)
+   ↓
+Validación API (Laravel GPT)
+   ↓
+Revisión Semántica y Debug (Claude + Copilot)
+   ↓
+Iteración siguiente
+
+Cada ciclo produce artefactos concretos:
+
+```typescript
+
+- /docs/ui-wireframe.md → //generado por GPT-4o
+- /src/routes.tsx →       //propuesto por React Assistant
+- /src/components/... →   //implementado por Copilot
+- /src/api/client.ts →    //validado por Laravel GPT
+- /src/__tests__ →        //verificado por Claude
+
+```
+
+### Metodología de prompts
+
+He usado la metodología ASPECCT para coordinar a los modelos:
+
+| Sigla | Función | Ejemplo |
+|--------|:----:|:---------:|
+| A | Actor / Rol | “Actúa como diseñador UI experto en dashboards médicos” |
+| S | Stage / Contexto | “Estamos en la fase de planificación de la vista principal del panel de actividad del usuario.” |
+| P | Purpose / Objetivo | “Definir los componentes visuales que mostrarán los datos de Fitbit.” |
+| E | Expectation / Output esperado | “Devuelve un esquema JSON con nombre de componente, tipo y props.” |
+| C | Constraints / Límites | “Usa TailwindCSS y componentes reutilizables, sin dependencias extra.” |
+| C(2) | Checks / Validación | “Verifica consistencia con los endpoints de la API Swagger.” |
+| T | Tone / Estilo | “Profesional y académico, claro, con foco en reusabilidad.” |
 
 ---
 
@@ -138,6 +184,8 @@ GET /api/v1/stats/communities/by-discipline // Stats por disciplina
 | Panel Admin | ❌ | ❌ | ✅ |
 
 ---
+
+<div align="center">
 
 ## 🛠️ Tecnologías utilizadas
 
@@ -277,6 +325,8 @@ S5_API/
 | **Producción** | [kaizen-fitbit.railway.app](https://s5-api-production.up.railway.app) | Ver abajo ↓ |
 | **API Swagger** | [/api/documentation](https://s5-api-production.up.railway.app/api/documentation) | - |
 | **Repositorio** | [GitHub](https://github.com/Saikurukaizen/S5_API/tree/dev) | - |
+
+</div>
 
 ### 👤 Usuarios de Prueba
 
@@ -562,6 +612,8 @@ npm run test:coverage
 
 ---
 
+<div align="center">
+
 ## 🤝 Contribución
 
 ¡Las contribuciones son bienvenidas! Sigue estos pasos:
@@ -592,8 +644,6 @@ Si encuentras un bug, por favor [abre un issue](https://github.com/Saikurukaizen
 
 ## 👨‍💻 Sobre el Autor
 
-<div align="center">
-
 ![Marc Sanchez](https://via.placeholder.com/150/667eea/ffffff?text=MS)
 
 ### **Marc Sanchez**
@@ -608,6 +658,7 @@ Si encuentras un bug, por favor [abre un issue](https://github.com/Saikurukaizen
 #### 🎓 Formación
 
 - **Certificado de competencias PHP Full-Stack** - Bootcamp PHP Fullstack - IT Academy - Barcelona
+- **Introduction in Computer Science** - Harvard University (Actualmente en curso)
 - **Certificado de profesionalidad Lv.3** - Desarrollo de Aplicaciones Web (2024-2026)
 - **Certificaciones**:
   - MySQL advanced

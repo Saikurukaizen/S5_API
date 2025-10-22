@@ -1,31 +1,41 @@
 import React, { useState } from 'react';
+import { useDisciplines } from '../../hooks/useDisciplines';
 import { useAuth } from '../../contexts/AuthContext';
 import './AuthForms.css';
 
 interface RegisterFormData {
+  bank_acc?: string;
   name: string;
+  lastname: string;
+  date_of_birth: string;
   email: string;
   password: string;
   confirmPassword: string;
+  discipline_id?: number;
 }
 
 export const RegisterForm: React.FC = () => {
+  const { data: disciplinesData } = useDisciplines();
   const { register, isLoading } = useAuth();
   const [formData, setFormData] = useState<RegisterFormData>({
+  bank_acc: '',
     name: '',
+    lastname: '',
+    date_of_birth: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    discipline_id: undefined
   });
   const [error, setError] = useState<string>('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: name === 'discipline_id' ? (value ? Number(value) : undefined) : value
     }));
-    // Clear error when user types
+    // Clear error cuando el usuario escribe o selecciona
     if (error) setError('');
   };
 
@@ -53,9 +63,12 @@ export const RegisterForm: React.FC = () => {
     try {
       const registerData = {
         name: formData.name,
+        lastname: formData.lastname,
+        date_of_birth: formData.date_of_birth,
         email: formData.email,
         password: formData.password,
-        password_confirmation: formData.confirmPassword
+        password_confirmation: formData.confirmPassword,
+        discipline_id: formData.discipline_id
       };
       await register(registerData);
       // Navigation will be handled by ProtectedRoute in App.tsx
@@ -75,21 +88,45 @@ export const RegisterForm: React.FC = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label className="form-label">NOMBRE COMPLETO</label>
+          <label className="form-label">NOMBRE</label>
           <input 
             type="text" 
             name="name"
             className="form-input" 
-            placeholder="Marc Sanchez"
+            placeholder="Nombre"
             value={formData.name}
             onChange={handleChange}
             required
             disabled={isLoading}
           />
         </div>
-
         <div className="form-group">
-          <label className="form-label">EMAIL ADDRESS</label>
+          <label className="form-label">APELLIDO</label>
+          <input 
+            type="text" 
+            name="lastname"
+            className="form-input" 
+            placeholder="Apellido"
+            value={formData.lastname}
+            onChange={handleChange}
+            required
+            disabled={isLoading}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label">FECHA DE NACIMIENTO</label>
+          <input 
+            type="date" 
+            name="date_of_birth"
+            className="form-input" 
+            value={formData.date_of_birth}
+            onChange={handleChange}
+            required
+            disabled={isLoading}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label">EMAIL</label>
           <input 
             type="email" 
             name="email"
@@ -101,9 +138,37 @@ export const RegisterForm: React.FC = () => {
             disabled={isLoading}
           />
         </div>
-
         <div className="form-group">
-          <label className="form-label">PASSWORD</label>
+          <label className="form-label">CUENTA BANCARIA (opcional)</label>
+          <input 
+            type="text" 
+            name="bank_acc"
+            className="form-input" 
+            placeholder="Cuenta bancaria"
+            value={formData.bank_acc}
+            onChange={handleChange}
+            disabled={isLoading}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label">DISCIPLINA (opcional)</label>
+          <select
+            name="discipline_id"
+            className="form-input"
+            value={formData.discipline_id || ''}
+            onChange={handleChange}
+            disabled={isLoading}
+          >
+            <option value="">Selecciona una disciplina</option>
+            {disciplinesData?.data?.map((discipline: any) => (
+              <option key={discipline.id} value={discipline.id}>
+                {discipline.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="form-group">
+          <label className="form-label">CONTRASEÑA</label>
           <input 
             type="password" 
             name="password"
@@ -115,9 +180,8 @@ export const RegisterForm: React.FC = () => {
             disabled={isLoading}
           />
         </div>
-
         <div className="form-group">
-          <label className="form-label">CONFIRMAR PASSWORD</label>
+          <label className="form-label">CONFIRMAR CONTRASEÑA</label>
           <input 
             type="password" 
             name="confirmPassword"
@@ -129,7 +193,6 @@ export const RegisterForm: React.FC = () => {
             disabled={isLoading}
           />
         </div>
-
         <button 
           type="submit" 
           className={`form-btn ${isLoading ? 'loading' : ''}`}

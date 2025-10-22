@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, ReactNode } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Dashboard from '../../pages/Dashboard';
@@ -9,7 +9,11 @@ import CommunityGrid from '../Community/CommunityGrid';
 import { adaptCommunitiesToFrontend } from '../../utils/adapters';
 import './Layout.css';
 
-const Layout: React.FC = () => {
+interface LayoutProps {
+  children?: ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const { data: communitiesResponse, isLoading: communitiesLoading } = useCommunities();
   const communities = communitiesResponse?.data ? adaptCommunitiesToFrontend(communitiesResponse.data) : [];
@@ -51,6 +55,7 @@ const Layout: React.FC = () => {
         <main className="main-content">
           <div className="content-wrapper">
             {content}
+            {children}
           </div>
         </main>
       </div>
