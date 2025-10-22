@@ -1,7 +1,7 @@
+<div align="center">
+
 # 🏃‍♂️ Kaizen Fitbit Tracker
 
-
-<div align="center">
 ## 👤 Alumno
 Desarrollado por Marc Sanchez
 
@@ -675,25 +675,25 @@ Si encuentras un bug, por favor [abre un issue](https://github.com/Saikurukaizen
 
 #### 🛠️ Skills Técnicos
 
-**Backend**: PHP, Laravel, Node.js, Python, Java  
+**Backend**: PHP, Laravel, Node.js, Java, C
 **Frontend**: React, TypeScript, TailwindCSS, Next.js  
-**Database**: MySQL, PostgreSQL, MongoDB, Redis  
+**Database**: MySQL, MongoDB, Redis  
 **DevOps**: Docker, Kubernetes, GitHub Actions, Railway, Vercel  
 **Tools**: Git, VSCode, Postman, Figma, Jira
 
 #### 📊 Proyectos Destacados
 
-- **Kaizen Fitness Tracker** - Plataforma de gestión de comunidades deportivas
-- **E-commerce Platform** - Marketplace full-stack con pasarela de pagos
-- **Real-Time Chat App** - Aplicación de mensajería con WebSockets
-- **Portfolio CMS** - Sistema de gestión de contenido headless
+- **Kaizen Fitbit Tracker** - Plataforma de gestión de comunidades deportivas
+- **Geestor de tareas estilo Kanban** - Gestor de tareas en MVC 
+- **e-Commerce con CRM** - Aplicación e-commerce con presupuestador para empresa de aluminios.
+- **Filesystem Package** - Refactorización de un paquete de gestor de archivos
 
 #### 🌱 Actualmente Aprendiendo
 
-- Arquitecturas de microservicios
-- GraphQL & Apollo
-- Machine Learning con TensorFlow
-- Web3 & Blockchain
+- Patrones de diseño, arquitectura de software
+- Claude Code con IA
+- Bases de Python
+- Data Algorhytms
 
 ---
 
