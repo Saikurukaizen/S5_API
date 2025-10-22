@@ -5,7 +5,7 @@ FROM php:8.2-fpm
 
 # Instala dependencias necesarias
 RUN apt-get update && apt-get install -y \
-    zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev curl git \
+    zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev curl git netcat-openbsd \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
 # Copiamos el código de la API desde la subcarpeta
