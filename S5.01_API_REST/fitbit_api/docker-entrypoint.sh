@@ -1,8 +1,11 @@
 #!/bin/sh
 set -e
 
-echo "Esperando a que la base de datos (MySQL) esté lista..."
-until nc -z db 3306; do
+DB_HOST=${DB_HOST:-db}
+DB_PORT=${DB_PORT:-3306}
+
+echo "Esperando a que la base de datos ($DB_HOST:$DB_PORT) esté lista..."
+until nc -z "$DB_HOST" "$DB_PORT"; do
   echo "Esperando conexión con DB..."
   sleep 3
 done
