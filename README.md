@@ -270,6 +270,7 @@ GET /api/v1/stats/communities/by-discipline // Stats por disciplina
 
 **CI/CD**: GitHub Actions para testing y deploy automático
 
+</div>
 ---
 
 ## 🏗 Arquitectura del Sistema
@@ -642,7 +643,7 @@ npm run test:coverage
 
 ---
 
-<div align="center">
+
 
 ## 🤝 Contribución
 
@@ -672,6 +673,8 @@ Si encuentras un bug, por favor [abre un issue](https://github.com/Saikurukaizen
 
 ---
 
+<div align="center">
+ 
 ## 👨‍💻 Sobre el Autor
 
   <div align="center">
