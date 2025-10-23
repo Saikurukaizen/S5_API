@@ -674,7 +674,9 @@ Si encuentras un bug, por favor [abre un issue](https://github.com/Saikurukaizen
 
 ## 👨‍💻 Sobre el Autor
 
-![Marc Sanchez](S5.02_DevAI/frontend/assets/img/IMG_20251022_150709.png)
+  <div align="center">
+  <img src="S5.02_DevAI/frontend/assets/img/IMG_20251022_150709.png" alt="Hola" width="110">
+  </div>
 
 ### **Marc Sanchez**
 *Full-Stack Developer | DevOps Enthusiast | Open Source Contributor*
