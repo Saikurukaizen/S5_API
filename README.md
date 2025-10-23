@@ -214,12 +214,17 @@ GET /api/v1/stats/communities/by-discipline // Stats por disciplina
 </tr>
 </table>
 
-- **Framework**: Laravel 12.0 (último estable)
-- **Autenticación**: JWT Bearer (NO Passport OAuth2)
-- **Base de Datos**: MySQL 8.0 con migraciones y seeders
-- **Cache**: Redis para sesiones y queries
-- **Documentación**: Swagger/OpenAPI 3.0
-- **Testing**: PHPUnit con 80%+ coverage en +100 tests, con implementación TDD
+**Framework**: Laravel 12.0 (último estable)
+
+**Autenticación**: JWT Bearer (NO Passport OAuth2)
+ 
+**Base de Datos**: MySQL 8.0 con migraciones y seeders
+
+**Cache**: Redis para sesiones y queries
+
+**Documentación**: Swagger/OpenAPI 3.0
+
+**Testing**: PHPUnit con 80%+ coverage en +100 tests, con implementación TDD
 
 ### Frontend (SPA)
 
@@ -232,13 +237,19 @@ GET /api/v1/stats/communities/by-discipline // Stats por disciplina
 </tr>
 </table>
 
-- **Framework**: React 18+ con hooks modernos
-- **Lenguaje**: TypeScript 5+ (100% tipado)
-- **Bundler**: Vite para builds ultrarrápidos
-- **Estilos**: TailwindCSS + Custom Cyberpunk theme
-- **State**: TanStack Query (React Query) para cache
-- **Routing**: React Router v6
-- **HTTP**: Axios con interceptores
+**Framework**: React 18+ con hooks modernos
+
+**Lenguaje**: TypeScript 5+ (100% tipado)
+
+**Bundler**: Vite para builds ultrarrápidos
+
+**Estilos**: TailwindCSS + Custom Cyberpunk theme
+
+**State**: TanStack Query (React Query) para cache
+
+**Routing**: React Router v6
+
+**HTTP**: Axios con interceptores
 
 ### DevOps & Infraestructura
 
@@ -251,10 +262,13 @@ GET /api/v1/stats/communities/by-discipline // Stats por disciplina
 </tr>
 </table>
 
-- **Contenedores**: Docker Compose para desarrollo local
-- **Deploy**: Railway (backend + DB)
-- **Web Server**: Nginx como reverse proxy
-- **CI/CD**: GitHub Actions para testing y deploy automático
+**Contenedores**: Docker Compose para desarrollo local
+
+**Deploy**: Railway (backend + DB)
+
+**Web Server**: Nginx como reverse proxy
+
+**CI/CD**: GitHub Actions para testing y deploy automático
 
 ---
 
