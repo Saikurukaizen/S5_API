@@ -270,6 +270,7 @@ GET /api/v1/stats/communities/by-discipline // Stats por disciplina
 
 **CI/CD**: GitHub Actions para testing y deploy automático
 
+</div>
 ---
 
 ## 🏗 Arquitectura del Sistema
