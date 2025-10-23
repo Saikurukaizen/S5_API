@@ -1,5 +1,8 @@
 FROM node:20-alpine
 
+# Update system packages to fix vulnerabilities
+RUN apk update && apk upgrade
+
 WORKDIR /app
 
 COPY package*.json ./
