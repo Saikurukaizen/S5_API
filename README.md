@@ -84,17 +84,27 @@ DISCLAIMER: Es un proyecto en fase de mejora, y devuelve tanto datos de la db (c
 
 ### Flujo de trabajo de IA
 
-. Planificación (Claude & ChatGPT 4o)
-- ↓
-. Diseño UX/UI (Claude)
-- ↓
-. Implementación React (React Frontend Assistant + Copilot)
-- ↓
-. Validación API (Laravel GPT)
-- ↓
-. Revisión Semántica y Debug (Claude + Copilot)
-- ↓
-. *Iteración siguiente*
+**Planificación** (Claude & ChatGPT 4o)
+
+↓
+
+**Diseño UX/UI** (Claude)
+
+↓
+
+**Implementación React** (React Frontend Assistant + Copilot)
+
+↓
+
+**Validación API** (Laravel GPT)
+
+↓
+
+**Revisión Semántica y Debug** (Claude + Copilot)
+
+↓
+
+**Iteración siguiente**
 
 </div>
 
