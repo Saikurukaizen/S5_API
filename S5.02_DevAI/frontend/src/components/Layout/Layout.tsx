@@ -55,7 +55,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <main className="main-content">
           <div className="content-wrapper">
             {content}
-            {children}
+            {/* Render children only if not in dashboard section */}
+            {activeSection !== 'dashboard' && children}
           </div>
         </main>
       </div>

@@ -5,7 +5,7 @@
 ## 👤 Alumno
 Desarrollado por Marc Sanchez
 
-![Kaizen Logo](https://via.placeholder.com/200x200/667eea/ffffff?text=KAIZEN)
+![Kaizen Logo](S5.02_DevAI/frontend/assets/img/Captura%20de%20pantalla%20logo.png)
 
 **La plataforma definitiva para gestionar comunidades deportivas**
 
@@ -80,19 +80,33 @@ DISCLAIMER: Es un proyecto en fase de mejora, y devuelve tanto datos de la db (c
 - **Especialista SEO Frontend**: ChatGPT 4o & Claude Sonnet 4.5
 - **Full-Stack Mid-Senior Assistant**: Github Copilot integrado en IDE.
 
+<div align="center">
+
 ### Flujo de trabajo de IA
 
-Planificación (Claude & ChatGPT 4o) 
+Planificación (Claude & ChatGPT 4o)
+<tr>
    ↓
+<tr>
 Diseño UX/UI (Claude)
+<tr>
    ↓
+<tr>
 Implementación React (React Frontend Assistant + Copilot)
+<tr>
    ↓
+<tr>
 Validación API (Laravel GPT)
+<tr>
    ↓
+<tr>
 Revisión Semántica y Debug (Claude + Copilot)
+<tr>
    ↓
-Iteración siguiente
+<tr>
+*Iteración siguiente*
+
+</div>
 
 Cada ciclo produce artefactos concretos:
 
@@ -196,7 +210,7 @@ GET /api/v1/stats/communities/by-discipline // Stats por disciplina
 <td align="center"><img src="https://laravel.com/img/logomark.min.svg" width="50"/><br/>Laravel 12</td>
 <td align="center"><img src="https://www.php.net/images/logos/new-php-logo.svg" width="50"/><br/>PHP 8.3</td>
 <td align="center"><img src="https://www.mysql.com/common/logos/logo-mysql-170x115.png" width="50"/><br/>MySQL 8</td>
-<td align="center"><img src="https://redis.io/images/redis-white.png" width="50"/><br/>Redis 7</td>
+<td align="center"><img src="S5.02_DevAI/frontend/assets/img/Redis-Logo-500x313.jpg" width="50"/><br/>Redis 7</td>
 </tr>
 </table>
 
@@ -214,7 +228,7 @@ GET /api/v1/stats/communities/by-discipline // Stats por disciplina
 <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" width="50"/><br/>React 18</td>
 <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" width="50"/><br/>TypeScript</td>
 <td align="center"><img src="https://vitejs.dev/logo.svg" width="50"/><br/>Vite</td>
-<td align="center"><img src="https://tailwindcss.com/_next/static/media/tailwindcss-mark.3c5441fc7a190fb1800d4a5c7f07ba4b1345a9c8.svg" width="50"/><br/>Tailwind CSS</td>
+<td align="center"><img src="S5.02_DevAI/frontend/assets/img/t_tailwind-css7675.logowik.com.webp" width="50"/><br/>Tailwind CSS</td>
 </tr>
 </table>
 
@@ -282,6 +296,7 @@ GET /api/v1/stats/communities/by-discipline // Stats por disciplina
 ### Estructura de Directorios
 
 ```
+
 S5_API/
 ├── backend/                  # Laravel API
 │   ├── app/
@@ -312,6 +327,7 @@ S5_API/
     ├── docker-compose.yml   # Orquestación de servicios
     ├── nginx/               # Config Nginx
     └── php/                 # Dockerfile PHP-FPM
+
 ```
 
 ---
@@ -353,22 +369,22 @@ S5_API/
 <summary>🖼️ Ver Screenshots (Click para expandir)</summary>
 
 #### Login & Dashboard
-![Login](https://via.placeholder.com/800x450/667eea/ffffff?text=Login+Screen)
+![Login](S5.02_DevAI/frontend/assets/img/Captura%20de%20pantalla%202025-10-23%20063804.png)
 *Pantalla de autenticación con diseño Cyberpunk*
 
-![Dashboard](https://via.placeholder.com/800x450/667eea/ffffff?text=Dashboard+Admin)
+![Dashboard](S5.02_DevAI/frontend/assets/img/Captura%20de%20pantalla%202025-10-23%20063206.png)
 *Dashboard principal con estadísticas en tiempo real*
 
 #### Gestión de Disciplinas
-![Disciplines](https://via.placeholder.com/800x450/667eea/ffffff?text=Disciplines+CRUD)
+![Disciplines](S5.02_DevAI/frontend/assets/img/Captura%20de%20pantalla%202025-10-23%20063512.png)
 *CRUD completo de disciplinas deportivas*
 
 #### Comunidades Activas
-![Communities](https://via.placeholder.com/800x450/667eea/ffffff?text=Communities+Management)
+![Communities](S5.02_DevAI/frontend/assets/img/Captura%20de%20pantalla%202025-10-23%20063442.png)
 *Gestión de comunidades con estadísticas*
 
 #### Analytics
-![Analytics](https://via.placeholder.com/800x450/667eea/ffffff?text=Analytics+Dashboard)
+![Analytics](S5.02_DevAI/frontend/assets/img/Captura%20de%20pantalla%202025-10-23%20063722.png)
 *Dashboard de analytics con gráficos interactivos*
 
 </details>
@@ -644,7 +660,7 @@ Si encuentras un bug, por favor [abre un issue](https://github.com/Saikurukaizen
 
 ## 👨‍💻 Sobre el Autor
 
-![Marc Sanchez](https://via.placeholder.com/150/667eea/ffffff?text=MS)
+![Marc Sanchez](S5.02_DevAI/frontend/assets/img/IMG_20251022_150709.png)
 
 ### **Marc Sanchez**
 *Full-Stack Developer | DevOps Enthusiast | Open Source Contributor*
@@ -668,10 +684,10 @@ Si encuentras un bug, por favor [abre un issue](https://github.com/Saikurukaizen
 
 #### 💼 Experiencia
 
-- **Full-Stack Developer** @ Tech Startup (2023-Actual)
-  - Desarrollo de SPAs con React/Vue
-  - APIs RESTful con Laravel/Node.js
-  - DevOps con Docker, CI/CD, AWS
+- **Full-Stack Developer** @ IT Academy (2025)
+  - Desarrollo de SPAs con TailwindCSS y AIGen
+  - APIs RESTful con PHP/Laravel/Node.js
+  - DevOps con Docker, CI/CD, Railway, AWS
 
 #### 🛠️ Skills Técnicos
 
