@@ -1,8 +1,19 @@
 #!/bin/sh
 set -e
 
+# Usar variables de entorno de Railway/Laravel
 DB_HOST=${DB_HOST:-db}
 DB_PORT=${DB_PORT:-3306}
+DB_DATABASE=${DB_DATABASE:-fitbit}
+DB_USERNAME=${DB_USERNAME:-fitbit_user}
+DB_PASSWORD=${DB_PASSWORD:-fitbit_pass}
+
+echo "🔍 DEBUG - Configuración de DB:"
+echo "DB_HOST: $DB_HOST"
+echo "DB_PORT: $DB_PORT"
+echo "DB_DATABASE: $DB_DATABASE"
+echo "DB_USERNAME: $DB_USERNAME"
+echo "DB_PASSWORD: ********"
 
 echo "Esperando a que la base de datos ($DB_HOST:$DB_PORT) esté lista..."
 until nc -z "$DB_HOST" "$DB_PORT"; do
@@ -17,9 +28,22 @@ if [ ! -f .env ] || ! grep -q "APP_KEY=" .env || grep -q "APP_KEY=$" .env; then
     php artisan key:generate --force
 fi
 
-# Ejecutar migraciones
-echo "Ejecutando migraciones..."
-php artisan migrate --force
+# Limpiar cache de configuración antes de migrar (IMPORTANTE)
+echo "Limpiando cache de configuración..."
+php artisan config:clear
+
+# Verificar conexión a base de datos
+echo "Verificando conexión a base de datos..."
+php artisan db:show 2>&1 || {
+    echo "❌ Error: No se puede conectar a la base de datos"
+    echo "Intentando con variables de entorno directamente..."
+    php artisan config:clear
+    php artisan migrate --force
+} && {
+    # Si la verificación fue exitosa, ejecutar migraciones
+    echo "Ejecutando migraciones..."
+    php artisan migrate --force
+}
 
 # Verificar si Passport ya está instalado (evitar duplicados)
 PASSPORT_MARKER_FILE="/var/www/html/storage/.passport-installed"
@@ -41,8 +65,7 @@ fi
 if [ "$PASSPORT_INSTALLED" = "false" ]; then
     echo "Configurando Passport por primera vez..."
     
-    # NUNCA ejecutar passport:install (genera migraciones duplicadas)
-    # En su lugar, solo generar las llaves
+    # Solo generar las llaves
     php artisan passport:keys --force
     
     # Crear archivo marcador para evitar futuras instalaciones
@@ -54,7 +77,7 @@ else
     echo "Passport ya está completamente configurado, omitiendo instalación ✔️"
 fi
 
-# Cachear configuración
+# Cachear configuración AL FINAL
 echo "Cacheando configuración..."
 php artisan config:cache
 php artisan route:cache
