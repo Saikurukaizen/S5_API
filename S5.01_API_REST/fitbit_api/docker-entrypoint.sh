@@ -10,12 +10,6 @@ until nc -z "$DB_HOST" "$DB_PORT"; do
 done
 echo "✔️ DB conectada"
 
-# Crear .env si no existe
-if [ ! -f .env ]; then
-    echo "Creando archivo .env..."
-    cp .env.example .env 2>/dev/null || touch .env
-fi
-
 php artisan key:generate --force
 php artisan config:clear
 php artisan migrate --force
