@@ -10,6 +10,8 @@ until nc -z "$DB_HOST" "$DB_PORT"; do
 done
 echo "✔️ DB conectada"
 
+cd /var/www/html
+
 php artisan key:generate --force
 php artisan config:clear
 php artisan migrate --force

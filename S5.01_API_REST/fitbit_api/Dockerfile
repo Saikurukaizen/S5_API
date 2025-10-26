@@ -12,12 +12,12 @@ COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-COPY . .
+COPY . /var/www/html/
 
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader || true
 
-# Crear .env si no existe
-RUN if [ ! -f .env ]; then cp .env.example .env 2>/dev/null || touch .env; fi
+# Crear .env desde .env.example
+RUN if [ -f .env.example ]; then cp .env.example .env; else touch .env; fi
 
 RUN chown -R www-data:www-data /var/www/html \
  && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
