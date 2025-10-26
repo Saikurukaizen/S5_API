@@ -1,27 +1,26 @@
-# Este Dockerfile "proxy" simplemente reenvía el build al Dockerfile real de fitbit_api
+FROM php:8.3-fpm-alpine
 
-# Copiamos el contenido de la subcarpeta de la API
-FROM php:8.2-fpm
+RUN apk add --no-cache \
+    bash git curl zip unzip libpng-dev libjpeg-turbo-dev freetype-dev \
+    oniguruma-dev zlib-dev libzip-dev netcat-openbsd
 
-# Instala dependencias necesarias
-RUN apt-get update && apt-get install -y \
-    zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev curl git netcat-openbsd \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+ && docker-php-ext-install pdo pdo_mysql mbstring gd exif pcntl bcmath opcache
 
-# Copiamos el código de la API desde la subcarpeta
-COPY S5.01_API_REST/fitbit_api/ /var/www
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
+WORKDIR /var/www/html
 
-# Instalamos composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY S5.01_API_REST/fitbit_api/ /var/www/html/
+
 RUN composer install --no-dev --optimize-autoloader
+RUN touch /var/www/html/.env
+RUN chown -R www-data:www-data /var/www/html \
+ && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Copiamos el entrypoint original
 COPY S5.01_API_REST/fitbit_api/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-ENTRYPOINT ["docker-entrypoint.sh"]
-
 EXPOSE 8000
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php-fpm"]
