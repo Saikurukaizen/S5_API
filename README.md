@@ -9,8 +9,8 @@ Desarrollado por Marc Sanchez
 
 **La plataforma definitiva para gestionar comunidades deportivas**
 
-[![Live Demo](https://img.shields.io/badge/Demo-Live-success?style=for-the-badge&logo=railway)](https://s5-api-production.up.railway.app)
-[![API Docs](https://img.shields.io/badge/API-Swagger-85EA2D?style=for-the-badge&logo=swagger)](https://s5-api-production.up.railway.app/api/documentation)
+[![Live Demo (En construcción)](https://img.shields.io/badge/Demo-Live-success?style=for-the-badge&logo=railway)](https://s5-api-production.up.railway.app)
+[![API Docs (Servidor Local)](https://img.shields.io/badge/API-Swagger-85EA2D?style=for-the-badge&logo=swagger)](https://localhost:8000/api/documentation)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker)](https://github.com/Saikurukaizen/S5_API/tree/dev)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
@@ -52,7 +52,7 @@ DISCLAIMER: Es un proyecto en fase de mejora, y devuelve tanto datos de la db (c
 - 🎨 **UX/UI Moderna**: Interface Cyberpunk/Synthwave con React 18 + TypeScript
 - 🔒 **Seguridad**: Autenticación JWT Bearer con roles granulares (User/Moderator/Admin)
 - 📊 **Analytics**: Dashboard con estadísticas en tiempo real y visualizaciones interactivas
-- 🐳 **DevOps**: Totalmente dockerizado y deployado en Railway
+- 🐳 **DevOps**: Dockerizado y deployado en Railway
 - 📱 **Responsive**: Diseño adaptativo para mobile, tablet y desktop.
 
 ## 🎯 Palabras Clave
@@ -258,7 +258,6 @@ GET /api/v1/stats/communities/by-discipline // Stats por disciplina
 <td align="center"><img src="https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png" width="50"/><br/>Docker</td>
 <td align="center"><img src="https://railway.app/brand/logo-light.svg" width="50"/><br/>Railway</td>
 <td align="center"><img src="https://nginx.org/nginx.png" width="50"/><br/>Nginx</td>
-<td align="center"><img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="50"/><br/>GitHub Actions</td>
 </tr>
 </table>
 
@@ -267,8 +266,6 @@ GET /api/v1/stats/communities/by-discipline // Stats por disciplina
 **Deploy**: Railway (backend + DB)
 
 **Web Server**: Nginx como reverse proxy
-
-**CI/CD**: GitHub Actions para testing y deploy automático
 
 </div>
 ---
@@ -354,8 +351,8 @@ S5_API/
 | Entorno | URL | Credenciales |
 |---------|-----|--------------|
 | **Producción** | [kaizen-fitbit.railway.app](https://s5-api-production.up.railway.app) | Ver abajo ↓ |
-| **API Swagger** | [/api/documentation](https://s5-api-production.up.railway.app/api/documentation) | - |
 | **Repositorio** | [GitHub](https://github.com/Saikurukaizen/S5_API/tree/dev) | - |
+| **Dpcumentación** | [API Docs en servidor local](http://localhost:8000/api/documentation) |
 
 </div>
 
@@ -443,7 +440,8 @@ npm run dev
 **¡Listo!** 🎉
 - Backend: `http://localhost:8000`
 - Frontend: `http://localhost:3000`
-- Swagger: `http://localhost:8000/api/documentation`
+
+- Podrás acceder a la documentación API de Swagger una vez levantado el servidor backend
 
 ### Opción 2: Instalación Manual
 
@@ -682,7 +680,7 @@ Si encuentras un bug, por favor [abre un issue](https://github.com/Saikurukaizen
   </div>
 
 ### **Marc Sanchez**
-*Full-Stack Developer | DevOps Enthusiast | Open Source Contributor*
+*Full-Stack Developer*
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-667eea?style=for-the-badge&logo=google-chrome&logoColor=white)](https://marcsanchez.dev)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/marc-sanchez-dev)
@@ -713,8 +711,8 @@ Si encuentras un bug, por favor [abre un issue](https://github.com/Saikurukaizen
 **Backend**: PHP, Laravel, Node.js, Java, C
 **Frontend**: React, TypeScript, TailwindCSS, Next.js  
 **Database**: MySQL, MongoDB, Redis  
-**DevOps**: Docker, Kubernetes, GitHub Actions, Railway, Vercel  
-**Tools**: Git, VSCode, Postman, Figma, Jira
+**DevOps**: Docker, Kubernetes, Railway  
+**Tools**: Git, VSCode, Postman
 
 #### 📊 Proyectos Destacados
 
