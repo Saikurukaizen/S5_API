@@ -443,6 +443,7 @@ npm run dev
 
 - Podrás acceder a la documentación API de Swagger una vez levantado el servidor backend
 
+
 ### Opción 2: Instalación Manual
 
 <details>
