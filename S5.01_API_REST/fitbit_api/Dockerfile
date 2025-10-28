@@ -14,7 +14,7 @@ WORKDIR /var/www/html
 # 👇 ahora el contexto ya está en S5.01_API_REST/fitbit_api, no repitas la ruta
 COPY . /var/www/html/
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN touch /var/www/html/.env
 RUN chown -R www-data:www-data /var/www/html \
  && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
@@ -24,4 +24,4 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 8000
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["php-fpm"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
