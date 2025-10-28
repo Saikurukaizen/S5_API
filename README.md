@@ -38,9 +38,9 @@ Desarrollado por Marc Sanchez
 
 ## 📄 Descripción
 
-**Kaizen Fitbit Tracker** es una plataforma full-stack moderna para la gestión integral de comunidades deportivas. Diseñada con arquitectura escalable y siguiendo las mejores prácticas de desarrollo, permite a usuarios, moderadores y administradores gestionar disciplinas, crear comunidades y analizar estadísticas en tiempo real.
+**Kaizen Fitbit Tracker** es una plataforma para la gestión integral de comunidades deportivas. Diseñada con arquitectura escalable, permite a usuarios, moderadores y administradores gestionar disciplinas, crear comunidades y analizar estadísticas en tiempo real.
 
-Consta de una API REST para el servidor backend y una interfaz de cliente frontend.
+Consta de una API REST para el servidor backend deployada en Railway y una interfaz de cliente frontend.
 
 DISCLAIMER: Es un proyecto en fase de mejora, y devuelve tanto datos de la db (como el perfil de usuario y rol o el listado de Disciplinas), como datos mockeados para testear la visualización completa del frontend. Así como algunos apartados a la espera de ser ampliados en ambas partes, mejoras en los tiempos de carga, etc.
 
@@ -52,7 +52,7 @@ DISCLAIMER: Es un proyecto en fase de mejora, y devuelve tanto datos de la db (c
 - 🎨 **UX/UI Moderna**: Interface Cyberpunk/Synthwave con React 18 + TypeScript
 - 🔒 **Seguridad**: Autenticación JWT Bearer con roles granulares (User/Moderator/Admin)
 - 📊 **Analytics**: Dashboard con estadísticas en tiempo real y visualizaciones interactivas
-- 🐳 **DevOps**: Dockerizado y deployado en Railway
+- 🐳 **DevOps**: Dockerizado y API REST deployado en Railway
 - 📱 **Responsive**: Diseño adaptativo para mobile, tablet y desktop.
 
 ## 🎯 Palabras Clave
@@ -344,15 +344,15 @@ S5_API/
 
 ---
 
-## 🎮 Demo Interactiva
+## 🎮 Demo
 
 ### 🌐 Acceso a la Aplicación
 
 | Entorno | URL | Credenciales |
 |---------|-----|--------------|
-| **Producción** | [kaizen-fitbit.railway.app](https://s5-api-production.up.railway.app) | Ver abajo ↓ |
+| **Producción** | [Comprobación de respuesta](https://kaizenfitbit.up.railway.app/api/status) | Ver abajo ↓ |
 | **Repositorio** | [GitHub](https://github.com/Saikurukaizen/S5_API/tree/dev) | - |
-| **Dpcumentación** | [API Docs en servidor local](http://localhost:8000/api/documentation) |
+| **Documentación** | [API Docs en servidor local](http://localhost:8000/api/documentation) |
 
 </div>
 
@@ -499,44 +499,30 @@ npm run dev
 
 #### Backend (.env)
 
-<!-- ```bash
+```bash
 # Aplicación
-APP_NAME="Kaizen Fitness Tracker"
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://s5-api-production.up.railway.app
+APP_NAME="Kaizen Fitbit Tracker"
+APP_ENV=local
+APP_KEY=base64:7Z/APtYCdcdvZkw+7cI5sz+xrXOKJY9y4xFMBgu9ThA=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+# La APP_URL en producción es https://kaizenfitbit.up.railway.app
 
 # Base de Datos
 DB_CONNECTION=mysql
-DB_HOST=mysql
+DB_HOST=db
 DB_PORT=3306
-DB_DATABASE=kaizen_db
-DB_USERNAME=kaizen_user
-DB_PASSWORD=secure_password_here
-
-# JWT
-JWT_SECRET=your-super-secret-key
-JWT_TTL=21600 # 15 días en minutos
+DB_DATABASE=fitbit_db
+DB_USERNAME=fitbit_user
+DB_PASSWORD=fitbit_pass
 
 # Redis
-REDIS_HOST=redis
+REDIS_CLIENT=phpredis
+REDIS_HOST=127.0.0.1
 REDIS_PASSWORD=null
 REDIS_PORT=6379
-
-# CORS
-CORS_ALLOWED_ORIGINS=https://kaizen-frontend.vercel.app,http://localhost:3000
 ```
-
-#### Frontend (.env.local)
-
-```bash
-# API
-REACT_APP_API_BASE_URL=https://s5-api-production.up.railway.app/api/v1
-
-# Timeouts
-REACT_APP_INACTIVITY_TIMEOUT=1800000  # 30 minutos
-REACT_APP_API_TIMEOUT=10000            # 10 segundos
-``` -->
 
 ### Comandos Útiles
 
@@ -705,14 +691,14 @@ Si encuentras un bug, por favor [abre un issue](https://github.com/Saikurukaizen
 - **Full-Stack Developer** @ IT Academy (2025)
   - Desarrollo de SPAs con TailwindCSS y AIGen
   - APIs RESTful con PHP/Laravel/Node.js
-  - DevOps con Docker, CI/CD, Railway, AWS
+  - DevOps con Docker, CI/CD, Railway
 
 #### 🛠️ Skills Técnicos
 
-**Backend**: PHP, Laravel, Node.js, Java, C
-**Frontend**: React, TypeScript, TailwindCSS, Next.js  
-**Database**: MySQL, MongoDB, Redis  
-**DevOps**: Docker, Kubernetes, Railway  
+**Backend**: PHP, Laravel, Java
+**Frontend**: React, TailwindCSS 
+**Database**: MySQL, MongoDB
+**DevOps**: Docker, Railway  
 **Tools**: Git, VSCode, Postman
 
 #### 📊 Proyectos Destacados
