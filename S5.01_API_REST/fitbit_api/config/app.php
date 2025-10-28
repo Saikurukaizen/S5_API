@@ -156,6 +156,5 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        Darkaonline\L5Swagger\L5SwaggerServiceProvider::class,
     ],
 ];
