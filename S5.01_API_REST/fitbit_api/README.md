@@ -14,6 +14,7 @@ Esta API RESTful está desarrollada con Laravel v.12.0, para la gestión de usua
 Se ha incluido paquetes de:
 - **Laravel Passport** para la autenticación **OAuth2** de tokens.
 - **Swagger** para la documentación API.
+- **Railway** para el deploy de la API
 
 Las bases de construcción se han basado rigurosamente bajo la Disertación de Roy T Fielding (Cap. 5) para la aplicación de buenas practicas RESTful 
 
@@ -28,6 +29,7 @@ Las bases de construcción se han basado rigurosamente bajo la Disertación de R
 - Policies / Resources
 - TDD
 - Swagger
+- Deploy
 
 ## Características Principales
 
@@ -53,6 +55,7 @@ Las bases de construcción se han basado rigurosamente bajo la Disertación de R
 - **PHPUnit v.11.5** - Testing con TDD
 - **Swagger/OpenAPI v.3.0** - Documentación API interactiva
 - **L5-Swagger** - Generación automática de documentación
+- **Railway** - Deployment
 - **IDE** - Visual Studio Code
 - **Git** / **Github**
 - **Gitflow** - Metodología de features
@@ -307,6 +310,17 @@ php artisan db:seed --class=CommunitySeeder
 
 ## 🚀 Despliegue y Producción
 
+Puedes comprobar el deploy con el siguiente link:
+
+[Deploy Confirmation](https://kaizenfitbit.up.railway.app/api/status)
+
+Este endpoint verifica la conexión con la db y el puerto del servidor (8080)
+
+Para la documentación API seguirá el siguiente endpoint:
+
+[Api Documentation](https://kaizenfitbit.up.railway.app/api/documentation)
+
+
 ### 📦 Comandos de Despliegue
 ```bash
 # Optimización para producción
@@ -323,7 +337,12 @@ php artisan migrate --force
 ```env
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://tu-dominio.com
+APP_URL=https://kaizenfitbit.up.railway.app
+DB_HOST="mysql.railway.internal"
+DB_PORT="3306"
+DB_DATABASE="railway"
+DB_USERNAME="root"
+DB_PASSWORD="nEQszGxNQYUyRmVHTOeDSaIwPOjigsSi"
 
 # Configuración OAuth
 PASSPORT_PERSONAL_ACCESS_CLIENT_ID=1
@@ -363,4 +382,4 @@ PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET=tu_secret
 
 **🎯 Estado del Proyecto**: **PRODUCTION READY** ✅  
 **📅 Última actualización**: Octubre 2025  
-**🔗 Documentación Swagger**: `http://localhost:8000/api/documentation`
+**🔗 Documentación Swagger**: `http://localhost:8080/api/documentation`
