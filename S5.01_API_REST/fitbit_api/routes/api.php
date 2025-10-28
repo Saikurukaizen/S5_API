@@ -11,8 +11,13 @@ use App\Http\Controllers\Stats\CommunityStatsController;
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return 'API Kaizen Fitbit Tracker funcionando';
+Route::get('/status', function () {
+    return response()->json([
+        'status' => 'ok',
+        'message' => 'API Kaizen Fitbit Tracker funcionando',
+        'env' => env('APP_ENV'),
+        'port' => env('APP_PORT', '8080')
+    ]);
 });
 
 Route::prefix('v1')->group(function (){
