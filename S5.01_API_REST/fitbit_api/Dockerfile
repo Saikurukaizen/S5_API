@@ -11,14 +11,15 @@ COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-COPY S5.01_API_REST/fitbit_api/ /var/www/html/
+# 👇 ahora el contexto ya está en S5.01_API_REST/fitbit_api, no repitas la ruta
+COPY . /var/www/html/
 
 RUN composer install --no-dev --optimize-autoloader
 RUN touch /var/www/html/.env
 RUN chown -R www-data:www-data /var/www/html \
  && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-COPY S5.01_API_REST/fitbit_api/docker-entrypoint.sh /usr/local/bin/
+COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 8000
