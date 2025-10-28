@@ -11,6 +11,9 @@ use App\Http\Controllers\Stats\CommunityStatsController;
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return 'API Kaizen Fitbit Tracker funcionando';
+});
 
 Route::prefix('v1')->group(function (){
     Route::post('/register', [AuthController::class, 'register']);
