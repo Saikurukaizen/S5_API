@@ -11,6 +11,8 @@ do
   sleep 2
 done
 
+sleep 5
+
 echo "Database is ready!"
 
 # Ejecutar migraciones y seeders
@@ -27,5 +29,5 @@ php artisan route:cache
 echo "Application is ready!"
 
 # Iniciar el servidor
-exec php artisan serve --host=0.0.0.0 --port=8080
+exec php-fpm
 ```
