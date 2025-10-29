@@ -240,6 +240,58 @@ class UserController extends Controller{
         ], 200);
     }
 
+    public function changeDiscipline(Request $request, $id): JsonResponse{
+        $request->validate([
+            'discipline_id' => 'nullable|exists:disciplines,id',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->discipline_id = $request->input('discipline_id');
+        $user->save();
+
+        return response()->json([
+            'message' => 'Discipline updated successfully',
+            'data' => $user
+        ], 200);
+    }
+
+    public function joinCommunity(Request $request, $id): JsonResponse{
+        $user = User::findOrFail($id);
+        $communityId = $request->input('community_id');
+        $community = Community::findOrFail($communityId);
+
+        if(!$user->discipline_id){
+            return response()->json([
+                'message' => 'User doesn\'t have a discipline to join a community'
+            ], 422);
+        }
+
+        if($community->discipline_id !== $user->discipline_id){
+            return response()->json([
+                'message' => 'User\'s discipline does not match community\'s discipline'
+            ], 422);
+        }
+
+        $user->community_id = $communityId;
+        $user->save();
+
+        return response()->json([
+            'message' => 'User joined community successfully',
+            'data' => $user
+        ], 200);
+    }
+
+    public function leaveCommunity($id): JsonResponse{
+        $user = User::findOrFail($id);
+        $user->community_id = null;
+        $user->save();
+
+        return response()->json([
+            'message' => 'User left community successfully',
+            'data' => $user
+        ], 200);
+    }
+
 }
 
 ?>

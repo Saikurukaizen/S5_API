@@ -16,7 +16,10 @@ class UserPolicy{
     }
 
     public function view(User $user, User $model): bool{
-        return $user->id === $model->id || in_array($user->role, ['admin', 'moderator']);
+        if($user->role === 'admin'){
+            return true;
+        }
+        return $user->id === $model->id; /* || in_array($user->role, ['admin', 'moderator']); */
     }
 
     public function createModelsBeingAdmin(User $user): bool{
