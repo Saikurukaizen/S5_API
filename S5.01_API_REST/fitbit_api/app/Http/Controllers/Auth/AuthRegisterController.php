@@ -11,14 +11,15 @@ use Illuminate\Support\Facades\Hash;
 class AuthRegisterController extends Controller{
 
     public function register(AuthRegisterRequest $request): JsonResponse{
+        $validated = $request->validated();
         $user = User::create([
-            'name' => $request->input('name'),
-            'lastname' => $request->input('lastname'),
-            'date_of_birth' => $request->input('date_of_birth'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-            'bank_acc' => $request->input('bank_acc'),
-            'discipline_id' => $request->input('discipline_id'),
+            'name' => $validated['name'],
+            'lastname' => $validated['lastname'],
+            'date_of_birth' => $validated['date_of_birth'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'bank_acc' => $validated['bank_acc'],
+            'discipline_id' => $validated['discipline_id'],
         ]);
 
         $tokenResult = $user->createToken('Personal Access Token');

@@ -101,11 +101,12 @@ class AuthController extends Controller{
  *          description="Credenciales de usuario",
  *          @OA\JsonContent(
  *              required={"email","password"},
+ *              @OA\Property(property="name", type="string", example="John Doe"),
  *              @OA\Property(property="email", type="string", format="email", example="john@example.com"),
- *              @OA\Property(property="password", type="string", format="password", example="password123")
- *          ),
- *      ),
- *      @OA\Response(
+ *              @OA\Property(property="password", type="string", format="password", example="password123"),
+ *              @OA\Property(property="password_confirmation", type="string", format="password", example="password123"),
+ *              @OA\Property(property="date_of_birth", type="string", format="date", example="1990-01-01", description="Formato: YYYY-MM-DD"),
+ *              @OA\Property(property="discipline_id", type="integer", example=1)
  *          response=200,
  *          description="Login exitoso",
  *          @OA\JsonContent(
@@ -131,7 +132,8 @@ class AuthController extends Controller{
         $user = User::where('email', $request->email)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'The provided credentials are incorrect.'
+                'message' => 'The provided credentials are incorrect.',
+                'error_code' => 5001
             ], 401);
         }
 
@@ -152,6 +154,24 @@ class AuthController extends Controller{
         ]);
     }
 
+    /**
+     * @OA\Post(
+     *      path="/api/v1/logout",
+     *      operationId="logout",
+     *      tags={"Authentication"},
+     *      summary="Cerrar sesión",
+     *      description="Cierra la sesión del usuario autenticado",
+     *      security={{"bearer_token":{}}},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Logout exitoso",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Successfully logged out")
+     *          )
+     *      ),
+     *      @OA\Response(response=401, description="No autenticado")
+     * )
+     */
     public function logout(Request $request): JsonResponse{
         $request->user()->tokens()->delete();
         
@@ -160,11 +180,28 @@ class AuthController extends Controller{
         ]);
     }
 
+    /**
+     * @OA\Get(
+     *      path="/api/v1/me",
+     *      operationId="getProfile",
+     *      tags={"Authentication"},
+     *      summary="Obtener perfil propio",
+     *      description="Devuelve los datos del usuario autenticado",
+     *      security={{"bearer_token":{}}},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Perfil obtenido exitosamente",
+     *          @OA\JsonContent(ref="#/components/schemas/User")
+     *      ),
+     *      @OA\Response(response=401, description="No autenticado")
+     * )
+     */
     public function me(Request $request): JsonResponse{
         $user = $request->user();       
         if (!$user) {
             return response()->json([
-                'message' => 'Unauthenticated'
+                'message' => 'Unauthenticated',
+                'error_code' => 5002
             ], 401);
         }
         

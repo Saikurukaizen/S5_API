@@ -117,6 +117,12 @@ class DisciplineController extends Controller{
      */
     public function store(Request $request): JsonResponse{
         $data = $this->validateData($request);
+        if (empty($data['name'])) {
+            return response()->json([
+                'message' => 'Name is required.',
+                'error_code' => 4001
+            ], 422);
+        }
         $discipline = Discipline::create($data);
 
         return response()->json([

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class AuthSessionController extends Controller{
 
     public function store(AuthLoginRequest $request): JsonResponse{
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validated();
 
         if(!Auth::attempt($credentials)){
             return response()->json([

@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Api\DisciplineController;
 use App\Http\Controllers\Api\CommunityController;
-use App\Http\Controllers\Api\CommunityMemberController;
+use App\Http\Controllers\Api\CommunityUserController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Stats\DisciplineStatsController;
@@ -29,10 +29,11 @@ Route::prefix('v1')->group(function (){
     Route::get('/disciplines/{discipline}', [DisciplineController::class, 'show']);
 
     Route::get('/communities', [CommunityController::class, 'index']);
-    Route::get('/communities/{community}', [CommunityController::class, 'show']);
 });
 
 Route::middleware(['auth:api'])->prefix('v1')->group(function (){
+    Route::put('/users/{id}/assign-moderator', [UserController::class, 'assignModerator'])->middleware('can:updateUser');
+    Route::get('/communities/{community}', [CommunityController::class, 'show']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
@@ -52,20 +53,15 @@ Route::middleware(['auth:api'])->prefix('v1')->group(function (){
         ->middleware('can:manage-communities');
     Route::delete('/communities/{community}', [CommunityController::class, 'destroy'])
         ->middleware('can:manage-communities');
-
-    Route::get('/communities/{community}/members',[CommunityMemberController::class, 'index']);
-    Route::post('/communities/{community}/members/{user}', [CommunityMemberController::class, 'addMember']);
-    Route::delete('/communities/{community}/members/{user}', [CommunityMemberController::class, 'removeMember']);
-
     Route::post('/users', [UserController::class, 'store'])->middleware('can:createUser');
     Route::get('/users', [UserController::class, 'index'])->middleware('can:viewAllUsers');
     Route::put('/users/{id}', [UserController::class, 'update'])->middleware('can:updateUser');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('can:deleteUser');
 
     Route::get('/users/{id}', [UserController::class, 'show']);    
-    Route::put('/users/{id}/discipline', [UserController::class, 'changeDiscipline']);
-    Route::post('/users/{id}/communities/{community}', [UserController::class, 'joinCommunity']);
-    Route::delete('/users/{id}/communities/{community}', [UserController::class, 'leaveCommunity']);
+    Route::put('/users/{id}/disciplines', [UserController::class, 'changeDiscipline']);
+    Route::post('/communities/{community}/users/{user}', [CommunityUserController::class, 'addUser']);
+    Route::delete('/communities/{community}/users/{user}', [CommunityUserController::class, 'removeUser']);
 });
 
 

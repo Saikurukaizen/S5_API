@@ -7,6 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Community;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @OA\Tag(
@@ -15,6 +19,26 @@ use Illuminate\Http\Request;
  * )
  */
 class UserController extends Controller{
+    /**
+     * Asignar rol de moderador a un usuario (solo admin)
+     */
+    public function assignModerator($id): JsonResponse {
+        $authUser = Auth::user();
+            if ($authUser->role !== 'admin') {
+                return response()->json([
+                    'message' => 'Forbidden: Only admin can assign moderator role.',
+                    'error_code' => 1001
+                ], 403);
+        }
+        $user = User::findOrFail($id);
+        $user->role = 'moderator';
+        $user->save();
+        return response()->json([
+            'message' => 'Moderator role assigned successfully',
+            'data' => $user
+        ], 200);
+    }
+    use AuthorizesRequests;
 
     protected function validateData($request): array{
         return $request->validate([
@@ -89,8 +113,15 @@ class UserController extends Controller{
      * )
      */
     public function show($id): JsonResponse{
-        $user = User::findOrFail($id);
+        $authUser = Auth::user();
+            if ($authUser->id != $id && $authUser->role !== 'admin') {
+                return response()->json([
+                    'message' => 'Forbidden: You do not have permission to view this user.',
+                    'error_code' => 1002
+                ], 403);
+        }
 
+        $user = User::findOrFail($id);
         return response()->json([
             'data' => $user
         ], 200);
@@ -133,15 +164,11 @@ class UserController extends Controller{
      * )
      */
     public function store(Request $request): JsonResponse{
-        $data = $this->validateData($request);
-        if(isset($data['password'])){
-            $data['password'] = bcrypt($data['password']);
-        }
-
+        $data = $request->validated();
+        $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
-
         return response()->json([
-            'message' => 'User created succesfully',
+            'message' => 'User created successfully',
             'data' => $user
         ], 201);
     }
@@ -191,14 +218,19 @@ class UserController extends Controller{
      * )
      */
     public function update(Request $request, $id): JsonResponse{
-        $data = $this->validateData($request);
+        $authUser = Auth::user();
+            if($authUser->id != $id && !in_array($authUser->role, ['admin'])){
+                return response()->json([
+                    'message' => 'Forbidden: You do not have permission to update this user.',
+                    'error_code' => 1003
+                ], 403);
+        }
+        $user = User::findOrFail($id);
+        $data = $request->validated();
         if(isset($data['password'])){
             $data['password'] = bcrypt($data['password']);
         }
-
-        $user = User::findOrFail($id);
         $user->update($data);
-        
         return response()->json([
             'message' => 'User updated successfully',
             'data' => $user
@@ -241,6 +273,42 @@ class UserController extends Controller{
         ], 200);
     }
 
+    /**
+     * @OA\Put(
+     *      path="/api/v1/users/{id}/discipline",
+     *      operationId="changeUserDiscipline",
+     *      tags={"Users"},
+     *      summary="Cambiar disciplina de usuario",
+     *      description="Cambia la disciplina asociada al usuario (solo admin/moderador)",
+     *      security={{"bearer_token":{}}},
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="ID del usuario",
+     *          @OA\Schema(type="integer", example=1)
+     *      ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="ID de la disciplina",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="discipline_id", type="integer", nullable=true, example=2)
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Disciplina actualizada exitosamente",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Discipline updated successfully"),
+     *              @OA\Property(property="data", ref="#/components/schemas/User")
+     *          )
+     *      ),
+     *      @OA\Response(response=401, description="No autorizado"),
+     *      @OA\Response(response=403, description="Sin permisos"),
+     *      @OA\Response(response=404, description="Usuario no encontrado"),
+     *      @OA\Response(response=422, description="Error de validación")
+     * )
+     */
     public function changeDiscipline(Request $request, $id): JsonResponse{
         $request->validate([
             'discipline_id' => 'nullable|exists:disciplines,id',
@@ -256,42 +324,6 @@ class UserController extends Controller{
         ], 200);
     }
 
-    public function joinCommunity(Request $request, $id): JsonResponse{
-        $user = User::findOrFail($id);
-        $communityId = $request->input('community_id');
-        $community = Community::findOrFail($communityId);
-
-        if(!$user->discipline_id){
-            return response()->json([
-                'message' => 'User doesn\'t have a discipline to join a community'
-            ], 422);
-        }
-
-        if($community->discipline_id !== $user->discipline_id){
-            return response()->json([
-                'message' => 'User\'s discipline does not match community\'s discipline'
-            ], 422);
-        }
-
-        $user->community_id = $communityId;
-        $user->save();
-
-        return response()->json([
-            'message' => 'User joined community successfully',
-            'data' => $user
-        ], 200);
-    }
-
-    public function leaveCommunity($id): JsonResponse{
-        $user = User::findOrFail($id);
-        $user->community_id = null;
-        $user->save();
-
-        return response()->json([
-            'message' => 'User left community successfully',
-            'data' => $user
-        ], 200);
-    }
 
 }
 

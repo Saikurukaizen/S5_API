@@ -99,6 +99,33 @@ class CommunityController extends Controller{
         ], 200);
     }
 
+    /**
+     * @OA\Get(
+     *      path="/api/v1/communities/{community}",
+     *      operationId="showCommunity",
+     *      tags={"Communities"},
+     *      summary="Obtener comunidad específica",
+     *      description="Devuelve una comunidad específica por ID (solo admin/moderador)",
+     *      security={{"bearer_token":{}}},
+     *      @OA\Parameter(
+     *          name="community",
+     *          in="path",
+     *          required=true,
+     *          description="ID de la comunidad",
+     *          @OA\Schema(type="integer", example=1)
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Comunidad encontrada",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="data", ref="#/components/schemas/Community")
+     *          )
+     *      ),
+     *      @OA\Response(response=401, description="No autorizado"),
+     *      @OA\Response(response=403, description="Sin permisos"),
+     *      @OA\Response(response=404, description="Comunidad no encontrada")
+     * )
+     */
     public function show(Community $community): JsonResponse{
         $this->authorize('view', $community);
         
@@ -112,7 +139,7 @@ class CommunityController extends Controller{
     public function store(Request $request): JsonResponse{
         $user = Auth::user();
         if (!$user) {
-            return response()->json(['message' => 'Unauthenticated'], 401);
+            return response()->json(['message' => 'Unauthenticated', 'error_code' => 3001], 401);
         }
 
         $this->authorize('create', Community::class);
@@ -126,6 +153,45 @@ class CommunityController extends Controller{
         ], 201);
     }
 
+    /**
+     * @OA\Put(
+     *      path="/api/v1/communities/{community}",
+     *      operationId="updateCommunity",
+     *      tags={"Communities"},
+     *      summary="Actualizar comunidad",
+     *      description="Actualiza una comunidad existente (solo admin)",
+     *      security={{"bearer_token":{}}},
+     *      @OA\Parameter(
+     *          name="community",
+     *          in="path",
+     *          required=true,
+     *          description="ID de la comunidad",
+     *          @OA\Schema(type="integer", example=1)
+     *      ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="Datos actualizados de la comunidad",
+     *          @OA\JsonContent(
+     *              required={"name","discipline_id"},
+     *              @OA\Property(property="name", type="string", example="Boxing Community Updated"),
+     *              @OA\Property(property="description", type="string", example="Updated description"),
+     *              @OA\Property(property="discipline_id", type="integer", example=2)
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Comunidad actualizada exitosamente",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Community updated successfully"),
+     *              @OA\Property(property="data", ref="#/components/schemas/Community")
+     *          )
+     *      ),
+     *      @OA\Response(response=401, description="No autorizado"),
+     *      @OA\Response(response=403, description="Sin permisos"),
+     *      @OA\Response(response=404, description="Comunidad no encontrada"),
+     *      @OA\Response(response=422, description="Error de validación")
+     * )
+     */
     public function update(Request $request, Community $community): JsonResponse{
         $this->authorize('update', $community);
         $data = $this->validateData($request);
@@ -137,6 +203,33 @@ class CommunityController extends Controller{
         ], 200);
     }
     
+    /**
+     * @OA\Delete(
+     *      path="/api/v1/communities/{community}",
+     *      operationId="destroyCommunity",
+     *      tags={"Communities"},
+     *      summary="Eliminar comunidad",
+     *      description="Elimina una comunidad existente (solo admin)",
+     *      security={{"bearer_token":{}}},
+     *      @OA\Parameter(
+     *          name="community",
+     *          in="path",
+     *          required=true,
+     *          description="ID de la comunidad",
+     *          @OA\Schema(type="integer", example=1)
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Comunidad eliminada exitosamente",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Community deleted successfully")
+     *          )
+     *      ),
+     *      @OA\Response(response=401, description="No autorizado"),
+     *      @OA\Response(response=403, description="Sin permisos"),
+     *      @OA\Response(response=404, description="Comunidad no encontrada")
+     * )
+     */
     public function destroy(Request $request, Community $community): JsonResponse{
         $this->authorize('delete', $community);
 
