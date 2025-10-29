@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Community;
 use App\Models\User;
+use App\Policies\CommunityPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ProvidersAuthServiceProvider;
 use Laravel\Passport\Passport;
