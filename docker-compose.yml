@@ -16,9 +16,9 @@ services:
       - fitbit_network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 5
 
   php:
     container_name: fitbit_php
@@ -35,9 +35,6 @@ services:
         condition: service_healthy
     expose:
       - "9000"
-    networks:
-      - fitbit_network
-
   nginx:
     image: nginx:1.27-alpine
     container_name: fitbit_nginx
