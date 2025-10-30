@@ -19,25 +19,7 @@ use Illuminate\Support\Facades\Auth;
  * )
  */
 class UserController extends Controller{
-    /**
-     * Asignar rol de moderador a un usuario (solo admin)
-     */
-    public function assignModerator($id): JsonResponse {
-        $authUser = Auth::user();
-            if ($authUser->role !== 'admin') {
-                return response()->json([
-                    'message' => 'Forbidden: Only admin can assign moderator role.',
-                    'error_code' => 1001
-                ], 403);
-        }
-        $user = User::findOrFail($id);
-        $user->role = 'moderator';
-        $user->save();
-        return response()->json([
-            'message' => 'Moderator role assigned successfully',
-            'data' => $user
-        ], 200);
-    }
+    // Eliminado assignModerator. La asignación de rol se gestiona en update.
     use AuthorizesRequests;
 
     protected function validateData($request): array{
@@ -219,17 +201,30 @@ class UserController extends Controller{
      */
     public function update(Request $request, $id): JsonResponse{
         $authUser = Auth::user();
-            if($authUser->id != $id && !in_array($authUser->role, ['admin'])){
-                return response()->json([
-                    'message' => 'Forbidden: You do not have permission to update this user.',
-                    'error_code' => 1003
-                ], 403);
-        }
         $user = User::findOrFail($id);
         $data = $request->validated();
+
+        if (isset($data['role'])) {
+            if ($authUser->role !== 'admin') {
+                return response()->json([
+                    'message' => 'Forbidden: Only admin can change user role.',
+                    'error_code' => 1004
+                ], 403);
+            }
+            $user->role = $data['role'];
+        }
+
+        if ($authUser->id != $id && $authUser->role !== 'admin') {
+            return response()->json([
+                'message' => 'Forbidden: You do not have permission to update this user.',
+                'error_code' => 1003
+            ], 403);
+        }
+
         if(isset($data['password'])){
             $data['password'] = bcrypt($data['password']);
         }
+        unset($data['role']); // Evita que 'role' se actualice por update masivo
         $user->update($data);
         return response()->json([
             'message' => 'User updated successfully',

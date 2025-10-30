@@ -32,7 +32,6 @@ Route::prefix('v1')->group(function (){
 });
 
 Route::middleware(['auth:api'])->prefix('v1')->group(function (){
-    Route::put('/users/{id}/assign-moderator', [UserController::class, 'assignModerator'])->middleware('can:updateUser');
     Route::get('/communities/{community}', [CommunityController::class, 'show']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -53,11 +52,11 @@ Route::middleware(['auth:api'])->prefix('v1')->group(function (){
         ->middleware('can:manage-communities');
     Route::delete('/communities/{community}', [CommunityController::class, 'destroy'])
         ->middleware('can:manage-communities');
+
     Route::post('/users', [UserController::class, 'store'])->middleware('can:createUser');
     Route::get('/users', [UserController::class, 'index'])->middleware('can:viewAllUsers');
     Route::put('/users/{id}', [UserController::class, 'update'])->middleware('can:updateUser');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('can:deleteUser');
-
     Route::get('/users/{id}', [UserController::class, 'show']);    
     Route::put('/users/{id}/disciplines', [UserController::class, 'changeDiscipline']);
     Route::post('/communities/{community}/users/{user}', [CommunityUserController::class, 'addUser']);
