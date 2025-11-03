@@ -44,8 +44,8 @@ export const RegisterForm: React.FC = () => {
       setError('Las contraseñas no coinciden');
       return false;
     }
-    if (formData.password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
+    if (formData.password.length < 8) {
+      setError('La contraseña debe tener al menos 8 caracteres');
       return false;
     }
     return true;
@@ -179,6 +179,14 @@ export const RegisterForm: React.FC = () => {
             required
             disabled={isLoading}
           />
+          {formData.password && (
+            <small className={`password-hint ${formData.password.length >= 8 ? 'valid' : 'invalid'}`}>
+              {formData.password.length >= 8 
+                ? '✅ Contraseña válida' 
+                : `❌ Mínimo 8 caracteres (${formData.password.length}/8)`
+              }
+            </small>
+          )}
         </div>
         <div className="form-group">
           <label className="form-label">CONFIRMAR CONTRASEÑA</label>

@@ -141,13 +141,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(response.user);
       setToken(response.access_token);
       
-      console.log('Registration successful:', {
+      console.log('✅ Registration successful:', {
         user: response.user.name,
         role: response.user.role,
+        token: response.access_token.substring(0, 20) + '...',
         expiresIn: response.expires_in
       });
     } catch (error) {
-      console.error('Registration failed:', error);
+      console.error('❌ Registration failed:', error);
       throw error;
     } finally {
       setIsLoading(false);
