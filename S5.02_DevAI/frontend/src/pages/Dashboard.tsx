@@ -9,6 +9,7 @@ import { useDisciplines } from '../hooks/useDisciplines';
 import { useCommunities } from '../hooks/useCommunities';
 import { adaptCommunitiesToFrontend, adaptDisciplinesToFrontend } from '../utils/adapters';
 import { Discipline } from '../types';
+import FABDropdown from '../components/FABDropdown/FABDropdown';
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
@@ -118,13 +119,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Floating Action Button */}
-      <button 
-        className="fab"
-        title="Unirse a nueva comunidad"
-        onClick={() => console.log('FAB clicked')}
-      >
-        +
-      </button>
+      <FABDropdown />
     </div>
   );
 };

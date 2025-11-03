@@ -89,37 +89,6 @@ body.dark .page-title {
   width: 100%;
 }
 
-/* Floating Action Button */
-.fab {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 56px;
-  height: 56px;
-  border: none;
-  border-radius: 50%;
-  background: var(--gradient-primary);
-  color: white;
-  font-size: 24px;
-  font-weight: 300;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
-  transition: all var(--transition-normal);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.fab:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 12px 30px rgba(52, 152, 219, 0.5);
-}
-
-.fab:active {
-  transform: translateY(0) scale(0.95);
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .page-title {
@@ -132,14 +101,6 @@ body.dark .page-title {
 
   .page-subtitle {
     font-size: 14px;
-  }
-
-  .fab {
-    bottom: 20px;
-    right: 20px;
-    width: 48px;
-    height: 48px;
-    font-size: 20px;
   }
 }
 
