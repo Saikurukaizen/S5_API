@@ -6,14 +6,14 @@ interface Community {
   id: string;
   name: string;
   icon: string;
-  members: number;
+  users_count: number;
 }
 
 // Mock communities data - TODO: Replace with API call
 const mockCommunities: Community[] = [
-  { id: '1', name: 'Running BCN', icon: '🏃', members: 156 },
-  { id: '2', name: 'Cycling Masters', icon: '🚴', members: 89 },
-  { id: '3', name: 'Swim Team Pro', icon: '🏊', members: 67 }
+  { id: '1', name: 'Running BCN', icon: '🏃', users_count: 156 },
+  { id: '2', name: 'Cycling Masters', icon: '🚴', users_count: 89 },
+  { id: '3', name: 'Swim Team Pro', icon: '🏊', users_count: 67 }
 ];
 
 export const ProfileSidebar: React.FC = () => {
@@ -72,7 +72,7 @@ export const ProfileSidebar: React.FC = () => {
                 <div className="community-icon">{community.icon}</div>
                 <div>
                   <div className="community-name">{community.name}</div>
-                  <div className="community-members">{community.members} miembros</div>
+                  <div className="community-members">{community.users_count} miembros</div>
                 </div>
               </div>
               <button 

@@ -3,19 +3,24 @@ import { useRole } from '../../hooks/useRole';
 import './RoleBadge.css';
 
 interface RoleBadgeProps {
+  role?: string; // Rol específico a mostrar (opcional)
   showIcon?: boolean;
   showText?: boolean;
   size?: 'small' | 'medium' | 'large';
 }
 
 export const RoleBadge: React.FC<RoleBadgeProps> = ({
+  role, // Rol específico a mostrar
   showIcon = true,
   showText = true,
   size = 'medium',
 }) => {
   const { userRole, isAuthenticated } = useRole();
 
-  if (!isAuthenticated || !userRole) {
+  // Usar el rol específico pasado como prop, o el rol del usuario autenticado como fallback
+  const displayRole = role || userRole;
+
+  if (!isAuthenticated || !displayRole) {
     return null;
   }
 
@@ -55,7 +60,7 @@ export const RoleBadge: React.FC<RoleBadgeProps> = ({
     }
   };
 
-  const config = getRoleConfig(userRole);
+  const config = getRoleConfig(displayRole);
 
   return (
     <div className={`role-badge role-badge-${size} ${config.className}`}>

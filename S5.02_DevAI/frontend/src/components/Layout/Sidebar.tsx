@@ -1,31 +1,31 @@
 import React from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { RoleGuard, AdminOnly, ModeratorPlus } from '../RoleGuard/RoleGuard';
 import './Sidebar.css';
 
-interface SidebarProps {
-  activeSection: string;
-  onSectionChange: (section: string) => void;
-}
+interface SidebarProps {}
 
-const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => {
+const Sidebar: React.FC<SidebarProps> = () => {
+  const location = useLocation();
+  
   const menuItems = [
-    { id: 'dashboard', icon: '📊', label: 'Dashboard', notifications: 0 },
-    { id: 'communities', icon: '👥', label: 'Comunidades', notifications: 5 },
-    { id: 'disciplines', icon: '🏃', label: 'Disciplinas', notifications: 0 },
-    { id: 'achievements', icon: '🏆', label: 'Logros', notifications: 2 },
-    { id: 'profile', icon: '👤', label: 'Perfil', notifications: 0 },
-    { id: 'settings', icon: '⚙️', label: 'Configuración', notifications: 0 },
+    { path: '/dashboard', icon: '📊', label: 'Dashboard', notifications: 0 },
+    { path: '/communities', icon: '👥', label: 'Comunidades', notifications: 5 },
+    { path: '/disciplines', icon: '🏃', label: 'Disciplinas', notifications: 0 },
+    { path: '/achievements', icon: '🏆', label: 'Logros', notifications: 2 },
+    { path: '/profile', icon: '👤', label: 'Perfil', notifications: 0 },
+    { path: '/settings', icon: '⚙️', label: 'Configuración', notifications: 0 },
   ];
 
   const moderatorItems = [
-    { id: 'moderation', icon: '🛡️', label: 'Moderación', notifications: 0 },
-    { id: 'reports', icon: '📋', label: 'Reportes', notifications: 3 },
+    { path: '/moderation', icon: '🛡️', label: 'Moderación', notifications: 0 },
+    { path: '/reports', icon: '📋', label: 'Reportes', notifications: 3 },
   ];
 
   const adminItems = [
-    { id: 'admin', icon: '👑', label: 'Panel Admin', notifications: 0 },
-    { id: 'users', icon: '👥', label: 'Usuarios', notifications: 0 },
-    { id: 'analytics', icon: '📈', label: 'Analytics', notifications: 0 },
+    { path: '/admin', icon: '👑', label: 'Panel Admin', notifications: 0 },
+    { path: '/users', icon: '👥', label: 'Usuarios', notifications: 0 },
+    { path: '/stats', icon: '📈', label: 'Analytics', notifications: 0 },
   ];
 
   return (
@@ -35,17 +35,17 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
           <h3 className="nav-title">Principal</h3>
           <ul className="nav-menu">
             {menuItems.slice(0, 3).map((item) => (
-              <li key={item.id} className="nav-item">
-                <button
-                  className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
-                  onClick={() => onSectionChange(item.id)}
+              <li key={item.path} className="nav-item">
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                 >
                   <span className="nav-icon">{item.icon}</span>
                   <span className="nav-label">{item.label}</span>
                   {item.notifications > 0 && (
                     <span className="nav-badge">{item.notifications}</span>
                   )}
-                </button>
+                </NavLink>
               </li>
             ))}
           </ul>
@@ -55,17 +55,17 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
           <h3 className="nav-title">Usuario</h3>
           <ul className="nav-menu">
             {menuItems.slice(3).map((item) => (
-              <li key={item.id} className="nav-item">
-                <button
-                  className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
-                  onClick={() => onSectionChange(item.id)}
+              <li key={item.path} className="nav-item">
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                 >
                   <span className="nav-icon">{item.icon}</span>
                   <span className="nav-label">{item.label}</span>
                   {item.notifications > 0 && (
                     <span className="nav-badge">{item.notifications}</span>
                   )}
-                </button>
+                </NavLink>
               </li>
             ))}
           </ul>
@@ -76,17 +76,17 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
             <h3 className="nav-title">Moderación</h3>
             <ul className="nav-menu">
               {moderatorItems.map((item) => (
-                <li key={item.id} className="nav-item">
-                  <button
-                    className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
-                    onClick={() => onSectionChange(item.id)}
+                <li key={item.path} className="nav-item">
+                  <NavLink
+                    to={item.path}
+                    className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                   >
                     <span className="nav-icon">{item.icon}</span>
                     <span className="nav-label">{item.label}</span>
                     {item.notifications > 0 && (
                       <span className="nav-badge">{item.notifications}</span>
                     )}
-                  </button>
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -98,17 +98,17 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
             <h3 className="nav-title">Administración</h3>
             <ul className="nav-menu">
               {adminItems.map((item) => (
-                <li key={item.id} className="nav-item">
-                  <button
-                    className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
-                    onClick={() => onSectionChange(item.id)}
+                <li key={item.path} className="nav-item">
+                  <NavLink
+                    to={item.path}
+                    className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                   >
                     <span className="nav-icon">{item.icon}</span>
                     <span className="nav-label">{item.label}</span>
                     {item.notifications > 0 && (
                       <span className="nav-badge">{item.notifications}</span>
                     )}
-                  </button>
+                  </NavLink>
                 </li>
               ))}
             </ul>

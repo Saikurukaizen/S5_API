@@ -1,22 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { RoleBadge } from '../RoleBadge/RoleBadge';
 import LoginButton from '../LoginButton/LoginButton';
+import { useSearch } from '../../hooks/useSearch';
+import { SearchDropdown } from '../Search/SearchDropdown';
 import './Header.css';
 
 const Header: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const { user, logout, isAuthenticated } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const navigate = useNavigate();
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
+  
+  // Hook de búsqueda
+  const { results, isLoading, isEmpty } = useSearch(searchQuery);
 
   const handleLogout = async () => {
     try {
       await logout();
+      setShowUserMenu(false);
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
+
+  const handleMenuClick = (path: string) => {
+    setShowUserMenu(false);
+    navigate(path);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    setShowSearchResults(value.length >= 2);
+  };
+
+  const handleSearchFocus = () => {
+    if (searchQuery.length >= 2) {
+      setShowSearchResults(true);
+    }
+  };
+
+  const closeSearchResults = () => {
+    setShowSearchResults(false);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setShowSearchResults(false);
+  };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setShowUserMenu(false);
+      }
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Level/XP system removed - to be implemented in future version
 
@@ -30,14 +85,7 @@ const Header: React.FC = () => {
           </div>
         </div>
         <div className="header-center">
-          <div className="search-bar">
-            <span className="search-icon">🔍</span>
-            <input 
-              type="text" 
-              placeholder="Buscar comunidades, disciplinas..."
-              className="search-input"
-            />
-          </div>
+          {/* Search bar only available for authenticated users */}
         </div>
         <div className="header-right">
           <LoginButton />
@@ -70,13 +118,35 @@ const Header: React.FC = () => {
       </div>
 
       <div className="header-center">
-        <div className="search-bar">
+        <div className="search-bar" ref={searchRef}>
           <span className="search-icon">🔍</span>
           <input 
             type="text" 
             placeholder="Buscar comunidades, disciplinas..."
             className="search-input"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            onFocus={handleSearchFocus}
           />
+          {searchQuery && (
+            <button 
+              className="search-clear"
+              onClick={clearSearch}
+              type="button"
+            >
+              ✕
+            </button>
+          )}
+          
+          {showSearchResults && (
+            <SearchDropdown
+              results={results}
+              isLoading={isLoading}
+              isEmpty={isEmpty}
+              query={searchQuery}
+              onClose={closeSearchResults}
+            />
+          )}
         </div>
       </div>
 
@@ -101,15 +171,21 @@ const Header: React.FC = () => {
           <span className="notification-badge">3</span>
         </div>
 
-        <div className="user-profile" onClick={() => setShowUserMenu(!showUserMenu)}>
-          <div className="user-info">
+        <div className="user-profile" ref={userMenuRef}>
+          <div 
+            className="user-info"
+            onClick={() => setShowUserMenu(!showUserMenu)}
+          >
             <div className="user-name-container">
               <span className="user-name">{user.name}</span>
               <RoleBadge size="small" />
             </div>
             {/* Level/XP system removed - to be implemented in future version */}
           </div>
-          <div className="user-avatar">
+          <div 
+            className="user-avatar"
+            onClick={() => setShowUserMenu(!showUserMenu)}
+          >
             <div className="avatar-placeholder">
               {user.name.charAt(0).toUpperCase()}
             </div>
@@ -117,11 +193,17 @@ const Header: React.FC = () => {
           
           {showUserMenu && (
             <div className="user-menu">
-              <div className="user-menu-item">
+              <div 
+                className="user-menu-item"
+                onClick={() => handleMenuClick('/profile')}
+              >
                 <span>👤</span>
                 Profile
               </div>
-              <div className="user-menu-item">
+              <div 
+                className="user-menu-item"
+                onClick={() => handleMenuClick('/settings')}
+              >
                 <span>⚙️</span>
                 Settings
               </div>

@@ -1,6 +1,7 @@
 import { apiCall } from './client';
 import {
   User,
+  CreateUserRequest,
   UpdateUserRequest,
   PaginatedResponse,
   UserQueryParams,
@@ -22,6 +23,15 @@ export const userService = {
     return apiCall<ApiResponse<User>>({
       method: 'GET',
       url: `/users/${id}`,
+    });
+  },
+
+  // POST /api/v1/users
+  createUser: async (userData: CreateUserRequest): Promise<ApiResponse<User>> => {
+    return apiCall<ApiResponse<User>>({
+      method: 'POST',
+      url: '/users',
+      data: userData,
     });
   },
 

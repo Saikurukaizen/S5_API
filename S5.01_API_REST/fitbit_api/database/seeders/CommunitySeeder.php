@@ -20,24 +20,25 @@ class CommunitySeeder extends Seeder{
             return;
         }
 
+        // Create communities with fixed discipline_id relationships
         Community::create([
             'name' => 'The Way of the Do',
-            'description' => 'Community of Karate enthusiasts',
-            'discipline_id' => $disciplines->first()->id,
+            'description' => 'Community of Karate enthusiasts dedicated to the martial arts way',
+            'discipline_id' => 1, // Karate discipline
             'user_id' => $users->first()->id,
         ]);
 
         Community::create([
             'name' => 'Fitness Freaks',
-            'description' => 'A community for fitness lovers',
-            'discipline_id' => $disciplines->skip(1)->first()->id ?? $disciplines->first()->id,
-            'user_id' => $users->skip(1)->first()->id ?? $users->first()->id,
+            'description' => 'High-intensity community for fitness and strength training lovers',
+            'discipline_id' => 2, // Second discipline
+            'user_id' => $users->skip(1)->first()?->id ?? $users->first()->id,
         ]);
 
         Community::create([
             'name' => 'Yoga Enthusiasts',
-            'description' => 'A community for yoga practitioners',
-            'discipline_id' => $disciplines->skip(2)->first()->id ?? $disciplines->first()->id,
+            'description' => 'Peaceful community for yoga practitioners seeking balance and mindfulness',
+            'discipline_id' => 3, // Third discipline
             'user_id' => $users->first()->id,
         ]);
     }

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import StatsGrid from '../components/Stats/StatsGrid';
 import { useRole } from '../hooks/useRole';
 import CommunityGrid from '../components/Community/CommunityGrid';
@@ -13,6 +14,7 @@ import './Dashboard.css';
 const Dashboard: React.FC = () => {
   console.log('📊 Dashboard: Component rendering...');
   
+  const navigate = useNavigate();
   const { data: disciplinesResponse, isLoading: disciplinesLoading } = useDisciplines();
   const { data: communitiesResponse, isLoading: communitiesLoading } = useCommunities();
   
@@ -59,17 +61,17 @@ const Dashboard: React.FC = () => {
 
   const handleCommunityClick = (community: any) => {
     console.log('Community clicked:', community);
-    // TODO: Navigate to community detail view
+    navigate(`/communities/${community.id}`);
   };
 
   const handleDisciplineClick = (discipline: Discipline) => {
     console.log('Discipline clicked:', discipline);
-    // TODO: Implement discipline selection/toggle functionality
+    navigate(`/disciplines/${discipline.id}`);
   };
 
   const handleShowAllCommunities = () => {
     console.log('Show all communities');
-    // TODO: Navigate to all communities view
+    navigate('/communities');
   };
 
   return (

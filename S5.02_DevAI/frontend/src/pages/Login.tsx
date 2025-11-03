@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
-import { AuthCard } from '../components/Auth';
+import { LoginForm } from '../components/Auth';
 import { DataStream } from '../components/Effects';
 import './Login.css';
 
@@ -38,8 +39,25 @@ export const Login: React.FC = () => {
             </div>
           </div>
 
-          {/* Auth Card with Login/Register Forms */}
-          <AuthCard />
+          {/* Login Card */}
+          <div className="auth-card">
+            {/* Navigation */}
+            <div className="auth-tabs">
+              <span className="auth-tab active">
+                LOGIN
+              </span>
+              <Link to="/register" className="auth-tab">
+                REGISTER
+              </Link>
+            </div>
+
+            {/* Login Form */}
+            <div className="auth-content">
+              <div className="auth-tab-content active">
+                <LoginForm />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

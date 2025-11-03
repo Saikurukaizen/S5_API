@@ -55,7 +55,7 @@ const CommunityCard: React.FC<CommunityCardProps> = ({ community, onClick }) => 
         </div>
         
         <div className="community-members">
-          {community.members} miembros
+          {community.users_count} miembros
         </div>
       </div>
 

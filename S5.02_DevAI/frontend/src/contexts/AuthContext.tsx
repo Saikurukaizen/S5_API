@@ -7,11 +7,14 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  showLoadingAnimation: boolean;
+  isAppInitialized: boolean;
   login: (credentials: LoginRequest) => Promise<void>;
   register: (userData: RegisterRequest) => Promise<void>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<void>;
   updateUser: (user: User) => void;
+  hideLoadingAnimation: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,6 +27,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showLoadingAnimation, setShowLoadingAnimation] = useState(false);
+  const [isAppInitialized, setIsAppInitialized] = useState(false);
 
   const isAuthenticated = !!user && !!token;
 
@@ -68,6 +73,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (credentials: LoginRequest): Promise<void> => {
     console.log('🔐 AuthContext: Starting login process...');
+    const loginStartTime = Date.now();
+    
     try {
       setIsLoading(true);
       console.log('🔐 AuthContext: Set loading to true');
@@ -84,23 +91,39 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setAuthToken(response.access_token);
       console.log('🔐 AuthContext: Token set in localStorage and API client');
       
-      // Update state
-      setUser(response.user);
-      setToken(response.access_token);
-      console.log('🔐 AuthContext: User and token state updated');
+      // Show the loading animation immediately
+      setShowLoadingAnimation(true);
+      console.log('🔐 AuthContext: Loading animation started');
       
-      console.log('Login successful:', {
-        user: response.user.name,
-        role: response.user.role,
-        expiresIn: response.expires_in
-      });
+      // Calculate minimum animation time
+      const loginDuration = Date.now() - loginStartTime;
+      const minAnimationTime = 2500; // Minimum 2.5 seconds for good UX
+      const remainingTime = Math.max(0, minAnimationTime - loginDuration);
       
-      // Ensure loading is set to false after successful login
-      setIsLoading(false);
-      console.log('🔐 AuthContext: Set loading to false - Login completed');
+      // Ensure the animation runs for at least the minimum time
+      setTimeout(() => {
+        // Update state after minimum animation time
+        setUser(response.user);
+        setToken(response.access_token);
+        setIsAppInitialized(true);
+        console.log('🔐 AuthContext: User and token state updated');
+        
+        console.log('Login successful:', {
+          user: response.user.name,
+          role: response.user.role,
+          expiresIn: response.expires_in,
+          totalTime: Date.now() - loginStartTime
+        });
+        
+        // Set loading to false after state is set
+        setIsLoading(false);
+        console.log('🔐 AuthContext: Set loading to false - Login completed');
+      }, remainingTime);
+      
     } catch (error) {
       console.error('🔐 AuthContext: Login failed:', error);
       setIsLoading(false);
+      setShowLoadingAnimation(false);
       console.log('🔐 AuthContext: Set loading to false - Login error');
       throw error;
     }
@@ -179,16 +202,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(updatedUser);
   };
 
+  const hideLoadingAnimation = (): void => {
+    setShowLoadingAnimation(false);
+    console.log('🔐 AuthContext: Loading animation hidden');
+  };
+
+  // Enhanced initialization check
+  useEffect(() => {
+    if (isAuthenticated && !isLoading && isAppInitialized) {
+      // Small delay to ensure UI is ready
+      setTimeout(() => {
+        console.log('🔐 AuthContext: App fully initialized, can hide animation');
+      }, 100);
+    }
+  }, [isAuthenticated, isLoading, isAppInitialized]);
+
   const value: AuthContextType = {
     user,
     token,
     isLoading,
     isAuthenticated,
+    showLoadingAnimation,
+    isAppInitialized,
     login,
     register,
     logout,
     refreshToken,
     updateUser,
+    hideLoadingAnimation,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,5 +1,6 @@
 // DisciplinesList.tsx - Cyberpunk Style Fitbit
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DisciplinesList.css';
 import { DataList } from '../DataList/DataList';
 import { disciplineService } from '../../api';
@@ -8,14 +9,21 @@ import { useRole } from '../../hooks/useRole';
 
 export const DisciplinesList: React.FC = () => {
   const { permissions } = useRole();
+  const navigate = useNavigate();
   const [editingDiscipline, setEditingDiscipline] = useState<Discipline | null>(null);
   const [deletingDiscipline, setDeletingDiscipline] = useState<Discipline | null>(null);
+  const [creatingDiscipline, setCreatingDiscipline] = useState(false);
   const [editForm, setEditForm] = useState<{ name: string; description: string }>({ 
+    name: '', 
+    description: '' 
+  });
+  const [createForm, setCreateForm] = useState<{ name: string; description: string }>({ 
     name: '', 
     description: '' 
   });
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -58,6 +66,40 @@ export const DisciplinesList: React.FC = () => {
     }
   };
 
+  const handleCreateClick = () => {
+    setCreatingDiscipline(true);
+    setCreateForm({ 
+      name: '', 
+      description: '' 
+    });
+    setError(null);
+  };
+
+  const handleCreateFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setCreateForm({ ...createForm, [e.target.name]: e.target.value });
+  };
+
+  const handleCreateFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    setIsCreating(true);
+    setError(null);
+    
+    try {
+      await disciplineService.createDiscipline({
+        name: createForm.name,
+        description: createForm.description,
+      });
+      
+      setCreatingDiscipline(false);
+      setRefreshKey(prev => prev + 1);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Error al crear la disciplina');
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
   const handleDeleteClick = (discipline: Discipline) => {
     setDeletingDiscipline(discipline);
     setError(null);
@@ -81,8 +123,7 @@ export const DisciplinesList: React.FC = () => {
   };
 
   const handleDisciplineClick = (discipline: Discipline) => {
-    console.log('Discipline clicked:', discipline);
-    // Navegar a detalles de disciplina o abrir modal de vista
+    navigate(`/disciplines/${discipline.id}`);
   };
 
   const columns = [
@@ -127,9 +168,22 @@ export const DisciplinesList: React.FC = () => {
 
   return (
     <>
+      <div className="list-header">
+        <h1 className="page-title">🏃 GESTIÓN DE DISCIPLINAS</h1>
+        {permissions.canEditDisciplines && (
+          <button 
+            className="btn-cyber create-btn"
+            onClick={handleCreateClick}
+          >
+            <span className="btn-icon">🏃</span>
+            CREAR DISCIPLINA
+          </button>
+        )}
+      </div>
+
       <DataList
         key={refreshKey}
-        title="🏃 GESTIÓN DE DISCIPLINAS"
+        title=""
         columns={columns}
         fetchData={fetchDisciplines}
         onItemClick={handleDisciplineClick}
@@ -275,6 +329,84 @@ export const DisciplinesList: React.FC = () => {
                 )}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Creación */}
+      {creatingDiscipline && (
+        <div className="modal-overlay" onClick={() => !isCreating && setCreatingDiscipline(false)}>
+          <div className="modal cyberpunk-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>🏃 CREAR DISCIPLINA</h2>
+              <button 
+                className="close-btn" 
+                onClick={() => setCreatingDiscipline(false)}
+                disabled={isCreating}
+              >
+                ×
+              </button>
+            </div>
+            
+            <form onSubmit={handleCreateFormSubmit}>
+              <div className="form-group">
+                <label className="cyber-label">NOMBRE</label>
+                <input
+                  type="text"
+                  name="name"
+                  className="cyber-input"
+                  value={createForm.name}
+                  onChange={handleCreateFormChange}
+                  required
+                  disabled={isCreating}
+                  placeholder="Nombre de la disciplina"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="cyber-label">DESCRIPCIÓN</label>
+                <textarea
+                  name="description"
+                  className="cyber-textarea"
+                  value={createForm.description}
+                  onChange={handleCreateFormChange}
+                  disabled={isCreating}
+                  placeholder="Descripción de la disciplina..."
+                  rows={4}
+                />
+              </div>
+
+              {error && (
+                <div className="error-message">
+                  ⚠️ {error}
+                </div>
+              )}
+
+              <div className="modal-actions">
+                <button 
+                  type="button" 
+                  className="btn-cyber btn-secondary"
+                  onClick={() => setCreatingDiscipline(false)} 
+                  disabled={isCreating}
+                >
+                  CANCELAR
+                </button>
+                <button 
+                  type="submit" 
+                  className="btn-cyber btn-primary"
+                  disabled={isCreating}
+                >
+                  {isCreating ? (
+                    <>
+                      <span className="spinner"></span>
+                      CREANDO...
+                    </>
+                  ) : (
+                    '🏃 CREAR DISCIPLINA'
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

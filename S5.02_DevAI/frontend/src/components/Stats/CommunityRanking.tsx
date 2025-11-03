@@ -9,7 +9,7 @@ interface CommunityData {
   name: string;
   discipline: string;
   icon: string;
-  members: number;
+  users_count: number;
   progressPercentage: number;
   positionType?: 'gold' | 'silver' | 'bronze';
 }
@@ -38,7 +38,7 @@ const generateRankingFromDisciplines = (disciplines: any[]): CommunityData[] => 
       name: `${discipline.name} Club Barcelona`,
       discipline: `${getFirstEmoji(discipline.name)} ${discipline.name}`,
       icon: getFirstEmoji(discipline.name),
-      members: mockMembers,
+      users_count: mockMembers,
       progressPercentage: Math.round((mockMembers / maxMembers) * 100),
       positionType: index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : undefined
     };
@@ -153,7 +153,7 @@ export const CommunityRanking: React.FC = () => {
               </div>
               <div className="progress-label">{community.progressPercentage}%</div>
             </div>
-            <div className="ranking-members">{community.members}</div>
+            <div className="ranking-members">{community.users_count}</div>
           </div>
         ))}
         

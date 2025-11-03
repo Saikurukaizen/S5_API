@@ -23,15 +23,18 @@ class UserController extends Controller{
     use AuthorizesRequests;
 
     protected function validateData($request): array{
-        return $request->validate([
-            'name' => 'required|string|max:150',
-            'lastname' => 'required|string|max:150',
-            'date_of_birth' => 'required|date',
-            'email' => 'required|email|unique:users,email, ' . ($request->id ?? 'NULL') . ',id',
+        $rules = [
+            'name' => ($request->isMethod('post') ? 'required' : 'sometimes') . '|string|max:150',
+            'lastname' => ($request->isMethod('post') ? 'required' : 'sometimes') . '|string|max:150',
+            'date_of_birth' => ($request->isMethod('post') ? 'required' : 'sometimes') . '|date',
+            'email' => ($request->isMethod('post') ? 'required' : 'sometimes') . '|email|unique:users,email,' . ($request->route('id') ?? 'NULL') . ',id',
             'password' => ($request->isMethod('post') ? 'required|' : 'nullable|') . 'confirmed|min:6',
-            'bank_acc' => 'required|string|unique:users,bank_acc, ' . ($request->id ?? 'NULL') . ',id',
+            'bank_acc' => ($request->isMethod('post') ? 'required' : 'sometimes') . '|string|unique:users,bank_acc,' . ($request->route('id') ?? 'NULL') . ',id',
             'discipline_id' => 'nullable|exists:disciplines,id',
-        ]);
+            'role' => 'sometimes|in:user,moderator,admin'
+        ];
+        
+        return $request->validate($rules);
     }
 
     /**
@@ -146,7 +149,7 @@ class UserController extends Controller{
      * )
      */
     public function store(Request $request): JsonResponse{
-        $data = $request->validated();
+        $data = $this->validateData($request);
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
         return response()->json([
@@ -202,8 +205,9 @@ class UserController extends Controller{
     public function update(Request $request, $id): JsonResponse{
         $authUser = Auth::user();
         $user = User::findOrFail($id);
-        $data = $request->validated();
+        $data = $this->validateData($request);
 
+        // Solo el admin puede modificar el campo 'role'
         if (isset($data['role'])) {
             if ($authUser->role !== 'admin') {
                 return response()->json([
@@ -214,6 +218,7 @@ class UserController extends Controller{
             $user->role = $data['role'];
         }
 
+        // El usuario solo puede modificar sus propios datos (excepto 'role')
         if ($authUser->id != $id && $authUser->role !== 'admin') {
             return response()->json([
                 'message' => 'Forbidden: You do not have permission to update this user.',

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder{
             DisciplineSeeder::class,
             UserSeeder::class,
             CommunitySeeder::class,
+            CommunityUserSeeder::class, // Add relationships after communities exist
             PassportSeeder::class,
         ]);
     }

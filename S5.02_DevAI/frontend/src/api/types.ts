@@ -28,19 +28,38 @@ export interface LogoutResponse {
 export interface User {
   id: number;
   name: string;
+  lastname: string;
   email: string;
   email_verified_at?: string;
   role: 'user' | 'admin' | 'moderator' | 'User' | 'Admin' | 'Moderator'; // Support both cases
+  date_of_birth?: string;
+  bank_acc?: string;
+  discipline_id?: number;
   created_at: string;
   updated_at: string;
 }
 
+export interface CreateUserRequest {
+  name: string;
+  lastname: string;
+  email: string;
+  password: string;
+  role?: 'user' | 'admin' | 'moderator';
+  date_of_birth?: string;
+  bank_acc?: string;
+  discipline_id?: number;
+}
+
 export interface UpdateUserRequest {
   name?: string;
+  lastname?: string;
   email?: string;
   password?: string;
   password_confirmation?: string;
   role?: 'user' | 'admin' | 'moderator' | 'User' | 'Admin' | 'Moderator'; // Support both cases
+  date_of_birth?: string;
+  bank_acc?: string;
+  discipline_id?: number;
 }
 
 // Discipline Types
@@ -189,7 +208,7 @@ export interface Community {
   description?: string;
   discipline_id: number;
   discipline?: Discipline;
-  members_count: number;
+  users_count?: number;
   created_at: string;
   updated_at: string;
 }

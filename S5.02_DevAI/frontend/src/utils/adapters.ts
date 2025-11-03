@@ -58,7 +58,7 @@ export const adaptCommunityToFrontend = (apiCommunity: ApiCommunity): Community 
     name: apiCommunity.name,
     discipline: disciplineName,
     icon: getDisciplineEmoji(disciplineName),
-    members: members,
+    users_count: members,
     activeToday: Math.floor(members * 0.3), // Mock: 30% active today
     averageDistance: Math.floor(Math.random() * 50) + 10, // Mock data
     averageTime: Math.floor(Math.random() * 120) + 30, // Mock data

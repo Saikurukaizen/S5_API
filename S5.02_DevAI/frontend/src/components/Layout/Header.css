@@ -94,7 +94,7 @@ body.dark .logo {
 
 .search-input {
   width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 40px;
+  padding: var(--spacing-sm) 40px var(--spacing-sm) 40px;
   border: 2px solid var(--neon-cyan);
   border-radius: var(--radius-lg);
   background: rgba(0, 0, 0, 0.3);
@@ -103,6 +103,31 @@ body.dark .logo {
   font-family: 'Orbitron', monospace;
   transition: all var(--transition-fast);
   backdrop-filter: blur(10px);
+}
+
+.search-clear {
+  position: absolute;
+  right: var(--spacing-md);
+  z-index: 1;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.search-clear:hover {
+  color: var(--neon-pink);
+  background: rgba(255, 0, 128, 0.1);
+  text-shadow: 0 0 5px var(--neon-pink);
 }
 
 .search-input:focus {
@@ -426,6 +451,8 @@ body.light .search-icon {
   font-weight: 500;
   transition: all var(--transition-fast);
   border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+  cursor: pointer;
+  user-select: none;
 }
 
 .user-menu-item:last-child {

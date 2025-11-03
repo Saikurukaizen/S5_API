@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API Backend</title>
+</head>
+<body>
+    <h1>Test de API Backend</h1>
+    <div id="results"></div>
+    
+    <script>
+        const results = document.getElementById('results');
+        
+        // Test 1: Status endpoint
+        console.log('🔗 Testing API connectivity...');
+        
+        // Test con localhost
+        fetch('http://localhost:8000/api/status')
+            .then(response => response.json())
+            .then(data => {
+                results.innerHTML += '<p>✅ Status (localhost): ' + JSON.stringify(data) + '</p>';
+            })
+            .catch(error => {
+                results.innerHTML += '<p>❌ Status (localhost): ' + error.message + '</p>';
+                
+                // Intentar con 127.0.0.1
+                return fetch('http://127.0.0.1:8000/api/status');
+            })
+            .then(response => response ? response.json() : null)
+            .then(data => {
+                if (data) {
+                    results.innerHTML += '<p>✅ Status (127.0.0.1): ' + JSON.stringify(data) + '</p>';
+                }
+            })
+            .catch(error => {
+                results.innerHTML += '<p>❌ Status (127.0.0.1): ' + error.message + '</p>';
+            });
+        
+        // Test 2: Login endpoint
+        setTimeout(() => {
+            const loginData = {
+                email: 'lux@admin.com',
+                password: '8000'
+            };
+            
+            fetch('http://localhost:8000/api/v1/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            })
+            .then(response => {
+                results.innerHTML += '<p>📡 Login response status: ' + response.status + '</p>';
+                return response.json();
+            })
+            .then(data => {
+                results.innerHTML += '<p>✅ Login response: ' + JSON.stringify(data) + '</p>';
+            })
+            .catch(error => {
+                results.innerHTML += '<p>❌ Login error: ' + error.message + '</p>';
+            });
+        }, 2000);
+    </script>
+</body>
+</html>
