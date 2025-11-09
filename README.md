@@ -9,11 +9,6 @@ Desarrollado por Marc Sanchez
 
 **La plataforma definitiva para gestionar comunidades deportivas**
 
-[![Live Demo (En construcción)](https://img.shields.io/badge/Demo-Live-success?style=for-the-badge&logo=railway)](https://s5-api-production.up.railway.app)
-[![API Docs (Servidor Local)](https://img.shields.io/badge/API-Swagger-85EA2D?style=for-the-badge&logo=swagger)](https://localhost:8000/api/documentation)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker)](https://github.com/Saikurukaizen/S5_API/tree/dev)
-[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
-
 [Características](#-características-principales) • [Demo](#-demo-interactiva) • [Tecnologías](#-stack-tecnológico) • [Instalación](#-instalación-rápida) • [Roadmap](#-roadmap-20)
 </div>
 
@@ -669,7 +664,7 @@ Si encuentras un bug, por favor [abre un issue](https://github.com/Saikurukaizen
 ### **Marc Sanchez**
 *Full-Stack Developer*
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-667eea?style=for-the-badge&logo=google-chrome&logoColor=white)](https://marcsanchez.dev)
+[![Portfolio](https://img.shields.io/badge/Portfolio-667eea?style=for-the-badge&logo=google-chrome&logoColor=white)](https://saikurukaizen.github.io)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/marc-sanchez-dev)
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Saikurukaizen)
 
