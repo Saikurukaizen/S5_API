@@ -1,3 +1,5 @@
+
+
 - Crear proyecto nuevo emulando al proyecto de S4
 - Instalar paquetes PRIMERO: Breeze, TailwindCSS / React con las dependencias de Node.js, y Laravel Passport
 - PHPUnit y/o preparación de tests unitarios o TDD (Plantear TDD antes crear el proyecto)
@@ -86,11 +88,531 @@ instalar paquetes y dependecias, y decidir la arquitectura del proyecto ANETES q
 Definimos un trait que se implemente en la autentificación del usuario en el modelo User que Laravel crea por defecto. Además,
 se configura la api en congif/auth.php y se determina quien recibe y quien proviene la configuración de la api.
 
+Passport proporciona al instalar unas keys (publicas y privadas) para las HTTP Response.
+
+También, si organizo el proyecto desde la visión TDD, podría crear un ManagementTest para cada tipo de ruta (GET, POST, PUT, DELETE)
+Hay que ver también si va a ser tests de Features, o Unit tests.
+
+En cuanto a metodos test en el TDD: Observaciones
+- Todos aquellos métodos de test, que no son CRUD y que determine qué puede y qué no puede hacer X (lógica de negocio) forma
+parte de una tabla en la que esté asignado una clave foránea. Por ejemplo:
+
+- Todos aquellos métodos con una lógica de negocio específica, es mejor crear archivos aparte
+   /*  
+   PARA COMMUNITY
+   puedo crear un archivo CommunityMembershipTest
+   public function test_user_cannot_join_community_of_other_discipline()
+    {
+        // Crear disciplina A y B
+		$disciplineA = Discipline::factory()->create();
+		$disciplineB = Discipline::factory()->create();
+        // Crear comunidad en disciplina A
+		$communityA = Community::factory()->create(['discipline_id' => $disciplineA->id])
+        // Crear usuario con disciplina B
+		$user = User::factory()->create(['discipline_id' => $disciplineB->id])
+        // Intentar unir usuario a comunidad de disciplina A
+		$response = $this->actingAs($user)->postJson("/api/communities/{$communityA->id}/join");
+        // Esperar error 403 o 422
+		$response->assertStatus(403);
+		$response->assertStatus(422);
+    } 
+	
+	public function a_community_cannot_join_many_moderator_users{
+
+	}*/
+
+Por otro lado. Passport 13 en Laravel 12, no genera de por sí unos IDs ni tokens de
+clientes iniciales, así que, la idea es crear un PassportSeeder para recrear las tablas
+necesarias al realizar la migracion, y crear los clientes manualmente Usando
+
+php artisan passport:client --personal
+php artisan passport:client --password
+
+Para generar los registros en la tabla oauth_clients, y insertar el client_id:
+grant_types = ["personal_access"] en la tabla oauth_personal_access_clients
+Además, se puede automatizar con un seeder:
+
+Por otro lado, las versiones actuales de Laravel/Passport no genera client_id ni Access Client en la tabla
+al migrar, lo que he tenido que buscar otra solución al respecto: crearlas manualmente. Encontré dos maneras
+de hacerlo: una es forzando a la creacion con:
+php artisan vendor:publish --tag-passport-migrations y otra es crearla a mano
+
+php artisan make:migration create_oauth_personal_access_clients
+ Schema::create('oauth_personal_access_clients', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->uuid('client_id');
+            $table->timestamps();
+	});
+
+También, para crear el client y el Access Client hay dos comandos:
+
+	php artisan passport:client --personal
+	php artisan passport:client --password
+
+Seguido, hay que registrar la tabla oauth_personal_access_clients el client_id (usando grant_types = "personal_access")
+Passport necesita saber cual de los dos clientes creados en el paso 2 es el personal_client.
+
+Aparte, cuando realizas un migrate:fresh, todo se va al carajo. Así que, para evitar usar otro teclado porque
+rebentaste el anterior, hice un PassportSeeder, y creé un comando de artisan para la carga de client/password.
+Esto hará que, después de cada migrate:fresh, aplique el comando creado:
+
+php artisan app:create-passport-clients (Basicamente son los dos comandos --personal y --password en uno)
+
+Sobre los Test: He separado los Tests en 3 categorias:
+
+Tests/Feature - DisciplineTestApi - Valida los endpoints de la API, qué status devuelve y qué pasa en Passport
+	- Prueba los endpoints expuestos al cliente
+Tests/Unit - DisciplineManagementTest - Valida las operaciones CRUD y casos de uso a nivel app y sus reglas
+	- Representa correctamente el dominio
+Tests/Models - DisciplineTest - Valida la integridad de comandos de Eloquent: Relaciones, restricciones lógicas y reglas de negocio puras.
+	- Usa los modelos para simular flujos de negocio
+
+Dentro de Tests/Unit, he creado una carpeta de Policies para los Tests que tienen que ver con las acciones según
+el permiso de los usuarios. Es como un punto medio entre el Management y el Model, y testea los permisos en sí.
+Aseguran que cada función CRUD devuelva true/false según su permiso.
+
+Conclusion:
+	- Los ApiTest manejan los endpoints de la API.
+	- Los ManagementTest manejan la lógica de negocio CRUD.
+	- Los PolicyTest manejan los roles y permisos.
+
+	- Se usa Status tipo 200s para decir que está validado en admin
+	- Se usa Status tipo 403 para el error en users
+	- Se usa Status tipo 401 para el error en guests
+
+Esto define unos cuantos puntos:
+
+- En Laravel, el servidor es la aplicación completa. El cliente se conecta a la API a través del frontend.
+- Con el paquete Passport, hay un modelo Client y los modelos de casos de uso son Disciplines, Users, Communities.
+- Los endpoints son "la cara pública" de la API REST. El "contrato" entre cliente y servidor.
+- Los endpoints se diseñan alrededor de las entidades y los casos de uso.
+
+GET/POST/PUT/DELETE + /api/ + caso de uso (Disciplines/Users/Communities)
+
+ESTOS SON LOS ENDPOINTS:
+
+---UPDATED---
+
+# Disciplines
+
+GET/api/v1/disciplines - Listar disciplinas
+POST/api/v1/disciplines - Crear una disciplina (admin)
+PUT/api/v1/disciplines/{id} - Actualizar una disciplina(admin)
+DELETE/api/v1/disciplines/{id} - Borrar una disciplina (admin)
+
+GET/api/v1/disciplines/stats - Estadística de las disciplinas
+--Se puede crear un DisciplineStatsController para estas lógicas
+
+# Communities
+
+GET/api/v1/communities - Listar las comunidades
+POST/api/v1/communities - Crear una comunidad (admin o moderador de esa disciplina)
+PUT o PATCH/api/v1/communities/{id} - Actualizar parcial o total de una comunidad(solo admin puede cambiar nombre)
+DELETE/api/v1/communities/{id} - Borrar una comunidad (admin)
+
+GET/api/v1/communities/{id}/stats - Estadistica de una comunidad
+
+#Users
+---Estos endpoint se definen en api.php y se gestiona en un AuthController
+POST/api/v1/register - Registro de usuario
+POST/api/v1/login - Registro de un usuario
+
+GET/api/v1/users - Listado de usuarios
+GET/api/v1/users/{id} - Perfil propio o del usuario
+PUT/api/users/{id}/discipline - Cambiar de disciplina (pierde comunidades previas)
+POST/api/v1/users/{id}/communities/{id} - Unirse a una comunidad de su disciplina.
+DELETE/api/v1/users/{id}/communities/{id} - Salirse de esa comunidad que pertenece
+
+GET/api/v1/users/{id}/stats - Estadísticas de un usuario
+
+(Ver y añadir params key para consultas de comparación, queries para endpoints, etc)
+
+auth:api valida que haya un token Passport válido
+can:manage-disciplines invoca una Policy de Disciplines
+Se puede usar middleware como role:admin
+
+-----DISCLAIMER!!!-----
+
+1.- Los datos que Postman devuelve desde los endpoints está en formato JSON, que es un estandard en API RESTs.
+La discusión ha estado de qué tipo de bases de datos usar. Se puede usar MongoDB ya que trabaja con JSON, pero la config
+de Passport está pensada para almacenarse en bases de datos relacionales mySQL, ya que la configuración de la validación
+del client_id y el access token se almacena bien ahí, a pesar de que Passport es inherente a qué base de datos lo almacenes,
+al igual que la arquitectura API. 
+
+Para conservar la estructura JSON (porque es la más versátil y robusta, en el momento de enviar la API para el trabajo Frontend),
+es usar un array asociativo "key" / "value" como fila / columna en una tabla. Habrá maneras de transformar ese array
+en formato JSON(vease un parseJSON() o similar)
+
+** Dónde crear el array asociativo key/value? en la respuesta de los controladores bajo
+	return response()->json()
+	Puedes usar Resource classes si la API fuera más compleja y mantenible, en un DisciplineResources en /Http/Resources
+
+	Si la lógica es simple, se define el array en el controlador /api. Si no,
+	crear un DisciplineResource en /http/Resource. 
+
+	Logica:
+	Los datos se almacenan en MySQL usando Eloquent, no se necesita almacenar en JSON.
+	Cuando recupero datos con eloquest, ej: $discipline = Discipline::find($id), se
+	obtiene un objeto o colección de modelos. DisciplineResource transforma ese modelo en
+	un array asociativo, y Laravel convierte automáticamente ese array en JSON cuando
+	devuelves el Resource desde el controlador.
+
+	Ej: return new DisciplineResource($discipline);
+
+	Donde ocurre la conversión? 
+		El Controlador recupera el modelo y lo pasa al Resource
+		EL Resource define el array asociativo
+		Laravel convierte el Array del Resource a JSON al enviar la respuesta HTTP
 
 
 
+Además, hay que pensar en métricas y estadísticas para no hacer la lógica de un simple CRUD.
+Hay que realizar y empezar a realizar lógica más complejas que esto. Entonces:
+
+- Validar los endpoints y los recibe bien con status 200s
+- Ampliar endpoints para las stats, el register y el login.
+- Determinar la lógica de almacenaje, JSON / Array asoc. / mySQL
+- Ampliar el TDD con lógicas de métricas y estadísticas para las categorías del proyecto.
+- Añadir Policies, Providers, Controllers y Models según la estructura del TDD.
+
+--UPDATE--
+
+Primer run del TDD: 
+	- Los tests para el Management de Passport es válido: crea Passport Clients/Personal Access
+	- Se registra en la tabla
+	- No crea clientes duplicados
+
+	- No detecta archivos, que no se han creado todavía. Tales son:
+		. DisciplinePolicy
+		. La tabla de Database de Disciplines. 
+	- ApiTest - admin_can_create_a_discipline: Recibe error 403 en vez del 201
+
+	- Además, tampoco ha podido hacer run en los endpoints de la API.
+
+Además, la sustitución de /** @test*/ por #[Test], ya que, en PHPUnit v.12 y 
+versiones recientes, está deprecado. Esto modifica el comportamiento de los tests,
+pero lo hace más robusto y menos vulnerable.
+
+Versiones:
+Laravel 12.0
+Passport 13.2
+PHPUnit ^10.0
+
+También hay un error de una ruta no definida llamada Login: El middleware de
+autenticación(autho auth:api) detecta que el usuario no está autenticado. Laravel,
+por defecto, intenta redirigir al usuario a la ruta login usando route('login').
+Por ejemplo, un test tipo guest_cannot--blabla en ApiTest que accede a una ruta 
+protegida sin autenticación.
+
+Todo ello resume los "agujeros" para empezar a picar código, el punto de entrada de datos,
+de autenticado, y la ruta de viaje de los datos, y ya definidos gracias al TDD.
 
 
+---RESPUESTA IA SOBRE EL ARRAY JSON EN KEY/VALUE?
 
 
+1. ¿Dónde crear el array asociativo “key/value”?
+En la respuesta de los controladores:
+El array asociativo se crea normalmente en los métodos de los controladores, donde defines la estructura de la respuesta JSON para el frontend.
 
+<?php
+return response()->json([
+    'message' => 'Disciplina creada',
+    'data' => $discipline
+], 201);
+
+Esto garantiza que la API siempre devuelva datos en formato JSON, estándar y robusto.
+
+En los recursos (Resource classes):
+Para APIs más complejas y mantenibles, puedes usar Resource classes (app/Http/Resources).
+Ejemplo:
+
+<?php
+return new DisciplineResource($discipline);
+
+Dentro de la clase DisciplineResource, defines el array asociativo que será transformado a JSON.
+
+2. ¿En qué tipo de archivo y dónde debe estar?
+Controladores:
+Si la lógica es simple, puedes definir el array directamente en el controlador (Api).
+Resource classes:
+Para lógica más compleja, crea un archivo en app/Http/Resources/DisciplineResource.php.
+Esto te permite centralizar la transformación de datos y mantener el controlador limpio.
+3. ¿Por qué no en modelos o migraciones?
+Modelos:
+Los modelos (Models) representan la estructura y relaciones de la base de datos, no la forma en que se devuelven los datos.
+Migraciones:
+Las migraciones (migrations) solo definen la estructura de las tablas, no la lógica de respuesta.
+4. Conclusión y buenas prácticas
+Controladores:
+Úsalos para lógica sencilla y respuestas rápidas.
+Resource classes:
+Úsalas para APIs que requieren flexibilidad, personalización y consistencia en las respuestas.
+Nunca en migraciones o modelos:
+Mantén la lógica de presentación separada de la lógica de datos y estructura.
+Recomendación:
+
+Para mantener tu API escalable y robusta, crea Resource classes en app/Http/Resources y usa arrays asociativos en ellas para definir la estructura JSON de tus respuestas.
+Los controladores pueden usar estas resources para devolver los datos al frontend.
+¿Quieres un ejemplo de cómo crear y usar un Resource en Laravel para tus endpoints?
+
+2. Estructura del archivo app/Http/Resources/DisciplineResource.php:
+
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class DisciplineResource extends JsonResource
+{
+    public function toArray($request)
+    {
+        return [
+            'id'          => $this->id,
+            'name'        => $this->name,
+            'description' => $this->description,
+            'community'   => new CommunityResource($this->community), // si tienes relación
+            'users'       => UserResource::collection($this->users),  // si tienes relación
+            // Puedes añadir más campos o lógica aquí
+        ];
+    }
+}
+
+3. Usar el Resource en el DisciplineController:
+
+<?php
+use App\Http\Resources\DisciplineResource;
+
+public function show($id)
+{
+    $discipline = Discipline::findOrFail($id);
+    return new DisciplineResource($discipline);
+}
+
+public function index()
+{
+    return DisciplineResource::collection(Discipline::all());
+}
+
+4. Test para el Resource (opcional pero recomendable):
+
+Puedes crear un archivo como tests/Feature/DisciplineResourceTest.php para validar que la estructura del JSON es la esperada.
+Resumen:
+
+El Resource define el array asociativo para la respuesta JSON.
+Se instancia en el controlador y reemplaza el uso directo de response()->json().
+Es buena práctica añadir tests para los Resources en tu TDD.
+
+ejemplos de metodos test de porcentajes:
+
+ #[Test]
+    public function it_returns_percentage_of_users_per_discipline(): void
+    {
+        $this->actingAsAdmin();
+        $disciplines = Discipline::factory()->count(3)->create();
+        $userCounts = [5, 3, 2];
+        foreach ($disciplines as $i => $discipline) {
+            User::factory()->count($userCounts[$i])->create(['discipline_id' => $discipline->id]);
+        }
+        $totalUsers = array_sum($userCounts);
+        $expectedPercentages = [];
+        foreach ($disciplines as $i => $discipline) {
+            $expectedPercentages[$discipline->name] = round($userCounts[$i] / $totalUsers * 100);
+        }
+        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response->assertStatus(200);
+        foreach ($expectedPercentages as $name => $percentage) {
+            $response->assertJsonFragment([
+                'name' => $name,
+                'percentage' => $percentage
+            ]);
+        }
+    }
+
+    #[Test]
+    public function it_returns_ranking_of_disciplines_by_users(): void
+    {
+        $this->actingAsAdmin();
+        $disciplines = Discipline::factory()->count(3)->create();
+        $userCounts = [2, 6, 4];
+        foreach ($disciplines as $i => $discipline) {
+            User::factory()->count($userCounts[$i])->create(['discipline_id' => $discipline->id]);
+        }
+        $ranking = collect($disciplines)
+            ->map(function ($discipline, $i) use ($userCounts) {
+                return [
+                    'name' => $discipline->name,
+                    'users' => $userCounts[$i]
+                ];
+            })
+            ->sortByDesc('users')
+            ->values()
+            ->all();
+        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response->assertStatus(200);
+        foreach ($ranking as $rank) {
+            $response->assertJsonFragment($rank);
+        }
+    }
+
+    #[Test]
+    public function it_returns_additional_stats_for_disciplines(): void
+    {
+        $this->actingAsAdmin();
+        $disciplines = Discipline::factory()->count(2)->create();
+        User::factory()->count(4)->create(['discipline_id' => $disciplines[0]->id]);
+        User::factory()->count(1)->create(['discipline_id' => $disciplines[1]->id]);
+        // Ejemplo: media de usuarios por disciplina
+        $totalUsers = 5;
+        $totalDisciplines = 2;
+        $expectedAverage = $totalUsers / $totalDisciplines;
+        $response = $this->getJson('/api/stats/disciplines/stats');
+        $response->assertStatus(200)
+                 ->assertJsonFragment(['average_users_per_discipline' => $expectedAverage]);
+    }
+
+
+ /**
+     * Comprueba si un usuario es miembro de la comunidad
+     */
+    public function hasMember(User $user): bool {
+        return $this->members()->where('user_id', $user->id)->exists();
+    }
+
+    /**
+     * Comprueba si el usuario es el moderador (creador) de la comunidad
+     */
+    public function isModerator(User $user): bool {
+        return $user->role === 'moderador' && $this->user_id === $user->id;
+    }
+
+    /**
+     * Añade un usuario como miembro si no lo es ya
+     */
+    public function addMember(User $user): void {
+        if (!$this->hasMember($user)) {
+            $this->members()->attach($user->id);
+        }
+    }
+
+    /**
+     * Elimina un usuario como miembro
+     */
+    public function removeMember(User $user): void {
+        $this->members()->detach($user->id);
+    }
+
+Aquí tienes el análisis de buenas prácticas y separación de responsabilidades para los
+controladores principales:
+
+CommunityController
+
+Actualmente está vacío.
+Correcto: la lógica de gestión de miembros y otras acciones específicas debe estar 
+en controladores dedicados (como CommunityMemberController).
+CommunityMemberController
+
+Puntos positivos:
+
+Usa el trait AuthorizesRequests para aplicar policies.
+Métodos addMember y removeMember devuelven respuestas JSON claras.
+Valida si el usuario ya es miembro antes de añadirlo/eliminarlo.
+Usa authorize('update', $community) para controlar permisos (aunque podrías tener métodos
+ más específicos en el policy, como addMember y removeMember).
+Sugerencias:
+
+La validación de datos (validateData) está bien, pero podrías usar FormRequest para mayor
+ limpieza.
+Los métodos deberían recibir el Request y extraer los IDs de ahí, en vez de recibir modelos
+ directamente (mejor para rutas RESTful).
+Considera separar la lógica de comprobación de membresía en el Policy, no en el Controller.
+El método addMember tiene un error de sintaxis en return response()->json()([ ... ]) 
+(debe ser response()->json([ ... ])).
+
+
+UserController
+
+Puntos positivos:
+
+Métodos CRUD bien definidos.
+Usa validación centralizada en validateData.
+Devuelve respuestas JSON estructuradas.
+Encripta la contraseña correctamente.
+Sugerencias:
+
+La validación de email y bank_acc tiene un espacio extra antes de la coma en la regla 
+de validación, lo que puede causar problemas.
+Podrías usar FormRequest para separar la validación del controlador.
+Falta control de acceso (middleware/policies) para proteger acciones sensibles.
+No hay paginación en el método index (recomendado para grandes volúmenes de usuarios).
+No hay control de roles para limitar quién puede crear, actualizar o eliminar usuarios.
+Resumen de buenas prácticas y separación de responsabilidades
+Controllers: Solo deben orquestar la petición, delegar lógica de negocio a Services 
+o Policies, y devolver respuestas.
+Policies: Toda la lógica de autorización (quién puede añadir/eliminar miembros, etc.) debe estar aquí.
+FormRequest: Útil para separar la validación de datos del controlador.
+Respuestas JSON: Correcto, pero mejor usar Resources para respuestas complejas.
+Paginación: Recomendado para endpoints que devuelven colecciones grandes.
+Middleware: Asegúrate de proteger los endpoints con autenticación y autorización.
+
+UPDATE 6/10/25, LISTA DE TAREAS PARA LA Feature
+
+Controladores - Primordial
+
+- [V] Arreglar error de sintaxis en línea 29
+- [ ] Cambiar firma de métodos para usar Request en lugar de model injection
+- [ ] Implementar uso de validateData() correctamente
+- [ ] Añadir manejo de errores robusto
+
+Rutas API - Primordial
+
+- [V] POST /api/v1/communities/{community}/members/{user}
+- [V] DELETE /api/v1/communities/{community}/members/{user}
+- [V] GET /api/v1/communities/{community}/members
+- [V] Aplicar middleware auth:api
+- [V] Aplicar policies correspondientes
+
+Controladores faltantes - Media prioridad
+
+- [ ] CommunityController CRUD completo
+- [ ] CommunityStatsController para estadísticas
+- [ ] Implementar Resources para respuestas JSON consistentes
+
+Tests Unitarios - Prioridad
+
+- [ ] CommunityApiTest (0/17 tests pasando)
+- [ ] CommunityManagementTest (0/9 tests pasando)
+- [ ] CommunityResourcesTest (0/5 tests pasando)
+- [ ] CommunityStatsTest (0/10 tests pasando)
+- [ ] CommunityTest modelo (0/6 tests pasando)
+
+Documentacion API - Media prioridad
+- [ ] Documentar endpoints en OpenAPI/Swagger
+- [ ] Crear ejemplos de request/response
+- [ ] Documentar códigos de error
+- [ ] Actualizar README con nuevos endpoints
+
+PLAN DE ACCIÓN RECOMENDADO
+
+FASE 1: Correcciones Críticas (1-2 horas)
+Arreglar CommunityMemberController
+Crear rutas API básicas
+Ejecutar migraciones pendientes
+
+FASE 2: Implementación Core (3-4 horas)
+Crear CommunityController completo
+Implementar CommunityResource
+Hacer pasar tests básicos de API
+
+FASE 3: Features Avanzadas (2-3 horas)
+Implementar CommunityStatsController
+Completar todos los tests
+Optimizar queries y performance
+
+FASE 4: Documentación y Limpieza (1-2 horas)
+Documentar API completa
+Limpiar código y comments
+Actualizar archivo de cambios
+Preparar para merge
+	

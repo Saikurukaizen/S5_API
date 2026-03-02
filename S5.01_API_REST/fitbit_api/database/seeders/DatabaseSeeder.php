@@ -3,21 +3,21 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Discipline;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
-class DatabaseSeeder extends Seeder
-{
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-        // User::factory(10)->create();
+class DatabaseSeeder extends Seeder{
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+    public function run(): void{
+
+        $this->call([
+            DisciplineSeeder::class,
+            UserSeeder::class,
+            CommunitySeeder::class,
+            CommunityUserSeeder::class, // Add relationships after communities exist
+            PassportSeeder::class,
         ]);
     }
 }

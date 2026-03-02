@@ -1,0 +1,116 @@
+/* Personal Info Card Styles */
+.personal-info-card {
+  margin-bottom: var(--spacing-xl);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.card-header .section-title {
+  margin: 0;
+  border: none;
+}
+
+.edit-btn {
+  padding: 6px 12px;
+  font-size: 11px;
+}
+
+.profile-form {
+  position: relative;
+}
+
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--spacing-sm);
+  font-family: 'Orbitron', monospace;
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text-primary);
+  font-family: 'Orbitron', monospace;
+  font-size: 13px;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-fast);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 15px var(--neon-cyan);
+  background: rgba(0, 255, 255, 0.05);
+}
+
+.form-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.profile-form.edit-mode .form-input:not(:disabled) {
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 10px var(--neon-pink);
+}
+
+.save-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
+}
+
+.save-buttons .btn {
+  flex: 1;
+}
+
+.cancel-btn {
+  border-color: var(--text-muted);
+  color: var(--text-muted);
+  background: rgba(102, 102, 128, 0.1);
+}
+
+.cancel-btn:hover {
+  box-shadow: 0 0 15px var(--text-muted);
+}
+
+.save-btn {
+  border-color: var(--neon-pink);
+  color: var(--neon-pink);
+  background: rgba(230, 0, 122, 0.1);
+}
+
+.save-btn:hover {
+  box-shadow: 0 0 20px var(--neon-pink);
+}
+
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: stretch;
+  }
+  
+  .edit-btn {
+    width: 100%;
+  }
+  
+  .save-buttons {
+    flex-direction: column;
+  }
+}

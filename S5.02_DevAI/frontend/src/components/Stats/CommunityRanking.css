@@ -1,0 +1,163 @@
+.community-ranking-card {
+  margin-bottom: var(--spacing-xl);
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  animation: hologram 3s infinite, slideIn 0.6s ease-out;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.card-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.ranking-item:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 15px var(--neon-cyan);
+  transform: translateX(5px);
+}
+
+.ranking-position {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  box-shadow: 0 0 15px var(--neon-cyan);
+  flex-shrink: 0;
+}
+
+.ranking-position.gold {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  box-shadow: 0 0 20px #ffd700;
+}
+
+.ranking-position.silver {
+  background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+  box-shadow: 0 0 20px #c0c0c0;
+}
+
+.ranking-position.bronze {
+  background: linear-gradient(135deg, #cd7f32, #d4af6a);
+  box-shadow: 0 0 20px #cd7f32;
+}
+
+.ranking-icon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  flex-shrink: 0;
+}
+
+.ranking-info {
+  flex: 1;
+}
+
+.ranking-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.ranking-discipline {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ranking-members {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--neon-pink);
+}
+
+.progress-bar-wrapper {
+  width: 100%;
+  max-width: 200px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+  border-radius: 10px;
+  box-shadow: 0 0 10px var(--neon-cyan);
+  transition: width 1s ease-out;
+}
+
+.progress-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+@keyframes hologram {
+  0%, 100% { opacity: 1; }
+  98% { opacity: 1; }
+  99% { opacity: 0.85; }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

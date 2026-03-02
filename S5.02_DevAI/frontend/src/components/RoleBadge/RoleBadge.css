@@ -1,0 +1,128 @@
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 12px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.role-badge-small {
+  padding: 2px 6px;
+  font-size: 10px;
+  gap: 4px;
+}
+
+.role-badge-medium {
+  padding: 4px 8px;
+  font-size: 12px;
+  gap: 6px;
+}
+
+.role-badge-large {
+  padding: 6px 12px;
+  font-size: 14px;
+  gap: 8px;
+}
+
+.role-icon {
+  font-size: 1em;
+  line-height: 1;
+}
+
+.role-text {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Role-specific styles */
+.role-admin {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  color: white;
+  border-color: #ff6b6b;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+.role-admin:hover {
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  transform: translateY(-1px);
+}
+
+.role-moderator {
+  background: linear-gradient(135deg, #4ecdc4, #44a08d);
+  color: white;
+  border-color: #4ecdc4;
+  box-shadow: 0 2px 8px rgba(78, 205, 196, 0.3);
+}
+
+.role-moderator:hover {
+  box-shadow: 0 4px 12px rgba(78, 205, 196, 0.4);
+  transform: translateY(-1px);
+}
+
+.role-user {
+  background: linear-gradient(135deg, #45b7d1, #5dade2);
+  color: white;
+  border-color: #45b7d1;
+  box-shadow: 0 2px 8px rgba(69, 183, 209, 0.3);
+}
+
+.role-user:hover {
+  box-shadow: 0 4px 12px rgba(69, 183, 209, 0.4);
+  transform: translateY(-1px);
+}
+
+.role-unknown {
+  background: linear-gradient(135deg, #95a5a6, #bdc3c7);
+  color: white;
+  border-color: #95a5a6;
+  box-shadow: 0 2px 8px rgba(149, 165, 166, 0.3);
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .role-admin {
+  background: linear-gradient(135deg, #ff4757, #ff3742);
+  border-color: #ff4757;
+}
+
+[data-theme="dark"] .role-moderator {
+  background: linear-gradient(135deg, #00d2d3, #01a3a4);
+  border-color: #00d2d3;
+}
+
+[data-theme="dark"] .role-user {
+  background: linear-gradient(135deg, #3742fa, #2f3542);
+  border-color: #3742fa;
+}
+
+/* Cyberpunk theme for dark mode */
+[data-theme="dark"] .role-admin {
+  background: linear-gradient(135deg, #ff0266, #ff4081);
+  border: 1px solid #ff0266;
+  box-shadow: 
+    0 0 10px rgba(255, 2, 102, 0.4),
+    inset 0 0 10px rgba(255, 2, 102, 0.1);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="dark"] .role-moderator {
+  background: linear-gradient(135deg, #00fff2, #0de0d3);
+  border: 1px solid #00fff2;
+  box-shadow: 
+    0 0 10px rgba(0, 255, 242, 0.4),
+    inset 0 0 10px rgba(0, 255, 242, 0.1);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  color: #000;
+}
+
+[data-theme="dark"] .role-user {
+  background: linear-gradient(135deg, #8a2be2, #9370db);
+  border: 1px solid #8a2be2;
+  box-shadow: 
+    0 0 10px rgba(138, 43, 226, 0.4),
+    inset 0 0 10px rgba(138, 43, 226, 0.1);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}

@@ -1,0 +1,44 @@
+/* User Profile Page Styles */
+.profile-page {
+  min-height: 100vh;
+  background: var(--bg-color);
+  color: var(--text-primary);
+  position: relative;
+}
+
+.container {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+.page-title {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: var(--spacing-xl);
+  animation: neon-pulse 2s infinite, slideInUp 0.4s ease-out;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: var(--spacing-xl);
+  animation: slideInUp 0.6s ease-out;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+@media (max-width: 1024px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}

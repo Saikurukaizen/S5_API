@@ -1,0 +1,80 @@
+/* Activity Timeline Styles */
+.activity-timeline-card {
+  margin-bottom: var(--spacing-xl);
+}
+
+.activity-timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.activity-timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--neon-cyan), var(--neon-pink));
+}
+
+.activity-item {
+  position: relative;
+  margin-bottom: var(--spacing-lg);
+}
+
+.activity-item::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  z-index: 1;
+}
+
+/* Different colors for different activity types */
+.activity-item.activity-join::before {
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.activity-item.activity-event::before {
+  background: var(--neon-pink);
+  box-shadow: 0 0 10px var(--neon-pink);
+}
+
+.activity-item.activity-update::before {
+  background: var(--neon-purple);
+  box-shadow: 0 0 10px var(--neon-purple);
+}
+
+.activity-item.activity-achievement::before {
+  background: var(--neon-green);
+  box-shadow: 0 0 10px var(--neon-green);
+}
+
+.activity-date {
+  font-size: 10px;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  font-family: 'Orbitron', monospace;
+  font-weight: 600;
+}
+
+.activity-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-family: 'Orbitron', monospace;
+  line-height: 1.4;
+}
+
+.activity-text strong {
+  color: var(--neon-cyan);
+  font-weight: 700;
+}

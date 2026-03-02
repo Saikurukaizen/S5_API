@@ -1,0 +1,200 @@
+/* Profile Sidebar Styles */
+.profile-sidebar {
+  position: relative;
+}
+
+.avatar-section {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: var(--spacing-md);
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid var(--neon-cyan);
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  box-shadow: 0 0 30px var(--neon-cyan);
+  animation: hologram-flicker 2s infinite;
+}
+
+.avatar-badge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--neon-pink);
+  border: 3px solid var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 0 15px var(--neon-pink);
+}
+
+.user-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+  font-family: 'Orbitron', monospace;
+}
+
+.user-email {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+  font-family: 'Orbitron', monospace;
+}
+
+.user-role {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(0, 230, 230, 0.1);
+  border: 1px solid var(--neon-cyan);
+  border-radius: 12px;
+  font-size: 11px;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Orbitron', monospace;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-lg) 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--neon-pink);
+  margin-bottom: 4px;
+  font-family: 'Orbitron', monospace;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Orbitron', monospace;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color);
+  font-family: 'Orbitron', monospace;
+}
+
+.communities-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.community-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.community-item:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+.community-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.community-icon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.community-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: 'Orbitron', monospace;
+}
+
+.community-members {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'Orbitron', monospace;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 11px;
+}
+
+.btn-danger {
+  border-color: #ff3366;
+  color: #ff3366;
+  background: rgba(255, 51, 102, 0.1);
+}
+
+.btn-danger:hover {
+  box-shadow: 0 0 20px #ff3366;
+}
+
+.btn-pink {
+  border-color: var(--neon-pink);
+  color: var(--neon-pink);
+  background: rgba(230, 0, 122, 0.1);
+}
+
+.btn-pink:hover {
+  box-shadow: 0 0 20px var(--neon-pink);
+}
+
+.join-community-btn {
+  width: 100%;
+  margin-top: var(--spacing-lg);
+}
